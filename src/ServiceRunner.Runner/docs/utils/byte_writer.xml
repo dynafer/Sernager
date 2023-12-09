@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Class>
+    <Description>
+        <summary>
+            <para>
+                <c>ByteWriter</c> is a utility class that allows you to write bytes to a byte array.
+            </para>
+        </summary>
+    </Description>
+
+    <Constructor Name="Default">
+        <summary>
+            <para>
+                Creates a new instance of <c>ByteWriter</c>.
+            </para>
+        </summary>
+    </Constructor>
+
+    <Constructor Name="WithBytes">
+        <summary>
+            <para>
+                Creates a new instance of <c>ByteWriter</c> with the specified bytes.
+            </para>
+        </summary>
+        <remarks>
+            <param name="bytes">
+                <para>
+                    Parameters:<br/>
+                    <c>byte[]</c> <paramref name="bytes"/> - The bytes to write to.
+                </para>
+            </param>
+        </remarks>
+    </Constructor>
+
+    <PublicMethod Name="WriteBytes">
+        <summary>
+            <para>
+                Writes a specified byte array to the byte array.
+            </para>
+        </summary>
+        <remarks>
+            <para>
+                Parameters:<br/>
+                <c>byte[]</c> <paramref name="bytes"/> - The bytes to write.
+            </para>
+        </remarks>
+    </PublicMethod>
+
+    <PublicMethod Name="WriteInt32">
+        <summary>
+            <para>
+                Writes an <c>int</c> to the byte array.
+            </para>
+        </summary>
+        <remarks>
+            <para>
+                Parameters:<br/>
+                <c>int</c> <paramref name="value"/> - The <c>int</c> to write.
+            </para>
+        </remarks>
+    </PublicMethod>
+
+    <PublicMethod Name="WriteString">
+        <summary>
+            <para>
+                Writes a <c>string</c> to the byte array.
+            </para>
+        </summary>
+        <remarks>
+            <para>
+                Parameters:<br/>
+                <c>string</c> <paramref name="value"/> - The <c>string</c> to write.
+            </para>
+        </remarks>
+    </PublicMethod>
+
+    <PublicMethod Name="GetBytes">
+        <summary>
+            <para>
+                Gets the byte array.
+            </para>
+        </summary>
+        <returns>
+            <c>byte[]</c> - The byte array.
+        </returns>
+    </PublicMethod>
+</Class>

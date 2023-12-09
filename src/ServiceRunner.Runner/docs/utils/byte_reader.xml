@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Class>
+    <Description>
+        <summary>
+            <para>
+                <c>ByteReader</c> is a utility class that allows you to read bytes from a byte array.
+            </para>
+        </summary>
+    </Description>
+
+    <Constructor>
+        <summary>
+            <para>
+                Creates a new instance of <c>ByteReader</c> with the specified bytes.
+            </para>
+        </summary>
+        <remarks>
+            <param name="bytes">
+                <para>
+                    Parameters:<br/>
+                    <c>byte[]</c> <paramref name="bytes"/> - The bytes to read from.
+                </para>
+            </param>
+        </remarks>
+    </Constructor>
+
+    <PublicMethod Name="ReadBytes">
+        <summary>
+            <para>
+                Reads a specified length of bytes from the byte array.
+            </para>
+        </summary>
+        <remarks>
+            <para>
+                Parameters:<br/>
+                <c>int</c> <paramref name="length"/> - The length of bytes to read.
+            </para>
+        </remarks>
+        <returns>
+            <c>byte[]</c> - The bytes read.
+        </returns>
+    </PublicMethod>
+
+    <PublicMethod Name="ReadInt32">
+        <summary>
+            <para>
+                Reads an <c>int</c> from the byte array.
+            </para>
+        </summary>
+        <returns>
+            <c>int</c> - The <c>int</c> read.
+        </returns>
+    </PublicMethod>
+
+    <PublicMethod Name="ReadString">
+        <summary>
+            <para>
+                Reads a <c>string</c> from the byte array.
+            </para>
+        </summary>
+        <returns>
+            <c>string</c> - The <c>string</c> read.
+        </returns>
+    </PublicMethod>
+</Class>
