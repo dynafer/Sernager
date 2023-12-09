@@ -24,7 +24,7 @@
         </remarks>
     </Constructor>
 
-    <PublicMethod Name="ReadBytes">
+    <InternalMethod Name="ReadBytes">
         <summary>
             <para>
                 Reads a specified length of bytes from the byte array.
@@ -39,9 +39,9 @@
         <returns>
             <c>byte[]</c> - The bytes read.
         </returns>
-    </PublicMethod>
+    </InternalMethod>
 
-    <PublicMethod Name="ReadInt32">
+    <InternalMethod Name="ReadInt32">
         <summary>
             <para>
                 Reads an <c>int</c> from the byte array.
@@ -50,9 +50,9 @@
         <returns>
             <c>int</c> - The <c>int</c> read.
         </returns>
-    </PublicMethod>
+    </InternalMethod>
 
-    <PublicMethod Name="ReadString">
+    <InternalMethod Name="ReadString">
         <summary>
             <para>
                 Reads a <c>string</c> from the byte array.
@@ -61,5 +61,5 @@
         <returns>
             <c>string</c> - The <c>string</c> read.
         </returns>
-    </PublicMethod>
+    </InternalMethod>
 </Class>

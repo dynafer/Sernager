@@ -32,7 +32,7 @@
         </remarks>
     </Constructor>
 
-    <PublicMethod Name="WriteBytes">
+    <InternalMethod Name="WriteBytes">
         <summary>
             <para>
                 Writes a specified byte array to the byte array.
@@ -44,9 +44,9 @@
                 <c>byte[]</c> <paramref name="bytes"/> - The bytes to write.
             </para>
         </remarks>
-    </PublicMethod>
+    </InternalMethod>
 
-    <PublicMethod Name="WriteInt32">
+    <InternalMethod Name="WriteInt32">
         <summary>
             <para>
                 Writes an <c>int</c> to the byte array.
@@ -58,9 +58,9 @@
                 <c>int</c> <paramref name="value"/> - The <c>int</c> to write.
             </para>
         </remarks>
-    </PublicMethod>
+    </InternalMethod>
 
-    <PublicMethod Name="WriteString">
+    <InternalMethod Name="WriteString">
         <summary>
             <para>
                 Writes a <c>string</c> to the byte array.
@@ -72,9 +72,9 @@
                 <c>string</c> <paramref name="value"/> - The <c>string</c> to write.
             </para>
         </remarks>
-    </PublicMethod>
+    </InternalMethod>
 
-    <PublicMethod Name="GetBytes">
+    <InternalMethod Name="GetBytes">
         <summary>
             <para>
                 Gets the byte array.
@@ -83,5 +83,5 @@
         <returns>
             <c>byte[]</c> - The byte array.
         </returns>
-    </PublicMethod>
+    </InternalMethod>
 </Class>
