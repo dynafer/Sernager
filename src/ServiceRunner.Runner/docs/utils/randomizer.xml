@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Class>
+    <PublicStaticMethod Name="GenerateRandomString" Type="FixedLength">
+        <summary>
+            <para>
+                Generates a random string with the specified length.
+            </para>
+        </summary>
+        <remarks>
+            <para>
+                Parameters:<br/>
+                <c>int</c> <paramref name="length"/> - The length of the string to generate.
+            </para>
+        </remarks>
+        <returns>
+            <c>string</c> - The generated string.
+        </returns>
+    </PublicStaticMethod>
+    <PublicStaticMethod Name="GenerateRandomString" Type="RangeLength">
+        <summary>
+            <para>
+                Generates a random string with a length between the specified minimum and maximum.
+            </para>
+        </summary>
+        <remarks>
+            <para>
+                Parameters:<br/>
+                <c>int</c> <paramref name="minLength"/> - The minimum length of the string to generate.<br/>
+                <c>int</c> <paramref name="maxLength"/> - The maximum length of the string to generate.
+            </para>
+        </remarks>
+        <returns>
+            <c>string</c> - The generated string.
+        </returns>
+    </PublicStaticMethod>
+</Class>
