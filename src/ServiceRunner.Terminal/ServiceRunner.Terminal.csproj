@@ -34,4 +34,8 @@
     <Move SourceFiles="@(RenamedFiles)" DestinationFiles="@(DestinationFiles)" />
   </Target>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceRunner.Runner\ServiceRunner.Runner.csproj" />
+  </ItemGroup>
+
 </Project>
