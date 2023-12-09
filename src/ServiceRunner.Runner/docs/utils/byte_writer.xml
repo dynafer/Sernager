@@ -3,7 +3,7 @@
     <Description>
         <summary>
             <para>
-                <c>ByteWriter</c> is a utility class that allows you to write bytes to a byte array.
+                Utilises to write bytes to a byte array implemented by <see cref="IDisposable"/>.
             </para>
         </summary>
     </Description>

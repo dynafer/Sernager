@@ -3,7 +3,7 @@ using System.Text;
 namespace ServiceRunner.Runner.Utils;
 
 /// <include file='docs/utils/byte_writer.xml' path='Class/Description'/> 
-public class ByteWriter
+public class ByteWriter : IDisposable
 {
     private byte[] mBytes { get; set; } = Array.Empty<byte>();
 
@@ -16,6 +16,11 @@ public class ByteWriter
     public ByteWriter(byte[] bytes)
     {
         mBytes = bytes;
+    }
+
+    public void Dispose()
+    {
+        mBytes = null!;
     }
 
     /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteBytes"]'/>

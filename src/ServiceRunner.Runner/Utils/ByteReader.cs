@@ -3,9 +3,9 @@ using System.Text;
 namespace ServiceRunner.Runner.Utils;
 
 /// <include file='docs/utils/byte_reader.xml' path='Class/Description'/> 
-public class ByteReader
+public class ByteReader : IDisposable
 {
-    private readonly byte[] mBytes;
+    private byte[] mBytes { get; set; }
     public int Position { get; private set; } = 0;
     public int Length => mBytes.Length;
 
@@ -13,6 +13,12 @@ public class ByteReader
     public ByteReader(byte[] bytes)
     {
         mBytes = bytes;
+    }
+
+    public void Dispose()
+    {
+        mBytes = null!;
+        Position = 0;
     }
 
     /// <include file='docs/utils/byte_reader.xml' path='Class/PublicMethod[@Name="ReadBytes"]'/>
