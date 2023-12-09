@@ -3,7 +3,7 @@ using System.Text;
 namespace ServiceRunner.Runner.Utils;
 
 /// <include file='docs/utils/byte_reader.xml' path='Class/Description'/> 
-internal class ByteReader : IDisposable
+internal sealed class ByteReader : IDisposable
 {
     private byte[] mBytes { get; set; }
     internal int Position { get; private set; } = 0;

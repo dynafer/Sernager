@@ -3,7 +3,7 @@ using System.Text;
 namespace ServiceRunner.Runner.Utils;
 
 /// <include file='docs/utils/byte_writer.xml' path='Class/Description'/> 
-internal class ByteWriter : IDisposable
+internal sealed class ByteWriter : IDisposable
 {
     private byte[] mBytes { get; set; } = Array.Empty<byte>();
 
