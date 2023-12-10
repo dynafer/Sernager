@@ -3,14 +3,14 @@ using ServiceRunner.Runner.Utils;
 namespace ServiceRunner.Runner.Configs;
 
 /// <include file='docs/builders/configuration_metadata.xml' path='Class/Description'/>
-internal class ConfigurationMetadata : IDisposable
+internal sealed class ConfigurationMetadata : IDisposable
 {
     private static readonly int SIZE_BYTES_LENGTH = 16;
-    public static readonly int KEY_SIZE = 32;
-    public static readonly int IV_SIZE = 16;
-    public static readonly int MIN_SIZE = 32;
-    public static readonly int MAX_SIZE = 64;
-    public object Config { get; private set; }
+    internal static readonly int KEY_SIZE = 32;
+    internal static readonly int IV_SIZE = 16;
+    internal static readonly int MIN_SIZE = 32;
+    internal static readonly int MAX_SIZE = 64;
+    internal object Config { get; private set; }
 
     /// <include file='docs/builders/configuration_metadata.xml' path='Class/Constructor[@Name="WithConfig"]'/>
     internal ConfigurationMetadata(object config)

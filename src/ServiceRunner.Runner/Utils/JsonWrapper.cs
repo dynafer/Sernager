@@ -2,9 +2,9 @@ using System.Text.Json;
 
 namespace ServiceRunner.Runner.Utils;
 
-public static class JsonWrapper
+internal static class JsonWrapper
 {
-    public static string Serialize(object obj)
+    internal static string Serialize(object obj)
     {
         if (obj == null)
         {
@@ -14,7 +14,7 @@ public static class JsonWrapper
         return JsonSerializer.Serialize(obj);
     }
 
-    public static T? Deserialize<T>(string json)
+    internal static T? Deserialize<T>(string json)
     {
         if (!IsValid(json))
         {
@@ -24,7 +24,7 @@ public static class JsonWrapper
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    public static bool IsValid(string json)
+    internal static bool IsValid(string json)
     {
         if (string.IsNullOrWhiteSpace(json))
         {

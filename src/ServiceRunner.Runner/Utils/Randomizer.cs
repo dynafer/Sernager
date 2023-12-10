@@ -1,11 +1,11 @@
 namespace ServiceRunner.Runner.Utils;
 
-public static class Randomizer
+internal static class Randomizer
 {
     private readonly static string ALL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /// <include file='docs/utils/randomizer.xml' path='Class/PublicStaticMethod[@Name="GenerateRandomString"][@Type="FixedLength"]'/>
-    public static string GenerateRandomString(int length)
+    internal static string GenerateRandomString(int length)
     {
         if (length < 0)
         {
@@ -17,7 +17,7 @@ public static class Randomizer
     }
 
     /// <include file='docs/utils/randomizer.xml' path='Class/PublicStaticMethod[@Name="GenerateRandomString"][@Type="RangeLength"]'/>
-    public static string GenerateRandomString(int minLength, int maxLength)
+    internal static string GenerateRandomString(int minLength, int maxLength)
     {
         if (minLength < 0 || maxLength < 0 || minLength > maxLength)
         {
