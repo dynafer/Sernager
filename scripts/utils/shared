@@ -1,0 +1,73 @@
+#!/bin/bash
+set -e
+
+source_dir=./src
+
+targets=("all" "terminal")
+
+declare -A source_targets
+declare -a test_dirs
+source_targets["terminal"]="$source_dir/ServiceRunner.Terminal/ServiceRunner.Terminal.csproj"
+
+coverage_output_dir="./coverage"
+coverage_output_name="Coverage"
+coverage_format="opencover"
+
+for i in ./test/*; do
+    if [ -d "$i" ]; then
+        test_dirs+=("$i")
+    fi
+done
+
+function log_targets {
+    echo "Targets:"
+    for i in "${targets[@]}"; do
+        echo -e "\t$i"
+    done
+}
+
+function is_in_array {
+    local target="$1"
+    shift
+    local arr=("$@")
+
+    for i in "${arr[@]}"; do
+        if [ "$i" == "$target" ]; then
+            echo 1
+        fi
+    done
+
+    echo 0
+}
+
+function log_usage {
+    local command="$1"
+    shift
+
+    echo "Usage: bash ./run $command $@"
+}
+
+function join_by {
+    local d=${1-} f=${2-}
+    if shift 2; then
+        printf %s "$f" "${@/#/$d}"
+    fi
+}
+
+function replace_string {
+    local string="$1"
+    local search="$2"
+    local replace="$3"
+
+    replaced=$(echo "$string" | sed "s/$search/$replace/g")
+
+    echo "$replaced"
+}
+
+function replace_in_file {
+    local file="$1"
+    local search="$2"
+    local replace="$3"
+
+    sed -i "s/$search/$replace/g" "$file"
+}

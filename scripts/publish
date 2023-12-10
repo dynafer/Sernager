@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+source ./scripts/utils/shared
+
+target="$1"
+
+is_target=$(is_in_array "$target" "${targets[@]}")
+
+if [ "$target" == "" ] || [ "$target" == "help" ] || [ "$is_target" == "0" ]; then
+    log_targets
+    log_usage "publish" "<target>"
+    exit 1
+fi
+
+if [ "$target" == "all" ]; then
+    for i in "${targets[@]}"; do
+        dotnet publish "${source_targets[$i]}"
+    done
+else
+    dotnet publish "${source_targets[$target]}"
+fi
+
+exit 0

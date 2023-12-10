@@ -1,0 +1,52 @@
+#!/bin/bash
+set -e
+
+source ./scripts/utils/shared
+
+if [ ! -d "$coverage_output_dir" ]; then
+    mkdir "$coverage_output_dir"
+fi
+
+for i in $coverage_output_dir/*; do
+    rm -rf "$i"
+done
+
+echo -e "\n$(date +"%F %T"): Combining reports..."
+
+declare -a report_names
+
+for i in "${test_dirs[@]}"; do
+    test_name=$(basename "$i")
+    test_name=$(replace_string "$test_name" "\.Tests" "")
+    report_names+=("$test_name")
+
+    rm "$i/$coverage_output_dir/index.htm"
+
+    for j in $i/$coverage_output_dir/*; do
+        file_name=$(replace_string "$(basename "$j")" "\.Tests" "")
+        file_extension="${file_name##*.}"
+        if [ "$file_extension" == "xml" ]; then
+            file_name="$test_name.xml"
+            mv -f "$j" "$coverage_output_dir/$file_name"
+            continue
+        fi
+
+        if [ ! -d "$coverage_output_dir/$test_name" ]; then
+            mkdir "$coverage_output_dir/$test_name"
+        fi
+
+        mv -f "$j" "$coverage_output_dir/$test_name/$file_name"
+    done
+
+    rm -rf "$i/$coverage_output_dir"
+done
+
+for i in ./scripts/utils/templates/*; do
+    file_name=$(basename "$i")
+    cp -rf "$i" "$coverage_output_dir/$file_name"
+done
+
+combined_names=$(join_by '", "' "${report_names[@]}")
+replace_in_file "$coverage_output_dir/index.html" "{{report_names}}" "$combined_names"
+
+exit 0

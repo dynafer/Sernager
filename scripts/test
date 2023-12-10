@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+source ./scripts/utils/shared
+
+if [ "$1" == "help" ]; then
+    echo "Available options:"
+    echo -e "\tcoverage"
+    log_usage "test" "<option>"
+    exit 1
+fi
+
+if [ "$1" == "coverage" ]; then
+    for i in "${test_dirs[@]}"; do
+        dotnet test "$i" -p:CollectCoverage=true \
+                        -p:CoverletOutput="$coverage_output_dir/$coverage_output_name" \
+                        -p:CoverletOutputFormat="$coverage_format" \
+                        -p:IncludeTestAssembly=false
+
+        reportgenerator -reports:"$i/$coverage_output_dir/$coverage_output_name.$coverage_format.xml" \
+                        -targetdir:"$i/$coverage_output_dir" \
+                        -reporttypes:HTML
+    done
+
+    bash ./scripts/utils/combine_reports
+else
+    dotnet test
+fi
+
+exit 0
