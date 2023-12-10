@@ -2,7 +2,7 @@ using ServiceRunner.Runner.Utils;
 
 namespace ServiceRunner.Runner.Configs;
 
-/// <include file='docs/builders/configuration_metadata.xml' path='Class/Description'/>
+/// <include file='docs/configs/configuration_metadata.xml' path='Class/Description'/>
 internal sealed class ConfigurationMetadata : IDisposable
 {
     private static readonly int SIZE_BYTES_LENGTH = 16;
@@ -12,13 +12,13 @@ internal sealed class ConfigurationMetadata : IDisposable
     internal static readonly int MAX_SIZE = 64;
     internal object Config { get; private set; }
 
-    /// <include file='docs/builders/configuration_metadata.xml' path='Class/Constructor[@Name="WithConfig"]'/>
+    /// <include file='docs/configs/configuration_metadata.xml' path='Class/Constructor[@Name="WithConfig"]'/>
     internal ConfigurationMetadata(object config)
     {
         Config = config;
     }
 
-    /// <include file='docs/builders/configuration_metadata.xml' path='Class/Constructor[@Name="WithByteReader"]'/>
+    /// <include file='docs/configs/configuration_metadata.xml' path='Class/Constructor[@Name="WithByteReader"]'/>
     internal ConfigurationMetadata(ByteReader reader)
     {
         int keyLength = reader.ReadInt32();
@@ -41,7 +41,7 @@ internal sealed class ConfigurationMetadata : IDisposable
         Config = null!;
     }
 
-    /// <include file='docs/builders/configuration_metadata.xml' path='Class/InternalMethod[@Name="ToBytes"]'/>
+    /// <include file='docs/configs/configuration_metadata.xml' path='Class/InternalMethod[@Name="ToBytes"]'/>
     internal byte[] ToBytes()
     {
         string key = Randomizer.GenerateRandomString(KEY_SIZE);
