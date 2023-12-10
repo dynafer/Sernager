@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Class>
+    <Description>
+        <summary>
+            <para>
+                Helps to read or write a byte array for configuration with <see cref="Encryptor"/> implemented by <see cref="IDisposable"/>.
+            </para>
+        </summary>
+    </Description>
+    <Constructor Name="WithConfig">
+        <summary>
+            <para>
+                Creates a new instance of <c>ConfigurationMetadata</c> with configuration object.
+            </para>
+        </summary>
+        <remarks>
+            <param name="bytes">
+                <para>
+                    Parameters:<br/>
+                    <c>object</c> <paramref name="config"/> - The configuration object.
+                </para>
+            </param>
+        </remarks>
+    </Constructor>
+
+    <Constructor Name="WithByteReader">
+        <summary>
+            <para>
+                Creates a new instance of <c>ConfigurationMetadata</c> with <see cref="ByteReader"/>.<br/>
+                Calls <see cref="Encryptor"/> to decrypt the configuration.
+            </para>
+        </summary>
+        <remarks>
+            <param name="bytes">
+                <para>
+                    Parameters:<br/>
+                    <c>ByteReader</c> <paramref name="byteReader"/> - The bytes to read from.
+                </para>
+            </param>
+        </remarks>
+    </Constructor>
+
+    <InternalMethod Name="ToBytes">
+        <summary>
+            <para>
+                Converts the configuration object to bytes.<br/>
+                Calls <see cref="Encryptor"/> to encrypt the configuration.
+            </para>
+        </summary>
+        <returns>
+            <c>byte[]</c> - The bytes read.
+        </returns>
+    </InternalMethod>
+</Class>
