@@ -8,6 +8,11 @@ internal static class Encryptor
     /// <include file='docs/utils/encryptor.xml' path='Class/InternalStaticMethod[@Name="Encrypt"]'/>
     internal static byte[] Encrypt(string value, string key, string iv)
     {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
         byte[] encrypted;
 
         using (Aes aes = Aes.Create())
@@ -18,10 +23,12 @@ internal static class Encryptor
             ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
             using (MemoryStream memoryStream = new MemoryStream())
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-            using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
             {
-                streamWriter.Write(value);
+                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
+                {
+                    streamWriter.Write(value);
+                }
 
                 encrypted = memoryStream.ToArray();
             }

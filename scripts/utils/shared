@@ -47,6 +47,12 @@ function log_usage {
     echo "Usage: bash ./run $command $@"
 }
 
+function log {
+    local message="$1"
+
+    echo -e "$(date +"%F %T"): $message"
+}
+
 function join_by {
     local d=${1-} f=${2-}
     if shift 2; then

@@ -11,7 +11,7 @@ for i in $coverage_output_dir/*; do
     rm -rf "$i"
 done
 
-echo -e "\n$(date +"%F %T"): Combining reports..."
+log "Combining reports..."
 
 declare -a report_names
 
@@ -48,5 +48,7 @@ done
 
 combined_names=$(join_by '", "' "${report_names[@]}")
 replace_in_file "$coverage_output_dir/index.html" "{{report_names}}" "$combined_names"
+
+log "Done combining reports."
 
 exit 0
