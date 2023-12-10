@@ -12,9 +12,23 @@ fi
 
 if [ "$1" == "coverage" ]; then
     for i in "${test_dirs[@]}"; do
+        exclude_namespaces=()
+        for j in "${test_dirs[@]}"; do
+            if [ "$j" != "$i" ]; then
+                exclude_namespace=$(basename "$j")
+                exclude_namespace=$(replace_string "$exclude_namespace" "\.Tests" "")
+                exclude_namespaces+=("[$exclude_namespace*]$exclude_namespace*")
+            fi
+        done
+
+        exclude_namespaces=$(join_by "%2c" "${exclude_namespaces[@]}")
+
+        echo $exclude_namespaces
+
         dotnet test "$i" -p:CollectCoverage=true \
                         -p:CoverletOutput="$coverage_output_dir/$coverage_output_name" \
                         -p:CoverletOutputFormat="$coverage_format" \
+                        -p:Exclude="$exclude_namespaces" \
                         -p:IncludeTestAssembly=false
 
         reportgenerator -reports:"$i/$coverage_output_dir/$coverage_output_name.$coverage_format.xml" \
