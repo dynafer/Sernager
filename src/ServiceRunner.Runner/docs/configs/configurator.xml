@@ -3,15 +3,16 @@
     <Description>
         <summary>
             <para>
-                Provides methods for configuration file with <see cref="ConfigurationMetadata"/>.
+                Provides methods for configuration file with <see cref="ConfigurationMetadata"/>.<br/>
+                It's static class but uses as singleton.
             </para>
         </summary>
     </Description>
 
-    <Constructor Name="Init">
+    <InternalStaticMethod Name="Init">
         <summary>
             <para>
-                Creates a new instance of <c>Configurator</c>.
+                Initializes the configurator.<br/>
             </para>
         </summary>
         <remarks>
@@ -22,26 +23,7 @@
                 </param>
             </para>
         </remarks>
-    </Constructor>
-
-    <Constructor Name="WithConfig">
-        <summary>
-            <para>
-                Creates a new instance of <c>Configurator</c> with configuration object.
-            </para>
-        </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="path">
-                    <c>string</c> <paramref name="path"/> - The configuration file path.
-                </param><br/>
-                <param name="config">
-                    <c>object</c> <paramref name="config"/> - The configuration object.
-                </param>
-            </para>
-        </remarks>
-    </Constructor>
+    </InternalStaticMethod>
 
     <InternalStaticMethod Name="Parse">
         <summary>
@@ -58,17 +40,14 @@
                 </param>
             </para>
         </remarks>
-        <returns>
-            <c>Configurator</c> - The configurator instance.
-        </returns>
     </InternalStaticMethod>
 
-    <InternalMethod Name="SaveAsFile">
+    <InternalStaticMethod Name="SaveAsFile">
         <summary>
             <para>
                 Saves the configuration object to configuration file.<br/>
                 Uses <see cref="ConfigurationMetadata.ToBytes"/> to encrypt the configuration.
             </para>
         </summary>
-    </InternalMethod>
+    </InternalStaticMethod>
 </Class>
