@@ -5,7 +5,7 @@ namespace ServiceRunner.Runner.Tests.Units.Utils;
 
 public class ByteReaderTest
 {
-    private ByteReader mReader;
+    private ByteReader mReader { get; set; }
 
     [SetUp]
     public void Setup()

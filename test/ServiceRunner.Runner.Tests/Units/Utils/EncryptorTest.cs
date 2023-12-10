@@ -1,13 +1,12 @@
 using ServiceRunner.Runner.Utils;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace ServiceRunner.Runner.Tests.Units.Utils;
 
 public class EncryptorTest
 {
-    private string mKey;
-    private string mIV;
+    private string mKey { get; set; }
+    private string mIV { get; set; }
 
     [SetUp]
     public void Setup()
