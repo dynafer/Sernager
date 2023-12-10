@@ -23,8 +23,6 @@ if [ "$1" == "coverage" ]; then
 
         exclude_namespaces=$(join_by "%2c" "${exclude_namespaces[@]}")
 
-        echo $exclude_namespaces
-
         dotnet test "$i" -p:CollectCoverage=true \
                         -p:CoverletOutput="$coverage_output_dir/$coverage_output_name" \
                         -p:CoverletOutputFormat="$coverage_format" \
