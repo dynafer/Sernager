@@ -12,7 +12,7 @@ internal static class Configurator
     /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="Init"]'/>
     internal static void Init(string path)
     {
-        if (mPath != null)
+        if (mPath != null || Config != null)
         {
             Debug.WriteLine("Configurator already initialized");
             return;
@@ -25,7 +25,7 @@ internal static class Configurator
     /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="Parse"]'/>
     internal static void Parse(string path)
     {
-        if (mPath != null)
+        if (mPath != null || Config != null)
         {
             Debug.WriteLine("Configurator already initialized");
             return;
@@ -42,6 +42,12 @@ internal static class Configurator
     /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="SaveAsFile"]'/>
     internal static void SaveAsFile()
     {
+        if (mPath == null || Config == null)
+        {
+            Debug.WriteLine("Configurator not initialized");
+            return;
+        }
+
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
             byte[] bytes = metadata.ToBytes();
