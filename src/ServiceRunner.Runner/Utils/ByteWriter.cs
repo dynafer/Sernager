@@ -26,6 +26,11 @@ internal sealed class ByteWriter : IDisposable
     /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteBytes"]'/>
     internal ByteWriter WriteBytes(byte[] bytes)
     {
+        if (mBytes == null)
+        {
+            throw new ObjectDisposedException(nameof(ByteWriter));
+        }
+
         byte[] newBytes = new byte[mBytes.Length + bytes.Length];
 
         Array.Copy(mBytes, 0, newBytes, 0, mBytes.Length);
@@ -39,6 +44,11 @@ internal sealed class ByteWriter : IDisposable
     /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteInt32"]'/>
     internal ByteWriter WriteInt32(int value)
     {
+        if (mBytes == null)
+        {
+            throw new ObjectDisposedException(nameof(ByteWriter));
+        }
+
         byte[] bytes = BitConverter.GetBytes(value);
 
         WriteBytes(bytes);
@@ -49,6 +59,11 @@ internal sealed class ByteWriter : IDisposable
     /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteString"]'/>
     internal ByteWriter WriteString(string value)
     {
+        if (mBytes == null)
+        {
+            throw new ObjectDisposedException(nameof(ByteWriter));
+        }
+
         byte[] bytes = Encoding.UTF8.GetBytes(value);
 
         WriteBytes(bytes);
@@ -59,6 +74,11 @@ internal sealed class ByteWriter : IDisposable
     /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="GetBytes"]'/>
     internal byte[] GetBytes()
     {
+        if (mBytes == null)
+        {
+            throw new ObjectDisposedException(nameof(ByteWriter));
+        }
+
         return mBytes;
     }
 }

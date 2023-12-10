@@ -27,6 +27,8 @@ public class ByteReaderTest
         byte[] actualBytes = mReader.ReadBytes(4);
 
         Assert.That(actualBytes, Is.EqualTo(expectedBytes));
+        Assert.That(mReader.Position, Is.EqualTo(4));
+        Assert.That(mReader.Length, Is.EqualTo(8));
     }
 
     [Test]
@@ -36,6 +38,8 @@ public class ByteReaderTest
         int actualValue = mReader.ReadInt32();
 
         Assert.That(actualValue, Is.EqualTo(expectedValue));
+        Assert.That(mReader.Position, Is.EqualTo(4));
+        Assert.That(mReader.Length, Is.EqualTo(8));
     }
 
     [Test]
@@ -47,6 +51,17 @@ public class ByteReaderTest
         string actualString = mReader.ReadString(expectedString.Length);
 
         Assert.That(actualString, Is.EqualTo(expectedString));
+        Assert.That(mReader.Position, Is.EqualTo(expectedString.Length));
+        Assert.That(mReader.Length, Is.EqualTo(expectedString.Length));
+    }
+
+    [Test]
+    public void Skip_ShouldSkipBytes()
+    {
+        mReader.Skip(4);
+
+        Assert.That(mReader.Position, Is.EqualTo(4));
+        Assert.That(mReader.Length, Is.EqualTo(8));
     }
 
     [Test]
@@ -55,6 +70,8 @@ public class ByteReaderTest
         byte[] actualBytes = mReader.ReadBytes(0);
 
         Assert.That(actualBytes, Is.EqualTo(new byte[0]));
+        Assert.That(mReader.Position, Is.EqualTo(0));
+        Assert.That(mReader.Length, Is.EqualTo(8));
     }
 
     [Test]
@@ -62,7 +79,7 @@ public class ByteReaderTest
     {
         mReader.ReadBytes(4);
 
-        Assert.Throws<ArgumentException>(() => mReader.ReadBytes(5));
+        Assert.Throws<IndexOutOfRangeException>(() => mReader.ReadBytes(5));
     }
 
     [Test]
@@ -70,7 +87,7 @@ public class ByteReaderTest
     {
         mReader.ReadBytes(5);
 
-        Assert.Throws<ArgumentException>(() => mReader.ReadInt32());
+        Assert.Throws<IndexOutOfRangeException>(() => mReader.ReadInt32());
     }
 
     [Test]
@@ -78,7 +95,15 @@ public class ByteReaderTest
     {
         mReader.ReadBytes(5);
 
-        Assert.Throws<ArgumentException>(() => mReader.ReadString(4));
+        Assert.Throws<IndexOutOfRangeException>(() => mReader.ReadString(4));
+    }
+
+    [Test]
+    public void Skip_WithLengthGreaterThanRemainingBytes_ShouldThrowException()
+    {
+        mReader.ReadBytes(5);
+
+        Assert.Throws<IndexOutOfRangeException>(() => mReader.Skip(4));
     }
 
     [Test]
@@ -86,7 +111,7 @@ public class ByteReaderTest
     {
         mReader.Dispose();
 
-        Assert.Throws<ArgumentNullException>(() => mReader.ReadBytes(4));
+        Assert.Throws<ObjectDisposedException>(() => mReader.ReadBytes(4));
     }
 
     [Test]
@@ -94,7 +119,7 @@ public class ByteReaderTest
     {
         mReader.Dispose();
 
-        Assert.Throws<ArgumentNullException>(() => mReader.ReadInt32());
+        Assert.Throws<ObjectDisposedException>(() => mReader.ReadInt32());
     }
 
     [Test]
@@ -102,6 +127,14 @@ public class ByteReaderTest
     {
         mReader.Dispose();
 
-        Assert.Throws<ArgumentNullException>(() => mReader.ReadString(4));
+        Assert.Throws<ObjectDisposedException>(() => mReader.ReadString(4));
+    }
+
+    [Test]
+    public void Skip_AfterDispose_ShouldThrowException()
+    {
+        mReader.Dispose();
+
+        Assert.Throws<ObjectDisposedException>(() => mReader.Skip(4));
     }
 }
