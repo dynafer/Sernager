@@ -23,12 +23,12 @@
             </para>
         </summary>
         <remarks>
-            <param name="bytes">
-                <para>
-                    Parameters:<br/>
+            <para>
+                Parameters:<br/>
+                <param name="bytes">
                     <c>byte[]</c> <paramref name="bytes"/> - The bytes to write to.
-                </para>
-            </param>
+                </param>
+            </para>
         </remarks>
     </Constructor>
 
@@ -41,7 +41,9 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>byte[]</c> <paramref name="bytes"/> - The bytes to write.
+                <param name="bytes">
+                    <c>byte[]</c> <paramref name="bytes"/> - The bytes to write.
+                </param>
             </para>
         </remarks>
     </InternalMethod>
@@ -55,7 +57,9 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>int</c> <paramref name="value"/> - The <c>int</c> to write.
+                <param name="value">
+                    <c>int</c> <paramref name="value"/> - The <c>int</c> to write.
+                </param>
             </para>
         </remarks>
     </InternalMethod>
@@ -69,7 +73,9 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>string</c> <paramref name="value"/> - The <c>string</c> to write.
+                <param name="value">
+                    <c>string</c> <paramref name="value"/> - The <c>string</c> to write.
+                </param>
             </para>
         </remarks>
     </InternalMethod>

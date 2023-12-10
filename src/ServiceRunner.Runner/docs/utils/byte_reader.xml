@@ -15,12 +15,12 @@
             </para>
         </summary>
         <remarks>
-            <param name="bytes">
-                <para>
-                    Parameters:<br/>
+            <para>
+                Parameters:<br/>
+                <param name="bytes">
                     <c>byte[]</c> <paramref name="bytes"/> - The bytes to read from.
-                </para>
-            </param>
+                </param>
+            </para>
         </remarks>
     </Constructor>
 
@@ -33,7 +33,9 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>int</c> <paramref name="length"/> - The length of bytes to read.
+                <param name="length">
+                    <c>int</c> <paramref name="length"/> - The length of bytes to read.
+                </param>
             </para>
         </remarks>
         <returns>
@@ -72,7 +74,9 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>int</c> <paramref name="length"/> - The length of bytes to skip.
+                <param name="length">
+                    <c>int</c> <paramref name="length"/> - The length of bytes to skip.
+                </param>
             </para>
         </remarks>
     </InternalMethod>

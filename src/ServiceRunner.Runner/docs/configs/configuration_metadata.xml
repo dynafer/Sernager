@@ -14,12 +14,12 @@
             </para>
         </summary>
         <remarks>
-            <param name="bytes">
-                <para>
-                    Parameters:<br/>
+            <para>
+                Parameters:<br/>
+                <param name="config">
                     <c>object</c> <paramref name="config"/> - The configuration object.
-                </para>
-            </param>
+                </param>
+            </para>
         </remarks>
     </Constructor>
 
@@ -31,12 +31,12 @@
             </para>
         </summary>
         <remarks>
-            <param name="bytes">
-                <para>
-                    Parameters:<br/>
+            <para>
+                Parameters:<br/>
+                <param name="byteReader">
                     <c>ByteReader</c> <paramref name="byteReader"/> - The bytes to read from.
-                </para>
-            </param>
+                </param>
+            </para>
         </remarks>
     </Constructor>
 

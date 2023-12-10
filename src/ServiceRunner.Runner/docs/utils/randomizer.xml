@@ -9,8 +9,10 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>int</c> <paramref name="length"/> - The length of the string to generate.
-            </para>
+                <param name="length">
+                    <c>int</c> <paramref name="length"/> - The length of the string to generate.
+                </param>
+            </param>
         </remarks>
         <returns>
             <c>string</c> - The generated string.
@@ -25,8 +27,12 @@
         <remarks>
             <para>
                 Parameters:<br/>
-                <c>int</c> <paramref name="minLength"/> - The minimum length of the string to generate.<br/>
-                <c>int</c> <paramref name="maxLength"/> - The maximum length of the string to generate.
+                <param name="minLength">
+                    <c>int</c> <paramref name="minLength"/> - The minimum length of the string to generate.
+                </param><br/>
+                <param name="maxLength">
+                    <c>int</c> <paramref name="maxLength"/> - The maximum length of the string to generate.
+                </param>
             </para>
         </remarks>
         <returns>
