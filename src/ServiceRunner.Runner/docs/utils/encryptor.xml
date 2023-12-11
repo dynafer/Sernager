@@ -7,9 +7,9 @@
             </para>
         </summary>
 
-        <param name="value">The string to encrypt.</param>
-        <param name="key">The key to encrypt the string with.</param>
-        <param name="iv">The initialization vector to encrypt the string with.</param>
+        <param name="value">The string to encrypt</param>
+        <param name="key">The key to encrypt the string with</param>
+        <param name="iv">The initialization vector to encrypt the string with</param>
 
         <returns>
             <c>byte[]</c> - The encrypted string's bytes.
@@ -23,9 +23,9 @@
             </para>
         </summary>
 
-        <param name="value">The bytes to decrypt.</param>
-        <param name="key">The key to decrypt the string with.</param>
-        <param name="iv">The initialization vector to decrypt the string with.</param>
+        <param name="value">The bytes to decrypt</param>
+        <param name="key">The key to decrypt the string with</param>
+        <param name="iv">The initialization vector to decrypt the string with</param>
 
         <returns>
             <c>string</c> - The decrypted string.

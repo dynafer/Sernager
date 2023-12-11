@@ -23,7 +23,7 @@
             </para>
         </summary>
 
-        <param name="bytes">The bytes to write to.</param>
+        <param name="bytes">The bytes to write</param>
     </Constructor>
 
     <InternalMethod Name="WriteBytes">
@@ -33,7 +33,7 @@
             </para>
         </summary>
 
-        <param name="bytes">The bytes to write.</param>
+        <param name="bytes">The bytes to write</param>
     </InternalMethod>
 
     <InternalMethod Name="WriteInt32">
@@ -43,7 +43,7 @@
             </para>
         </summary>
 
-        <param name="value">The <c>int</c> to write.</param>
+        <param name="value">The <c>int</c> to write</param>
     </InternalMethod>
 
     <InternalMethod Name="WriteString">
@@ -53,7 +53,7 @@
             </para>
         </summary>
 
-        <param name="value">The <c>string</c> to write.</param>
+        <param name="value">The <c>string</c> to write</param>
     </InternalMethod>
 
     <InternalMethod Name="GetBytes">

@@ -15,7 +15,7 @@
             </para>
         </summary>
 
-        <param name="bytes">The bytes to read from.</param>
+        <param name="bytes">The bytes to read from</param>
     </Constructor>
 
     <InternalMethod Name="ReadBytes">
@@ -25,7 +25,7 @@
             </para>
         </summary>
 
-        <param name="length">The length of bytes to read.</param>
+        <param name="length">The length of bytes to read</param>
 
         <returns>
             <c>byte[]</c> - The bytes read.
@@ -63,6 +63,6 @@
             </para>
         </summary>
 
-        <param name="length">The length of bytes to skip.</param>
+        <param name="length">The length of bytes to skip</param>
     </InternalMethod>
 </Class>

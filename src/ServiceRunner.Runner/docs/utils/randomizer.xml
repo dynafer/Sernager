@@ -7,7 +7,7 @@
             </para>
         </summary>
 
-        <param name="length">The length of the string to generate.</param>
+        <param name="length">The length of the string to generate</param>
 
         <returns>
             <c>string</c> - The generated string.
@@ -21,8 +21,8 @@
             </para>
         </summary>
 
-        <param name="minLength">minimum length of the string to generate.</param>
-        <param name="maxLength">maximum length of the string to generate.</param>
+        <param name="minLength">minimum length of the string to generate</param>
+        <param name="maxLength">maximum length of the string to generate</param>
 
         <returns>
             <c>string</c> - The generated string.

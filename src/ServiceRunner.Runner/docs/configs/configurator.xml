@@ -16,7 +16,7 @@
             </para>
         </summary>
 
-        <param name="path">The configuration file path.</param>
+        <param name="path">The configuration file path</param>
     </InternalStaticMethod>
 
     <InternalStaticMethod Name="Parse">
@@ -27,7 +27,7 @@
             </para>
         </summary>
 
-        <param name="path">The configuration file path.</param>
+        <param name="path">The configuration file path</param>
     </InternalStaticMethod>
 
     <InternalStaticMethod Name="UseAutoSave">
