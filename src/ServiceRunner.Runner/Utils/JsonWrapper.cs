@@ -11,7 +11,10 @@ internal static class JsonWrapper
             return string.Empty;
         }
 
-        return JsonSerializer.Serialize(obj);
+        return JsonSerializer.Serialize(obj, new JsonSerializerOptions
+        {
+            WriteIndented = false
+        });
     }
 
     internal static T? Deserialize<T>(string json)
@@ -21,7 +24,10 @@ internal static class JsonWrapper
             return default;
         }
 
-        return JsonSerializer.Deserialize<T>(json);
+        return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
+        {
+            WriteIndented = false
+        });
     }
 
     internal static bool IsValid(string json)
