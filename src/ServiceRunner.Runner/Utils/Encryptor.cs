@@ -17,6 +17,7 @@ internal static class Encryptor
 
         using (Aes aes = Aes.Create())
         {
+            aes.Padding = PaddingMode.Zeros;
             aes.Key = Encoding.UTF8.GetBytes(key);
             aes.IV = Encoding.UTF8.GetBytes(iv);
 
@@ -44,19 +45,22 @@ internal static class Encryptor
 
         using (Aes aes = Aes.Create())
         {
+            aes.Padding = PaddingMode.Zeros;
             aes.Key = Encoding.UTF8.GetBytes(key);
             aes.IV = Encoding.UTF8.GetBytes(iv);
 
             ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
             using (MemoryStream memoryStream = new MemoryStream(value))
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-            using (StreamReader streamReader = new StreamReader(cryptoStream))
             {
-                text = streamReader.ReadToEnd();
+                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                using (StreamReader streamReader = new StreamReader(cryptoStream))
+                {
+                    text = streamReader.ReadToEnd();
+                }
             }
         }
 
-        return text;
+        return text.Replace("\0", "").Trim();
     }
 }
