@@ -22,14 +22,8 @@
                 Creates a new instance of <c>ByteWriter</c> with the specified bytes.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="bytes">
-                    <c>byte[]</c> <paramref name="bytes"/> - The bytes to write to.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="bytes">The bytes to write to.</param>
     </Constructor>
 
     <InternalMethod Name="WriteBytes">
@@ -38,14 +32,8 @@
                 Writes a specified byte array to the byte array.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="bytes">
-                    <c>byte[]</c> <paramref name="bytes"/> - The bytes to write.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="bytes">The bytes to write.</param>
     </InternalMethod>
 
     <InternalMethod Name="WriteInt32">
@@ -54,14 +42,8 @@
                 Writes an <c>int</c> to the byte array.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="value">
-                    <c>int</c> <paramref name="value"/> - The <c>int</c> to write.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="value">The <c>int</c> to write.</param>
     </InternalMethod>
 
     <InternalMethod Name="WriteString">
@@ -70,14 +52,8 @@
                 Writes a <c>string</c> to the byte array.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="value">
-                    <c>string</c> <paramref name="value"/> - The <c>string</c> to write.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="value">The <c>string</c> to write.</param>
     </InternalMethod>
 
     <InternalMethod Name="GetBytes">
@@ -86,6 +62,7 @@
                 Gets the byte array.
             </para>
         </summary>
+
         <returns>
             <c>byte[]</c> - The byte array.
         </returns>

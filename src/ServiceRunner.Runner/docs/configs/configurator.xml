@@ -15,14 +15,8 @@
                 Initializes the configurator.<br/>
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="path">
-                    <c>string</c> <paramref name="path"/> - The configuration file path.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="path">The configuration file path.</param>
     </InternalStaticMethod>
 
     <InternalStaticMethod Name="Parse">
@@ -32,14 +26,8 @@
                 Uses <see cref="ConfigurationMetadata.ToBytes"/> to decrypt the configuration bytes.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="path">
-                    <c>string</c> <paramref name="path"/> - The configuration file path.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="path">The configuration file path.</param>
     </InternalStaticMethod>
 
     <InternalStaticMethod Name="UseAutoSave">

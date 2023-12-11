@@ -6,35 +6,24 @@
                 Generates a random string with the specified length.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="length">
-                    <c>int</c> <paramref name="length"/> - The length of the string to generate.
-                </param>
-            </param>
-        </remarks>
+
+        <param name="length">The length of the string to generate.</param>
+
         <returns>
             <c>string</c> - The generated string.
         </returns>
     </PublicStaticMethod>
+
     <PublicStaticMethod Name="GenerateRandomString" Type="RangeLength">
         <summary>
             <para>
                 Generates a random string with a length between the specified minimum and maximum.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="minLength">
-                    <c>int</c> <paramref name="minLength"/> - The minimum length of the string to generate.
-                </param><br/>
-                <param name="maxLength">
-                    <c>int</c> <paramref name="maxLength"/> - The maximum length of the string to generate.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="minLength">minimum length of the string to generate.</param>
+        <param name="maxLength">maximum length of the string to generate.</param>
+
         <returns>
             <c>string</c> - The generated string.
         </returns>

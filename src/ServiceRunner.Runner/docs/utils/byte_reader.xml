@@ -14,14 +14,8 @@
                 Creates a new instance of <c>ByteReader</c> with the specified bytes.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="bytes">
-                    <c>byte[]</c> <paramref name="bytes"/> - The bytes to read from.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="bytes">The bytes to read from.</param>
     </Constructor>
 
     <InternalMethod Name="ReadBytes">
@@ -30,14 +24,9 @@
                 Reads a specified length of bytes from the byte array.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="length">
-                    <c>int</c> <paramref name="length"/> - The length of bytes to read.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="length">The length of bytes to read.</param>
+
         <returns>
             <c>byte[]</c> - The bytes read.
         </returns>
@@ -49,6 +38,7 @@
                 Reads an <c>int</c> from the byte array.
             </para>
         </summary>
+
         <returns>
             <c>int</c> - The <c>int</c> read.
         </returns>
@@ -60,6 +50,7 @@
                 Reads a <c>string</c> from the byte array.
             </para>
         </summary>
+
         <returns>
             <c>string</c> - The <c>string</c> read.
         </returns>
@@ -71,13 +62,7 @@
                 Skips a specified length of bytes from the byte array.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="length">
-                    <c>int</c> <paramref name="length"/> - The length of bytes to skip.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="length">The length of bytes to skip.</param>
     </InternalMethod>
 </Class>

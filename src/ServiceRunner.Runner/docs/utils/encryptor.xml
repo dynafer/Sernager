@@ -6,44 +6,27 @@
                 Encrypts the specified string with the specified key.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="value">
-                    <c>string</c> <paramref name="value"/> - The string to encrypt.
-                </param><br/>
-                <param name="key">
-                    <c>string</c> <paramref name="key"/> - The key to encrypt the string with.
-                </param><br/>
-                <param name="iv">
-                    <c>string</c> <paramref name="iv"/> - The initialization vector to encrypt the string with.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="value">The string to encrypt.</param>
+        <param name="key">The key to encrypt the string with.</param>
+        <param name="iv">The initialization vector to encrypt the string with.</param>
+
         <returns>
             <c>byte[]</c> - The encrypted string's bytes.
         </returns>
     </InternalStaticMethod>
+
     <InternalStaticMethod Name="Decrypt">
         <summary>
             <para>
                 Decrypts the specified string with the specified key.
             </para>
         </summary>
-        <remarks>
-            <para>
-                Parameters:<br/>
-                <param name="value">
-                    <c>byte[]</c> <paramref name="value"/> - The bytes to decrypt.
-                </param><br/>
-                <param name="key">
-                    <c>string</c> <paramref name="key"/> - The key to decrypt the string with.
-                </param><br/>
-                <param name="iv">
-                    <c>string</c> <paramref name="iv"/> - The initialization vector to decrypt the string with.
-                </param>
-            </para>
-        </remarks>
+
+        <param name="value">The bytes to decrypt.</param>
+        <param name="key">The key to decrypt the string with.</param>
+        <param name="iv">The initialization vector to decrypt the string with.</param>
+
         <returns>
             <c>string</c> - The decrypted string.
         </returns>
