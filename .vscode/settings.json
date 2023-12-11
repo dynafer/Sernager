@@ -1,5 +1,8 @@
 {
     "coverage-gutters.coverageFileNames": [
         "Coverage.info"
-    ]
+    ],
+    "coverage-gutters.showGutterCoverage": false,
+    "coverage-gutters.showLineCoverage": false,
+    "coverage-gutters.showRulerCoverage": false,
 }

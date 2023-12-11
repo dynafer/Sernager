@@ -11,7 +11,7 @@
     <Constructor Name="WithConfig">
         <summary>
             <para>
-                Creates a new instance of <c>ConfigurationMetadata</c> with configuration object.
+                Creates a new instance of <c><see cref="ConfigurationMetadata"/></c> with configuration object.
             </para>
         </summary>
 
@@ -21,7 +21,7 @@
     <Constructor Name="WithByteReader">
         <summary>
             <para>
-                Creates a new instance of <c>ConfigurationMetadata</c> with <see cref="ByteReader"/>.<br/>
+                Creates a new instance of <c><see cref="ConfigurationMetadata"/></c> with <see cref="ByteReader"/>.<br/>
                 Calls <see cref="Encryptor"/> to decrypt the configuration.
             </para>
         </summary>

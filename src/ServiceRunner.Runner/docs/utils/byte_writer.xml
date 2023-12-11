@@ -11,7 +11,7 @@
     <Constructor Name="Default">
         <summary>
             <para>
-                Creates a new instance of <c>ByteWriter</c>.
+                Creates a new instance of <c><see cref="ByteWriter"/></c>.
             </para>
         </summary>
     </Constructor>
@@ -19,7 +19,7 @@
     <Constructor Name="WithBytes">
         <summary>
             <para>
-                Creates a new instance of <c>ByteWriter</c> with the specified bytes.
+                Creates a new instance of <c><see cref="ByteWriter"/></c> with the specified bytes.
             </para>
         </summary>
 

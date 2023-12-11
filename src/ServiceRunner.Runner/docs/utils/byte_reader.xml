@@ -11,7 +11,7 @@
     <Constructor>
         <summary>
             <para>
-                Creates a new instance of <c>ByteReader</c> with the specified bytes.
+                Creates a new instance of <c><see cref="ByteReader"/></c> with the specified bytes.
             </para>
         </summary>
 

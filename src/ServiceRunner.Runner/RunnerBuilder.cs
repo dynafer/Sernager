@@ -15,11 +15,23 @@ public class RunnerBuilder
 
         if (!File.Exists(configPath))
         {
-            Configurator.Parse(configPath);
+            Configurator.Init(configPath);
         }
         else
         {
-            Configurator.Init(configPath);
+            Configurator.Parse(configPath);
         }
+    }
+
+    public RunnerBuilder EnableAutoSave()
+    {
+        Configurator.UseAutoSave();
+
+        return this;
+    }
+
+    public IService Build()
+    {
+        return new Service();
     }
 }
