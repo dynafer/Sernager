@@ -13,12 +13,22 @@ if [ "$target" == "" ] || [ "$target" == "help" ] || [ "$is_target" == "0" ]; th
     exit 1
 fi
 
+dotnet restore
+
 if [ "$target" == "all" ]; then
     for i in "${targets[@]}"; do
-        dotnet build "${source_targets[$i]}"
+        if [ "$i" == "all" ]; then
+            continue
+        fi
+
+        cd "$source_dir/${source_targets[$i]}"
+        dotnet msbuild
+        cd ../../
     done
 else
-    dotnet build "${source_targets[$target]}"
+    cd "$source_dir/${source_targets[$target]}"
+    dotnet msbuild
+    cd ../../
 fi
 
 exit 0

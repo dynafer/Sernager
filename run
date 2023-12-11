@@ -27,8 +27,6 @@ if [ "$command" == "" ] || [ "$command" == "help" ] || [ "$is_command" == "0" ];
     exit 1
 fi
 
-echo "$command"
-
 bash ./scripts/$command "${@:2}"
 
 exit 0

@@ -25,7 +25,7 @@ if [ "$1" == "coverage" ]; then
 
         dotnet test "$i" -p:CollectCoverage=true \
                         -p:CoverletOutput="$coverage_output_dir/$coverage_output_name" \
-                        -p:CoverletOutputFormat="$coverage_format" \
+                        -p:CoverletOutputFormat=\"$coverage_format,$coverage_lcov_format\" \
                         -p:Exclude="$exclude_namespaces" \
                         -p:IncludeTestAssembly=false
 

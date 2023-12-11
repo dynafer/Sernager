@@ -7,11 +7,12 @@ targets=("all" "terminal")
 
 declare -A source_targets
 declare -a test_dirs
-source_targets["terminal"]="$source_dir/ServiceRunner.Terminal/ServiceRunner.Terminal.csproj"
+source_targets["terminal"]="ServiceRunner.Terminal"
 
 coverage_output_dir="./coverage"
 coverage_output_name="Coverage"
 coverage_format="opencover"
+coverage_lcov_format="lcov"
 
 for i in ./test/*; do
     if [ -d "$i" ]; then
