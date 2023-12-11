@@ -5,15 +5,14 @@ namespace ServiceRunner.Runner.Configs;
 /// <include file='docs/configs/configuration_metadata.xml' path='Class/Description'/>
 internal sealed class ConfigurationMetadata : IDisposable
 {
-    private static readonly int SIZE_BYTES_LENGTH = 16;
     internal static readonly int KEY_SIZE = 32;
     internal static readonly int IV_SIZE = 16;
     internal static readonly int MIN_SIZE = 32;
     internal static readonly int MAX_SIZE = 64;
-    internal object Config { get; private set; }
+    internal Configuration Config { get; private set; }
 
     /// <include file='docs/configs/configuration_metadata.xml' path='Class/Constructor[@Name="WithConfig"]'/>
-    internal ConfigurationMetadata(object config)
+    internal ConfigurationMetadata(Configuration config)
     {
         Config = config;
     }
@@ -29,11 +28,11 @@ internal sealed class ConfigurationMetadata : IDisposable
         reader.Skip(beginSaltLength);
         string key = reader.ReadString(keyLength);
         string iv = reader.ReadString(ivLength);
-        byte[] encryptedBytes = reader.ReadBytes(reader.Length - reader.Position - endSaltLength - SIZE_BYTES_LENGTH);
+        byte[] encryptedBytes = reader.ReadBytes(reader.Length - reader.Position - endSaltLength);
         reader.Skip(endSaltLength);
 
         string json = Encryptor.Decrypt(encryptedBytes, key, iv);
-        Config = JsonWrapper.Deserialize<object>(json) ?? throw new Exception("Failed to deserialize configuration");
+        Config = JsonWrapper.Deserialize<Configuration>(json) ?? throw new Exception("Failed to deserialize configuration");
     }
 
     public void Dispose()
@@ -63,6 +62,7 @@ internal sealed class ConfigurationMetadata : IDisposable
                 .WriteInt32(salts[1].Length)
                 .WriteString(salts[0])
                 .WriteString(key)
+                .WriteString(iv)
                 .WriteBytes(encrypted)
                 .WriteString(salts[1]);
 

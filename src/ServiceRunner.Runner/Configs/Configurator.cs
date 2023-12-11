@@ -1,5 +1,4 @@
 using ServiceRunner.Runner.Utils;
-using System.Diagnostics;
 
 namespace ServiceRunner.Runner.Configs;
 
@@ -7,28 +6,27 @@ namespace ServiceRunner.Runner.Configs;
 internal static class Configurator
 {
     private static string mPath { get; set; } = null!;
-    internal static object Config { get; private set; } = null!;
+    internal static Configuration Config { get; private set; } = null!;
+    internal static bool IsInitialized => mPath != null && Config != null;
 
     /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="Init"]'/>
     internal static void Init(string path)
     {
-        if (mPath != null || Config != null)
+        if (IsInitialized)
         {
-            Debug.WriteLine("Configurator already initialized");
-            return;
+            throw new InvalidOperationException("Configurator already initialized");
         }
 
         mPath = path;
-        Config = new object();
+        Config = new Configuration();
     }
 
     /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="Parse"]'/>
     internal static void Parse(string path)
     {
-        if (mPath != null || Config != null)
+        if (IsInitialized)
         {
-            Debug.WriteLine("Configurator already initialized");
-            return;
+            throw new InvalidOperationException("Configurator already initialized");
         }
 
         using (ByteReader reader = new ByteReader(File.ReadAllBytes(path)))
@@ -39,13 +37,21 @@ internal static class Configurator
         }
     }
 
+    /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="UseAutoSave"]'/>
+    internal static void UseAutoSave()
+    {
+        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+        {
+            SaveAsFile();
+        };
+    }
+
     /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="SaveAsFile"]'/>
     internal static void SaveAsFile()
     {
-        if (mPath == null || Config == null)
+        if (!IsInitialized)
         {
-            Debug.WriteLine("Configurator not initialized");
-            return;
+            throw new InvalidOperationException("Configurator not initialized");
         }
 
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
