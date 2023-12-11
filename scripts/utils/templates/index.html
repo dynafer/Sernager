@@ -20,49 +20,9 @@
 </body>
 
 <script type="text/javascript">
-    const CACHE_CURRENT_REPORT = "currentReport";
     const reports = ["{{report_names}}"];
-
-    const nav = document.getElementById('nav-tab');
-    const content = document.getElementById('tab-content');
-
-    const currentReport = localStorage.getItem(CACHE_CURRENT_REPORT);
-    const bCurrentReportExists = currentReport !== null && reports.includes(currentReport);
-
-    for (let i = 0; i < reports.length; ++i) {
-        const report = reports[i];
-        const reportId = report.replace(/\./g, "-");
-
-        const bActivated = (bCurrentReportExists && report === currentReport) || (!bCurrentReportExists && i == 0);
-
-        const navHTML = `
-            <li class="nav-item" role="presentation">
-                <button class="nav-link${bActivated ? " active" : ""}"
-                    id="${reportId}-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#${reportId}"
-                    type="button"
-                    role="tab"
-                    onclick="localStorage.setItem('${CACHE_CURRENT_REPORT}', '${report}')"
-                    aria-controls="${report}"
-                    aria-selected="${bActivated ? " true" : "false"}">${report}</button>
-            </li>
-        `;
-
-        const contentHTML = `
-            <div class="tab-pane h-100 fade${bActivated ? " show active" : ""}"
-                id="${reportId}"
-                role="tabpanel"
-                aria-labelledby="${reportId}-tab"
-                tabindex="0">
-                <iframe frameborder="0" width="100%" height="100%" src="./${report}/index.html"></iframe>
-            </div>
-        `;
-
-        nav.innerHTML += navHTML;
-        content.innerHTML += contentHTML;
-    }
 </script>
+<script src="./js/index.js"></script>
 <script src="./js/bootstrap.bundle.min.js"></script>
 
 </html>
