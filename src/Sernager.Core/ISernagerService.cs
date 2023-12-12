@@ -2,7 +2,7 @@ using Sernager.Core.Builders;
 
 namespace Sernager.Core;
 
-public interface IService
+public interface ISernagerService
 {
     ISettingBuilder Setting { get; }
 }

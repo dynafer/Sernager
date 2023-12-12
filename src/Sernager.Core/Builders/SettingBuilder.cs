@@ -14,7 +14,7 @@ public class SettingBuilder : ISettingBuilder
     {
         if (!Configurator.IsInitialized)
         {
-            throw new InvalidOperationException("You must call RunnerBuilder.Build().");
+            throw new InvalidOperationException("You must call SernagerBuilder.Build().");
         }
     }
 

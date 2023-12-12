@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Sernager.Core.Tests")]
 namespace Sernager.Core;
 
-public class RunnerBuilder
+public class SernagerBuilder
 {
-    public RunnerBuilder(string configPath = "./config.sr")
+    public SernagerBuilder(string configPath = "./config.sr")
     {
         if (string.IsNullOrWhiteSpace(configPath))
         {
@@ -23,15 +23,15 @@ public class RunnerBuilder
         }
     }
 
-    public RunnerBuilder EnableAutoSave()
+    public SernagerBuilder EnableAutoSave()
     {
         Configurator.UseAutoSave();
 
         return this;
     }
 
-    public IService Build()
+    public ISernagerService Build()
     {
-        return new Service();
+        return new SernagerService();
     }
 }

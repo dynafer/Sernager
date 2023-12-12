@@ -2,7 +2,7 @@ using Sernager.Core.Builders;
 
 namespace Sernager.Core;
 
-internal class Service : IService
+internal class SernagerService : ISernagerService
 {
     public ISettingBuilder Setting { get; init; } = new SettingBuilder();
 }

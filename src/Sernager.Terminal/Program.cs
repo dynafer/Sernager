@@ -1,5 +1,4 @@
-﻿using Sernager.Core;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Sernager.Terminal.Tests")]
 
@@ -9,15 +8,6 @@ internal class Program
 {
     static void Main()
     {
-        RunnerBuilder builder = new RunnerBuilder();
-        builder.EnableAutoSave();
-
-        IService runner = builder.Build();
-
-        runner.Setting.AddSettingName("test")
-                    .UseManager("test")
-                    .AddEnvFile("./bin/test.env");
-
         Console.WriteLine("Hello World!");
     }
 }

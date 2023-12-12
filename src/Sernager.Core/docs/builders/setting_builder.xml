@@ -16,7 +16,7 @@
         </summary>
 
         <exception cref="InvalidOperationException">
-            Thrown when called not from <see cref="RunnerBuilder"/>.
+            Thrown when called not from <see cref="SernagerBuilder"/>.
         </exception>
     </Constructor>
 
