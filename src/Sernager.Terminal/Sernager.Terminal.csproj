@@ -32,7 +32,7 @@
   </Target>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sernager.Runner\Sernager.Runner.csproj" />
+    <ProjectReference Include="..\Sernager.Core\Sernager.Core.csproj" />
   </ItemGroup>
 
 </Project>

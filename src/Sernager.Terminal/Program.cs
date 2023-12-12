@@ -1,4 +1,4 @@
-﻿using Sernager.Runner;
+﻿using Sernager.Core;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Sernager.Terminal.Tests")]
