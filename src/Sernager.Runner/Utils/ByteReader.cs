@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace ServiceRunner.Runner.Utils;
+namespace Sernager.Runner.Utils;
 
 /// <include file='docs/utils/byte_reader.xml' path='Class/Description'/> 
 internal sealed class ByteReader : IDisposable

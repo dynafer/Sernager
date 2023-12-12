@@ -1,8 +1,8 @@
-using ServiceRunner.Runner.Configs;
-using ServiceRunner.Runner.Managers;
-using ServiceRunner.Runner.Options;
+using Sernager.Runner.Configs;
+using Sernager.Runner.Managers;
+using Sernager.Runner.Options;
 
-namespace ServiceRunner.Runner.Builders;
+namespace Sernager.Runner.Builders;
 
 /// <include file='docs/builders/setting_builder.xml' path='Class/Description'/> 
 public class SettingBuilder : ISettingBuilder

@@ -7,7 +7,7 @@ targets=("all" "terminal")
 
 declare -A source_targets
 declare -a test_dirs
-source_targets["terminal"]="ServiceRunner.Terminal"
+source_targets["terminal"]="Sernager.Terminal"
 
 coverage_output_dir="./coverage"
 coverage_output_name="Coverage"

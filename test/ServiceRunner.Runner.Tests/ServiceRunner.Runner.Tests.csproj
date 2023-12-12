@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ServiceRunner.Runner\ServiceRunner.Runner.csproj" />
+    <ProjectReference Include="..\..\src\Sernager.Runner\Sernager.Runner.csproj" />
   </ItemGroup>
 
 </Project>

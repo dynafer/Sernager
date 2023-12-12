@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ServiceRunner.Terminal\ServiceRunner.Terminal.csproj" />
+    <ProjectReference Include="..\..\src\Sernager.Terminal\Sernager.Terminal.csproj" />
   </ItemGroup>
 
 </Project>

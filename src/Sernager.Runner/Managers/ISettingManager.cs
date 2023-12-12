@@ -1,7 +1,7 @@
-using ServiceRunner.Runner.Options;
+using Sernager.Runner.Options;
 using System.Collections.ObjectModel;
 
-namespace ServiceRunner.Runner.Managers;
+namespace Sernager.Runner.Managers;
 
 /// <include file='docs/managers/setting_manager.xml' path='Class/Description'/>
 public interface ISettingManager

@@ -1,6 +1,6 @@
-using ServiceRunner.Runner.Builders;
+using Sernager.Runner.Builders;
 
-namespace ServiceRunner.Runner;
+namespace Sernager.Runner;
 
 public interface IService
 {

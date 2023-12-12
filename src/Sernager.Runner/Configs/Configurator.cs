@@ -1,6 +1,6 @@
-using ServiceRunner.Runner.Utils;
+using Sernager.Runner.Utils;
 
-namespace ServiceRunner.Runner.Configs;
+namespace Sernager.Runner.Configs;
 
 /// <include file='docs/configs/configurator.xml' path='Class/Description'/>
 internal static class Configurator

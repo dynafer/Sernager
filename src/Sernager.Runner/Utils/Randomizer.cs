@@ -1,4 +1,4 @@
-namespace ServiceRunner.Runner.Utils;
+namespace Sernager.Runner.Utils;
 
 internal static class Randomizer
 {

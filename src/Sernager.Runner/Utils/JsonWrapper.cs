@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace ServiceRunner.Runner.Utils;
+namespace Sernager.Runner.Utils;
 
 internal static class JsonWrapper
 {

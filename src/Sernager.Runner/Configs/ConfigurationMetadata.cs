@@ -1,6 +1,6 @@
-using ServiceRunner.Runner.Utils;
+using Sernager.Runner.Utils;
 
-namespace ServiceRunner.Runner.Configs;
+namespace Sernager.Runner.Configs;
 
 /// <include file='docs/configs/configuration_metadata.xml' path='Class/Description'/>
 internal sealed class ConfigurationMetadata : IDisposable

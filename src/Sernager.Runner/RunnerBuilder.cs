@@ -1,8 +1,8 @@
-﻿using ServiceRunner.Runner.Configs;
+﻿using Sernager.Runner.Configs;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ServiceRunner.Runner.Tests")]
-namespace ServiceRunner.Runner;
+[assembly: InternalsVisibleTo("Sernager.Runner.Tests")]
+namespace Sernager.Runner;
 
 public class RunnerBuilder
 {

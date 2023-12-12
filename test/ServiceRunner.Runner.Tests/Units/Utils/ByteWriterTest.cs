@@ -1,7 +1,7 @@
-using ServiceRunner.Runner.Utils;
+using Sernager.Runner.Utils;
 using System.Text;
 
-namespace ServiceRunner.Runner.Tests.Units.Utils;
+namespace Sernager.Runner.Tests.Units.Utils;
 
 public class ByteWriterTest
 {

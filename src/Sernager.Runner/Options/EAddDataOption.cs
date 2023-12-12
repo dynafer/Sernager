@@ -1,4 +1,4 @@
-namespace ServiceRunner.Runner.Options;
+namespace Sernager.Runner.Options;
 
 public enum EAddDataOption
 {

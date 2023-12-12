@@ -1,4 +1,4 @@
-namespace ServiceRunner.Runner.Configs;
+namespace Sernager.Runner.Configs;
 
 public class Configuration
 {
