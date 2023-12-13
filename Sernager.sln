@@ -1,15 +1,14 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sernager.Core", "src\Sernager.Core\Sernager.Core.csproj", "{27F69C8A-8E90-4D4D-82CB-50A5C8430B1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sernager.Core", "src\Sernager.Core\Sernager.Core.csproj", "{27F69C8A-8E90-4D4D-82CB-50A5C8430B1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sernager.Terminal", "src\Sernager.Terminal\Sernager.Terminal.csproj", "{2EA41416-1971-4A62-BCA2-4FC72A0A3905}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sernager.Terminal", "src\Sernager.Terminal\Sernager.Terminal.csproj", "{2EA41416-1971-4A62-BCA2-4FC72A0A3905}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sernager.Core.Tests", "test\Sernager.Core.Tests\Sernager.Core.Tests.csproj", "{61B780BF-B91B-421D-A159-7F978BB2B2AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sernager.Terminal.Tests", "test\Sernager.Terminal.Tests\Sernager.Terminal.Tests.csproj", "{2F02B932-B03C-4E3E-9FEE-C4D856DA641D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sernager.Terminal.Tests", "test\Sernager.Terminal.Tests\Sernager.Terminal.Tests.csproj", "{2F02B932-B03C-4E3E-9FEE-C4D856DA641D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
