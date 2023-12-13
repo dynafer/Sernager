@@ -1,7 +1,7 @@
 namespace Sernager.Core.Configs;
 
-public class Configuration
+internal class Configuration
 {
-    public List<string> SettingNames { get; init; } = new List<string>();
-    public Dictionary<string, Dictionary<string, string>> Settings { get; init; } = new Dictionary<string, Dictionary<string, string>>();
+    internal List<string> SettingNames { get; init; } = new List<string>();
+    internal Dictionary<string, Dictionary<string, string>> Settings { get; init; } = new Dictionary<string, Dictionary<string, string>>();
 }

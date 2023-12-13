@@ -4,11 +4,11 @@ using Sernager.Core.Options;
 
 namespace Sernager.Core.Builders;
 
-public class SettingBuilder : ISettingBuilder
+internal class SettingBuilder : ISettingBuilder
 {
     private readonly Dictionary<string, SettingManager> mSettingManagers = new Dictionary<string, SettingManager>();
 
-    public SettingBuilder()
+    internal SettingBuilder()
     {
         if (!Configurator.IsInitialized)
         {
