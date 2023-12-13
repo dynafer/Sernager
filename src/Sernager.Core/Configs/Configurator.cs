@@ -1,64 +1,80 @@
+using Sernager.Core.Managers;
+using Sernager.Core.Options;
 using Sernager.Core.Utils;
 
 namespace Sernager.Core.Configs;
 
-/// <include file='docs/configs/configurator.xml' path='Class/Description'/>
 internal static class Configurator
 {
-    private static string mPath { get; set; } = null!;
+    private static string mConfigDir { get; set; } = null!;
     internal static Configuration Config { get; private set; } = null!;
-    internal static bool IsInitialized => mPath != null && Config != null;
+    internal static bool IsInitialized => mConfigDir != null && Config != null;
 
-    /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="Init"]'/>
-    internal static void Init(string path)
+    internal static void Init()
     {
         if (IsInitialized)
         {
-            throw new InvalidOperationException("Configurator already initialized");
+            ErrorManager.ThrowFail<InvalidOperationException>("Configurator already initialized.");
+            return;
         }
 
-        mPath = path;
+        mConfigDir = Path.GetFullPath(Directory.GetCurrentDirectory());
         Config = new Configuration();
     }
 
-    /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="Parse"]'/>
-    internal static void Parse(string path)
+    internal static void Parse(string filePath)
     {
         if (IsInitialized)
         {
-            throw new InvalidOperationException("Configurator already initialized");
+            ErrorManager.ThrowFail<InvalidOperationException>("Configurator already initialized.");
+            return;
         }
 
-        using (ByteReader reader = new ByteReader(File.ReadAllBytes(path)))
-        using (ConfigurationMetadata metadata = new ConfigurationMetadata(reader))
+        string extension = Path.GetExtension(filePath).ToLowerInvariant();
+        EConfigurationType? type = extension switch
         {
-            mPath = path;
+            ".yml" => EConfigurationType.Yaml,
+            ".yaml" => EConfigurationType.Yaml,
+            ".json" => EConfigurationType.Json,
+            ".srn" => EConfigurationType.Sernager,
+            _ => null,
+        };
+
+        if (type == null)
+        {
+            ErrorManager.ThrowFail<InvalidOperationException>("Invalid configuration file extension.");
+            return;
+        }
+
+        using (ByteReader reader = new ByteReader(File.ReadAllBytes(filePath)))
+        using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type.Value))
+        {
+            mConfigDir = Path.GetFullPath(Path.GetDirectoryName(filePath) ?? "./");
             Config = metadata.Config;
         }
     }
 
-    /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="UseAutoSave"]'/>
-    internal static void UseAutoSave()
+    internal static void UseAutoSave(EConfigurationType type = EConfigurationType.Sernager)
     {
         AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
         {
-            SaveAsFile();
+            SaveAsFile(type);
         };
     }
 
-    /// <include file='docs/configs/configurator.xml' path='Class/InternalStaticMethod[@Name="SaveAsFile"]'/>
-    internal static void SaveAsFile()
+    internal static void SaveAsFile(EConfigurationType type = EConfigurationType.Sernager)
     {
         if (!IsInitialized)
         {
-            throw new InvalidOperationException("Configurator not initialized");
+            ErrorManager.ThrowFail<InvalidOperationException>("Configurator hasn't initialized.");
+            return;
         }
 
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
-            byte[] bytes = metadata.ToBytes();
+            byte[] bytes = metadata.ToBytes(type);
 
-            File.WriteAllBytes(mPath, bytes);
+            File.WriteAllBytes(mConfigDir, bytes);
         }
     }
 }
