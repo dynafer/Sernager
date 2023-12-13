@@ -1,28 +1,14 @@
+using Sernager.Core.Tests.Dummies;
+using Sernager.Core.Tests.Fixtures;
 using Sernager.Core.Utils;
 using System.Text.Json;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class JsonWrapperTest
+public class JsonWrapperTest : BaseFixture
 {
-    private class TestObject
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-    }
-
-    private class UnserializableObject
-    {
-        public UnserializableObject Self { get; set; }
-
-        public UnserializableObject()
-        {
-            Self = this;
-        }
-    }
-
-    private TestObject mTestObject { get; set; }
-    private TestObject[] mTestArray { get; set; }
+    private NormalObject mNormalObject { get; set; }
+    private NormalObject[] mTestArray { get; set; }
     private UnserializableObject mUnserializableObject { get; set; }
     private string mValidObjectJson { get; set; }
     private string mValidArrayJson { get; set; }
@@ -31,11 +17,11 @@ public class JsonWrapperTest
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        mTestObject = new TestObject { Id = 1, Name = "Test" };
-        mTestArray = [mTestObject, new TestObject { Id = 2, Name = "Test" }];
+        mNormalObject = new NormalObject { Id = 1, Name = "Test" };
+        mTestArray = [mNormalObject, new NormalObject { Id = 2, Name = "Test" }];
         mUnserializableObject = new UnserializableObject();
-        mValidObjectJson = "{\"Id\":1,\"Name\":\"Test\"}";
-        mValidArrayJson = "[{\"Id\":1,\"Name\":\"Test\"},{\"Id\":2,\"Name\":\"Test\"}]";
+        mValidObjectJson = "{\"id\":1,\"name\":\"Test\"}";
+        mValidArrayJson = "[{\"id\":1,\"name\":\"Test\"},{\"id\":2,\"name\":\"Test\"}]";
         mInvalidCases = [
             null,
             "",
@@ -73,7 +59,7 @@ public class JsonWrapperTest
     [Test]
     public void Serialize_WithValidObject_ShouldReturnCorrectJson()
     {
-        string result = JsonWrapper.Serialize(mTestObject);
+        string result = JsonWrapper.Serialize(mNormalObject);
 
         Assert.That(result, Is.EqualTo(mValidObjectJson));
     }
@@ -92,7 +78,7 @@ public class JsonWrapperTest
         for (int i = 0; i < mInvalidCases.Length; ++i)
         {
             string? invalidCase = mInvalidCases[i];
-            TestObject? result = JsonWrapper.Deserialize<TestObject>(invalidCase!);
+            NormalObject? result = JsonWrapper.Deserialize<NormalObject>(invalidCase!);
 
             Assert.That(result, Is.Null);
         }
@@ -101,17 +87,17 @@ public class JsonWrapperTest
     [Test]
     public void Deserialize_WithValidObjectJson_ShouldReturnCorrectObject()
     {
-        TestObject? result = JsonWrapper.Deserialize<TestObject>(mValidObjectJson);
+        NormalObject? result = JsonWrapper.Deserialize<NormalObject>(mValidObjectJson);
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Id, Is.EqualTo(mTestObject.Id));
-        Assert.That(result.Name, Is.EqualTo(mTestObject.Name));
+        Assert.That(result.Id, Is.EqualTo(mNormalObject.Id));
+        Assert.That(result.Name, Is.EqualTo(mNormalObject.Name));
     }
 
     [Test]
     public void Deserialize_WithValidArrayJson_ShouldReturnCorrectArray()
     {
-        TestObject[]? result = JsonWrapper.Deserialize<TestObject[]>(mValidArrayJson);
+        NormalObject[]? result = JsonWrapper.Deserialize<NormalObject[]>(mValidArrayJson);
 
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Length, Is.EqualTo(mTestArray.Length));
@@ -170,15 +156,15 @@ public class JsonWrapperTest
     [Test]
     public void Serialize_WithEmptyObject_ShouldReturnEmptyJson()
     {
-        string result = JsonWrapper.Serialize(new TestObject());
+        string result = JsonWrapper.Serialize(new NormalObject());
 
-        Assert.That(result, Is.EqualTo("{\"Id\":0,\"Name\":\"\"}"));
+        Assert.That(result, Is.EqualTo("{\"id\":0,\"name\":\"\"}"));
     }
 
     [Test]
     public void Serialize_WithEmptyArray_ShouldReturnEmptyJson()
     {
-        string result = JsonWrapper.Serialize(new TestObject[2]);
+        string result = JsonWrapper.Serialize(new NormalObject[2]);
 
         Assert.That(result, Is.EqualTo("[null,null]"));
     }
@@ -186,23 +172,23 @@ public class JsonWrapperTest
     [Test]
     public void Serialize_WithEmptyObjectArray_ShouldReturnEmptyJson()
     {
-        string result = JsonWrapper.Serialize(new TestObject[2] { new TestObject(), new TestObject() });
+        string result = JsonWrapper.Serialize(new NormalObject[2] { new NormalObject(), new NormalObject() });
 
-        Assert.That(result, Is.EqualTo("[{\"Id\":0,\"Name\":\"\"},{\"Id\":0,\"Name\":\"\"}]"));
+        Assert.That(result, Is.EqualTo("[{\"id\":0,\"name\":\"\"},{\"id\":0,\"name\":\"\"}]"));
     }
 
     [Test]
     public void Deserialize_WithEmptyObjectJson_ShouldReturnDefault()
     {
-        TestObject? result = JsonWrapper.Deserialize<TestObject>("{}");
+        NormalObject? result = JsonWrapper.Deserialize<NormalObject>("{}");
 
-        Assert.That(result, Is.EqualTo(new TestObject()));
+        Assert.That(result, Is.EqualTo(new NormalObject()));
     }
 
     [Test]
     public void Deserialize_WithEmptyArrayJson_ShouldReturnDefault()
     {
-        TestObject[]? result = JsonWrapper.Deserialize<TestObject[]>("[]");
+        NormalObject[]? result = JsonWrapper.Deserialize<NormalObject[]>("[]");
 
         Assert.That(result, Is.Empty);
     }

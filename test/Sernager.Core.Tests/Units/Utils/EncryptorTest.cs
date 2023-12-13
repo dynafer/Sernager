@@ -1,9 +1,10 @@
+using Sernager.Core.Tests.Fixtures;
 using Sernager.Core.Utils;
 using System.Security.Cryptography;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class EncryptorTest
+public class EncryptorTest : BaseFixture
 {
     private string mKey { get; set; }
     private string mIV { get; set; }

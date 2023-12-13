@@ -1,8 +1,9 @@
+using Sernager.Core.Tests.Fixtures;
 using Sernager.Core.Utils;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class RandomizerTest
+public class RandomizerTest : BaseFixture
 {
     private readonly string mAllChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

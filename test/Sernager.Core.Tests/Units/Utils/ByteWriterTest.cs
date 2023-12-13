@@ -1,9 +1,10 @@
+using Sernager.Core.Tests.Fixtures;
 using Sernager.Core.Utils;
 using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class ByteWriterTest
+public class ByteWriterTest : BaseFixture
 {
     private ByteWriter mWriter { get; set; }
     private ByteWriter mWriterWithBytes { get; set; }

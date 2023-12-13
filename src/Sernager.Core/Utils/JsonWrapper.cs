@@ -4,7 +4,7 @@ namespace Sernager.Core.Utils;
 
 internal static class JsonWrapper
 {
-    internal static string Serialize(object obj)
+    internal static string Serialize(object obj, bool bIndented = false)
     {
         if (obj == null)
         {
@@ -13,7 +13,9 @@ internal static class JsonWrapper
 
         return JsonSerializer.Serialize(obj, new JsonSerializerOptions
         {
-            WriteIndented = false
+            WriteIndented = bIndented,
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         });
     }
 
@@ -26,7 +28,8 @@ internal static class JsonWrapper
 
         return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
         {
-            WriteIndented = false
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         });
     }
 

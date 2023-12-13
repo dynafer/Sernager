@@ -1,16 +1,16 @@
+using Sernager.Core.Tests.Fixtures;
 using Sernager.Core.Utils;
 using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class ByteReaderTest
+public class ByteReaderTest : BaseFixture
 {
     private ByteReader mReader { get; set; }
 
     [SetUp]
     public void Setup()
     {
-
         mReader = new ByteReader([1, 2, 3, 4, 5, 6, 7, 8]);
     }
 
