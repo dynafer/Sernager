@@ -1,15 +1,14 @@
+using Sernager.Core.Managers;
 using System.Text;
 
 namespace Sernager.Core.Utils;
 
-/// <include file='docs/utils/byte_reader.xml' path='Class/Description'/> 
 internal sealed class ByteReader : IDisposable
 {
     private byte[] mBytes { get; set; }
     internal int Position { get; private set; } = 0;
     internal int Length => mBytes.Length;
 
-    /// <include file='docs/utils/byte_reader.xml' path='Class/Constructor'/>
     internal ByteReader(byte[] bytes)
     {
         mBytes = bytes;
@@ -21,17 +20,18 @@ internal sealed class ByteReader : IDisposable
         Position = 0;
     }
 
-    /// <include file='docs/utils/byte_reader.xml' path='Class/PublicMethod[@Name="ReadBytes"]'/>
     internal byte[] ReadBytes(int length)
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteReader));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            return Array.Empty<byte>();
         }
 
         if (Position + length > mBytes.Length)
         {
-            throw new IndexOutOfRangeException();
+            ErrorManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
+            return Array.Empty<byte>();
         }
 
         byte[] bytes = new byte[length];
@@ -43,12 +43,12 @@ internal sealed class ByteReader : IDisposable
         return bytes;
     }
 
-    /// <include file='docs/utils/byte_reader.xml' path='Class/PublicMethod[@Name="ReadInt32"]'/>
     internal int ReadInt32()
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteReader));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            return 0;
         }
 
         byte[] bytes = ReadBytes(sizeof(int));
@@ -56,12 +56,12 @@ internal sealed class ByteReader : IDisposable
         return BitConverter.ToInt32(bytes, 0);
     }
 
-    /// <include file='docs/utils/byte_reader.xml' path='Class/PublicMethod[@Name="ReadString"]'/>
     internal string ReadString(int length)
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteReader));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            return string.Empty;
         }
 
         byte[] bytes = ReadBytes(length);
@@ -69,17 +69,18 @@ internal sealed class ByteReader : IDisposable
         return Encoding.UTF8.GetString(bytes);
     }
 
-    /// <include file='docs/utils/byte_reader.xml' path='Class/PublicMethod[@Name="Skip"]'/>
     internal void Skip(int length)
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteReader));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            return;
         }
 
         if (Position + length > mBytes.Length)
         {
-            throw new IndexOutOfRangeException();
+            ErrorManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
+            return;
         }
 
         Position += length;

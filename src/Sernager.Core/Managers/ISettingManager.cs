@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 
 namespace Sernager.Core.Managers;
 
-/// <include file='docs/managers/setting_manager.xml' path='Class/Description'/>
 public interface ISettingManager
 {
     ISettingManager AddEnvFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists);

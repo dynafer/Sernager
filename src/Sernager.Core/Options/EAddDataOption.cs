@@ -4,5 +4,4 @@ public enum EAddDataOption
 {
     SkipIfExists,
     Overwrite,
-    ThrowIfExists,
 }

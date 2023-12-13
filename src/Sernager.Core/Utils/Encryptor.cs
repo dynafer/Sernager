@@ -1,3 +1,4 @@
+using Sernager.Core.Managers;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -5,12 +6,12 @@ namespace Sernager.Core.Utils;
 
 internal static class Encryptor
 {
-    /// <include file='docs/utils/encryptor.xml' path='Class/InternalStaticMethod[@Name="Encrypt"]'/>
     internal static byte[] Encrypt(string value, string key, string iv)
     {
         if (value == null)
         {
-            throw new ArgumentNullException(nameof(value));
+            ErrorManager.ThrowFail<ArgumentNullException>(nameof(value));
+            return Array.Empty<byte>();
         }
 
         byte[] encrypted;
@@ -38,7 +39,6 @@ internal static class Encryptor
         return encrypted;
     }
 
-    /// <include file='docs/utils/encryptor.xml' path='Class/InternalStaticMethod[@Name="Decrypt"]'/>
     internal static string Decrypt(byte[] value, string key, string iv)
     {
         string text = "";

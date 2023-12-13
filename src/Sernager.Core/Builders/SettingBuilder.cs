@@ -4,21 +4,19 @@ using Sernager.Core.Options;
 
 namespace Sernager.Core.Builders;
 
-/// <include file='docs/builders/setting_builder.xml' path='Class/Description'/> 
 public class SettingBuilder : ISettingBuilder
 {
     private readonly Dictionary<string, SettingManager> mSettingManagers = new Dictionary<string, SettingManager>();
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/Constructor'/>
     public SettingBuilder()
     {
         if (!Configurator.IsInitialized)
         {
-            throw new InvalidOperationException("You must call SernagerBuilder.Build().");
+            ErrorManager.ThrowFail<InvalidOperationException>("You must call SernagerBuilder.Build().");
+            return;
         }
     }
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/PublicMethod[@Name="AddSettingName"]'/>
     public ISettingBuilder AddSettingName(string name, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
         if (Configurator.Config.SettingNames.Contains(name))
@@ -30,8 +28,6 @@ public class SettingBuilder : ISettingBuilder
                 case EAddDataOption.Overwrite:
                     Configurator.Config.SettingNames.Remove(name);
                     break;
-                case EAddDataOption.ThrowIfExists:
-                    throw new InvalidOperationException($"Setting name '{name}' already exists.");
             }
         }
 
@@ -40,7 +36,6 @@ public class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/PublicMethod[@Name="AddSettingNames"][@Type="WithDefaultOption"]'/>
     public ISettingBuilder AddSettingNames(params string[] names)
     {
         foreach (string name in names)
@@ -51,7 +46,6 @@ public class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/PublicMethod[@Name="AddSettingNames"][@Type="WithGivenOption"]'/>
     public ISettingBuilder AddSettingNames(IEnumerable<string> names, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
         foreach (string name in names)
@@ -62,7 +56,6 @@ public class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/PublicMethod[@Name="RemoveSettingName"]'/>
     public ISettingBuilder RemoveSettingName(string name)
     {
         if (!Configurator.Config.SettingNames.Contains(name))
@@ -85,7 +78,6 @@ public class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/PublicMethod[@Name="RemoveSettingNames"]'/>
     public ISettingBuilder RemoveSettingNames(params string[] names)
     {
         foreach (string name in names)
@@ -96,7 +88,6 @@ public class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    /// <include file='docs/builders/setting_builder.xml' path='Class/PublicMethod[@Name="UseManager"]'/>
     public ISettingManager UseManager(string name)
     {
         if (!Configurator.Config.SettingNames.Contains(name))

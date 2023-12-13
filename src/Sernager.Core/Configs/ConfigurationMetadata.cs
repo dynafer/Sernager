@@ -1,23 +1,21 @@
+using Sernager.Core.Managers;
 using Sernager.Core.Utils;
 
 namespace Sernager.Core.Configs;
 
-/// <include file='docs/configs/configuration_metadata.xml' path='Class/Description'/>
 internal sealed class ConfigurationMetadata : IDisposable
 {
     internal static readonly int KEY_SIZE = 32;
     internal static readonly int IV_SIZE = 16;
     internal static readonly int MIN_SIZE = 32;
     internal static readonly int MAX_SIZE = 64;
-    internal Configuration Config { get; private set; }
+    internal Configuration Config { get; private set; } = null!;
 
-    /// <include file='docs/configs/configuration_metadata.xml' path='Class/Constructor[@Name="WithConfig"]'/>
     internal ConfigurationMetadata(Configuration config)
     {
         Config = config;
     }
 
-    /// <include file='docs/configs/configuration_metadata.xml' path='Class/Constructor[@Name="WithByteReader"]'/>
     internal ConfigurationMetadata(ByteReader reader)
     {
         int keyLength = reader.ReadInt32();
@@ -32,7 +30,15 @@ internal sealed class ConfigurationMetadata : IDisposable
         reader.Skip(endSaltLength);
 
         string json = Encryptor.Decrypt(encryptedBytes, key, iv);
-        Config = JsonWrapper.Deserialize<Configuration>(json) ?? throw new Exception("Failed to deserialize configuration");
+        Configuration? config = JsonWrapper.Deserialize<Configuration>(json);
+
+        if (config == null)
+        {
+            ErrorManager.ThrowFail<Exception>("Failed to deserialize configuration.");
+            return;
+        }
+
+        Config = config;
     }
 
     public void Dispose()
@@ -40,7 +46,6 @@ internal sealed class ConfigurationMetadata : IDisposable
         Config = null!;
     }
 
-    /// <include file='docs/configs/configuration_metadata.xml' path='Class/InternalMethod[@Name="ToBytes"]'/>
     internal byte[] ToBytes()
     {
         string key = Randomizer.GenerateRandomString(KEY_SIZE);

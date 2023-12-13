@@ -1,18 +1,16 @@
+using Sernager.Core.Managers;
 using System.Text;
 
 namespace Sernager.Core.Utils;
 
-/// <include file='docs/utils/byte_writer.xml' path='Class/Description'/> 
 internal sealed class ByteWriter : IDisposable
 {
     private byte[] mBytes { get; set; } = Array.Empty<byte>();
 
-    /// <include file='docs/utils/byte_writer.xml' path='Class/Constructor[@Name="Default"]'/>
     internal ByteWriter()
     {
     }
 
-    /// <include file='docs/utils/byte_writer.xml' path='Class/Constructor[@Name="WithBytes"]'/>
     internal ByteWriter(byte[] bytes)
     {
         mBytes = bytes;
@@ -23,12 +21,12 @@ internal sealed class ByteWriter : IDisposable
         mBytes = null!;
     }
 
-    /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteBytes"]'/>
     internal ByteWriter WriteBytes(byte[] bytes)
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteWriter));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            return this;
         }
 
         byte[] newBytes = new byte[mBytes.Length + bytes.Length];
@@ -41,12 +39,12 @@ internal sealed class ByteWriter : IDisposable
         return this;
     }
 
-    /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteInt32"]'/>
     internal ByteWriter WriteInt32(int value)
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteWriter));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            return this;
         }
 
         byte[] bytes = BitConverter.GetBytes(value);
@@ -56,12 +54,12 @@ internal sealed class ByteWriter : IDisposable
         return this;
     }
 
-    /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="WriteString"]'/>
     internal ByteWriter WriteString(string value)
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteWriter));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            return this;
         }
 
         byte[] bytes = Encoding.UTF8.GetBytes(value);
@@ -71,12 +69,12 @@ internal sealed class ByteWriter : IDisposable
         return this;
     }
 
-    /// <include file='docs/utils/byte_writer.xml' path='Class/PublicMethod[@Name="GetBytes"]'/>
     internal byte[] GetBytes()
     {
         if (mBytes == null)
         {
-            throw new ObjectDisposedException(nameof(ByteWriter));
+            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            return Array.Empty<byte>();
         }
 
         return mBytes;
