@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+source ./scripts/utils/shared
+
+target="$1"
+
+is_target=$(is_in_array "$target" "${targets_without_all[@]}")
+
+if [ "$target" == "" ] || [ "$target" == "help" ] || [ "$is_target" == "0" ]; then
+    log_targets "1"
+    log_usage "run" "<target>"
+    exit 1
+fi
+
+dotnet run --project "$source_dir/${source_targets[$target]}" "${@:2}"

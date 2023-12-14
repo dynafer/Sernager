@@ -4,6 +4,7 @@ set -e
 source_dir=./src
 
 targets=("all" "terminal")
+targets_without_all=("${targets[@]:1}")
 
 declare -A source_targets
 declare -a test_dirs
@@ -21,8 +22,17 @@ for i in ./test/*; do
 done
 
 function log_targets {
+    local bWithoutAll="$1"
+    local selected_targets=()
+
+    if [ "$bWithoutAll" == "1" ]; then
+        selected_targets=("${targets_without_all[@]}")
+    else
+        selected_targets=("${targets[@]}")
+    fi
+
     echo "Targets:"
-    for i in "${targets[@]}"; do
+    for i in "${selected_targets[@]}"; do
         echo -e "\t$i"
     done
 }
@@ -45,7 +55,7 @@ function log_usage {
     local command="$1"
     shift
 
-    echo "Usage: bash ./run $command $@"
+    echo "Usage: bash ./cmd $command $@"
 }
 
 function log {
