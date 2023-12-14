@@ -1,12 +1,14 @@
 using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
+using System.Diagnostics;
 
 namespace Sernager.Core.Configs;
 
 internal static class Configurator
 {
     private static string mConfigDir { get; set; } = null!;
+    private static string mConfigName { get; set; } = null!;
     internal static Configuration Config { get; private set; } = null!;
     internal static bool IsInitialized => mConfigDir != null && Config != null;
 
@@ -20,6 +22,8 @@ internal static class Configurator
 
         mConfigDir = Path.GetFullPath(Directory.GetCurrentDirectory());
         Config = new Configuration();
+
+        Debug.WriteLine("Configurator initialized.");
     }
 
     internal static void Parse(string filePath)
@@ -50,6 +54,7 @@ internal static class Configurator
         using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type.Value))
         {
             mConfigDir = Path.GetFullPath(Path.GetDirectoryName(filePath) ?? "./");
+            mConfigName = Path.GetFileNameWithoutExtension(filePath);
             Config = metadata.Config;
         }
     }
@@ -70,11 +75,26 @@ internal static class Configurator
             return;
         }
 
+        string filePath = Path.Combine(mConfigDir, $"{mConfigName}{getExtension(type)}");
+
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
             byte[] bytes = metadata.ToBytes(type);
 
-            File.WriteAllBytes(mConfigDir, bytes);
+            File.WriteAllBytes(filePath, bytes);
         }
+
+        Debug.WriteLine($"Configuration saved to {filePath}.");
+    }
+
+    private static string getExtension(EConfigurationType type)
+    {
+        return type switch
+        {
+            EConfigurationType.Yaml => ".yaml",
+            EConfigurationType.Json => ".json",
+            EConfigurationType.Sernager => ".srn",
+            _ => throw new InvalidOperationException("Invalid configuration type."),
+        };
     }
 }
