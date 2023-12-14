@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Sernager.Core.Managers;
 
-internal class SettingManager : ISettingManager
+internal sealed class SettingManager : ISettingManager
 {
     private Dictionary<string, string> mSettings { get; set; }
 
@@ -60,6 +60,8 @@ internal class SettingManager : ISettingManager
                 setEnvData(keyValue[0], keyValue[1], option);
             }
         }
+
+        Debug.WriteLine($"Env file loaded: {filePath}");
 
         return this;
     }

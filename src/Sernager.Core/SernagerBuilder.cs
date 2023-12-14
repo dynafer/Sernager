@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Sernager.Core.Tests")]
 namespace Sernager.Core;
 
-public class SernagerBuilder
+public sealed class SernagerBuilder
 {
     private string mConfigFilePath { get; set; } = string.Empty;
 

@@ -4,7 +4,7 @@ using Sernager.Core.Options;
 
 namespace Sernager.Core.Builders;
 
-internal class SettingBuilder : ISettingBuilder
+internal sealed class SettingBuilder : ISettingBuilder
 {
     private readonly Dictionary<string, SettingManager> mSettingManagers = new Dictionary<string, SettingManager>();
 
