@@ -5,7 +5,7 @@ internal sealed class PromptTextStyle
     private readonly record struct RGBColor(int R, int G, int B);
 
     private EPromptDecorationFlags mDecoration { get; set; }
-    private ConsoleColor? mTextColor { get; set; }
+    private EPromptColorFlags? mTextColor { get; set; }
     private RGBColor? mRgbColor { get; set; }
     private string mText { get; set; } = string.Empty;
 
@@ -16,7 +16,7 @@ internal sealed class PromptTextStyle
         return this;
     }
 
-    internal PromptTextStyle SetTextColor(ConsoleColor color)
+    internal PromptTextStyle SetTextColor(EPromptColorFlags color)
     {
         mTextColor = color;
 
@@ -65,14 +65,22 @@ internal sealed class PromptTextStyle
 
         return mTextColor switch
         {
-            ConsoleColor.Black => "\u001b[30m",
-            ConsoleColor.Red => "\u001b[31m",
-            ConsoleColor.Green => "\u001b[32m",
-            ConsoleColor.Yellow => "\u001b[33m",
-            ConsoleColor.Blue => "\u001b[34m",
-            ConsoleColor.Magenta => "\u001b[35m",
-            ConsoleColor.Cyan => "\u001b[36m",
-            ConsoleColor.White => "\u001b[37m",
+            EPromptColorFlags.Black => "\u001b[30m",
+            EPromptColorFlags.Red => "\u001b[31m",
+            EPromptColorFlags.Green => "\u001b[32m",
+            EPromptColorFlags.Yellow => "\u001b[33m",
+            EPromptColorFlags.Blue => "\u001b[34m",
+            EPromptColorFlags.Magenta => "\u001b[35m",
+            EPromptColorFlags.Cyan => "\u001b[36m",
+            EPromptColorFlags.White => "\u001b[37m",
+            EPromptColorFlags.BrightBlack => "\u001b[90m",
+            EPromptColorFlags.BrightRed => "\u001b[91m",
+            EPromptColorFlags.BrightGreen => "\u001b[92m",
+            EPromptColorFlags.BrightYellow => "\u001b[93m",
+            EPromptColorFlags.BrightBlue => "\u001b[94m",
+            EPromptColorFlags.BrightMagenta => "\u001b[95m",
+            EPromptColorFlags.BrightCyan => "\u001b[96m",
+            EPromptColorFlags.BrightWhite => "\u001b[97m",
             _ => string.Empty,
         };
     }
