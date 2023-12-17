@@ -3,9 +3,8 @@ namespace Sernager.Terminal.Prompts.Styles;
 internal sealed class PromptTextStyle
 {
     private readonly record struct RGBColor(int R, int G, int B);
-
-    private EPromptDecorationFlags mDecoration { get; set; }
-    private EPromptColorFlags? mTextColor { get; set; }
+    private EPromptDecorationFlags mDecoration { get; set; } = EPromptDecorationFlags.None;
+    private EPromptColorFlags mTextColor { get; set; } = EPromptColorFlags.Default;
     private RGBColor? mRgbColor { get; set; }
     private string mText { get; set; } = string.Empty;
 
@@ -39,54 +38,65 @@ internal sealed class PromptTextStyle
 
     internal string Apply()
     {
-        return $"{getDecoration()}{getTextColor()}{mText}{getReset()}";
+        List<int> codes = new List<int>();
+
+        if (mDecoration != EPromptDecorationFlags.None)
+        {
+            codes.Add(getDecorationCode());
+        }
+
+        if (mTextColor != EPromptColorFlags.Default)
+        {
+            codes.Add(getTextColorCode());
+        }
+
+        if (mRgbColor.HasValue)
+        {
+            codes.Add(38);
+            codes.Add(2);
+            codes.Add(mRgbColor.Value.R);
+            codes.Add(mRgbColor.Value.G);
+            codes.Add(mRgbColor.Value.B);
+        }
+
+        return $"{AnsiCode.GraphicsMode(codes.ToArray())}{mText}{AnsiCode.ResetGraphicsMode()}";
     }
 
-    private string getDecoration()
+    private int getDecorationCode()
     {
         return mDecoration switch
         {
-            EPromptDecorationFlags.Bold => "\u001b[1m",
-            EPromptDecorationFlags.Dim => "\u001b[2m",
-            EPromptDecorationFlags.Italic => "\u001b[3m",
-            EPromptDecorationFlags.Underline => "\u001b[4m",
-            EPromptDecorationFlags.Hidden => "\u001b[8m",
-            EPromptDecorationFlags.Strikethrough => "\u001b[9m",
-            _ => string.Empty,
+            EPromptDecorationFlags.Bold => 1,
+            EPromptDecorationFlags.Dim => 2,
+            EPromptDecorationFlags.Italic => 3,
+            EPromptDecorationFlags.Underline => 4,
+            EPromptDecorationFlags.Hidden => 8,
+            EPromptDecorationFlags.Strikethrough => 9,
+            _ => 0,
         };
     }
 
-    private string getTextColor()
+    private int getTextColorCode()
     {
-        if (mRgbColor.HasValue)
-        {
-            return $"\u001b[38;2;{mRgbColor.Value.R};{mRgbColor.Value.G};{mRgbColor.Value.B}m";
-        }
-
         return mTextColor switch
         {
-            EPromptColorFlags.Black => "\u001b[30m",
-            EPromptColorFlags.Red => "\u001b[31m",
-            EPromptColorFlags.Green => "\u001b[32m",
-            EPromptColorFlags.Yellow => "\u001b[33m",
-            EPromptColorFlags.Blue => "\u001b[34m",
-            EPromptColorFlags.Magenta => "\u001b[35m",
-            EPromptColorFlags.Cyan => "\u001b[36m",
-            EPromptColorFlags.White => "\u001b[37m",
-            EPromptColorFlags.BrightBlack => "\u001b[90m",
-            EPromptColorFlags.BrightRed => "\u001b[91m",
-            EPromptColorFlags.BrightGreen => "\u001b[92m",
-            EPromptColorFlags.BrightYellow => "\u001b[93m",
-            EPromptColorFlags.BrightBlue => "\u001b[94m",
-            EPromptColorFlags.BrightMagenta => "\u001b[95m",
-            EPromptColorFlags.BrightCyan => "\u001b[96m",
-            EPromptColorFlags.BrightWhite => "\u001b[97m",
-            _ => string.Empty,
+            EPromptColorFlags.Black => 30,
+            EPromptColorFlags.Red => 31,
+            EPromptColorFlags.Green => 32,
+            EPromptColorFlags.Yellow => 33,
+            EPromptColorFlags.Blue => 34,
+            EPromptColorFlags.Magenta => 35,
+            EPromptColorFlags.Cyan => 36,
+            EPromptColorFlags.White => 37,
+            EPromptColorFlags.BrightBlack => 90,
+            EPromptColorFlags.BrightRed => 91,
+            EPromptColorFlags.BrightGreen => 92,
+            EPromptColorFlags.BrightYellow => 93,
+            EPromptColorFlags.BrightBlue => 94,
+            EPromptColorFlags.BrightMagenta => 95,
+            EPromptColorFlags.BrightCyan => 96,
+            EPromptColorFlags.BrightWhite => 97,
+            _ => 0,
         };
-    }
-
-    private string getReset()
-    {
-        return "\u001b[0m";
     }
 }
