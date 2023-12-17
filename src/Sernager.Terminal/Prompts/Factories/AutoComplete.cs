@@ -1,11 +1,21 @@
+using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Helpers;
 
 namespace Sernager.Terminal.Prompts.Factories;
 
-internal class AutoComplete
+internal sealed class AutoComplete<TSearchable>
+    where TSearchable : notnull
 {
-    private string mInput { get; set; } = string.Empty;
-    private int mCursorX { get; set; } = 0;
+    internal string Input { get; private set; } = string.Empty;
+    internal int CursorPosition { get; private set; } = 0;
+
+    internal AutoComplete()
+    {
+        if (typeof(TSearchable) != typeof(string))
+        {
+            throw new ArgumentException("TSearchable must be a string.");
+        }
+    }
 
     internal void InterceptInput(ConsoleKeyInfo keyInfo)
     {
@@ -25,6 +35,47 @@ internal class AutoComplete
         }
     }
 
+    internal int GetFirstSuggestionIndex(IEnumerable<TSearchable> searchableItems)
+    {
+        TSearchable[] items = searchableItems.ToArray();
+
+        if (items.Length == 0 || Input.Length == 0)
+        {
+            return -1;
+        }
+
+        for (int i = 0; i < items.Length; ++i)
+        {
+            if (items[i].ToSuggestItem().StartsWith(Input, StringComparison.OrdinalIgnoreCase))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    internal int[] GetSuggestionIndexes(IEnumerable<TSearchable> searchableItems)
+    {
+        TSearchable[] items = searchableItems.ToArray();
+
+        if (Input.Length == 0)
+        {
+            return items.Select((_, i) => i).ToArray();
+        }
+
+        if (items.Length == 0)
+        {
+            return Array.Empty<int>();
+        }
+
+        IEnumerable<int> indexes = items
+            .Where(item => item.ToSuggestItem().Contains(Input, StringComparison.OrdinalIgnoreCase))
+            .Select(item => Array.IndexOf(items, item));
+
+        return indexes.ToArray();
+    }
+
     private void addChar(ConsoleKeyInfo keyInfo)
     {
         if (!KeyHelper.IsCharKey(keyInfo.Key))
@@ -32,9 +83,9 @@ internal class AutoComplete
             return;
         }
 
-        mInput = mInput.Insert(mCursorX, keyInfo.KeyChar.ToString());
+        Input = Input.Insert(CursorPosition, keyInfo.KeyChar.ToString());
 
-        ++mCursorX;
+        ++CursorPosition;
     }
 
     private void deleteChar(ConsoleKey key)
@@ -43,17 +94,17 @@ internal class AutoComplete
 
         if (bForward)
         {
-            if (mCursorX < mInput.Length)
+            if (CursorPosition < Input.Length)
             {
-                mInput = mInput.Remove(mCursorX, 1);
+                Input = Input.Remove(CursorPosition, 1);
             }
         }
         else
         {
-            if (mCursorX > 0)
+            if (CursorPosition > 0)
             {
-                mInput = mInput.Remove(mCursorX, 1);
-                --mCursorX;
+                Input = Input.Remove(CursorPosition, 1);
+                --CursorPosition;
             }
         }
     }
@@ -64,16 +115,16 @@ internal class AutoComplete
 
         if (bForward)
         {
-            if (mCursorX < mInput.Length)
+            if (CursorPosition < Input.Length)
             {
-                ++mCursorX;
+                ++CursorPosition;
             }
         }
         else
         {
-            if (mCursorX > 0)
+            if (CursorPosition > 0)
             {
-                --mCursorX;
+                --CursorPosition;
             }
         }
     }
