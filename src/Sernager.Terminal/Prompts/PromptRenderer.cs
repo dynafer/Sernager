@@ -8,7 +8,9 @@ internal static class PromptRenderer
     {
         for (int i = 0; i < prints.Count; ++i)
         {
-            string paddedText = AddPadding(prints[i]);
+            EraseLine();
+
+            string paddedText = prints[i];
 
             Writer.WriteLine(paddedText);
         }
@@ -29,10 +31,17 @@ internal static class PromptRenderer
         Writer.WriteLine(text);
     }
 
-    internal static string AddPadding(string text, int startX = 0)
+    internal static void EraseScreen(int type = 0)
     {
-        string padding = new string(' ', Console.WindowWidth - startX - text.Length);
+        string ansiCode = AnsiCode.EraseScreen(type);
 
-        return $"{text}{padding}";
+        Write(ansiCode);
+    }
+
+    internal static void EraseLine(int type = 0)
+    {
+        string ansiCode = AnsiCode.EraseLine(type);
+
+        Write(ansiCode);
     }
 }

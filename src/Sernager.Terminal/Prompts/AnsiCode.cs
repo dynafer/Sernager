@@ -24,6 +24,21 @@ internal readonly record struct AnsiCode
         return $"{ESCAPE_CSI}{amount}D";
     }
 
+    internal static string CursorHorizontalAbsolute(int amount = 1)
+    {
+        return $"{ESCAPE_CSI}{amount}G";
+    }
+
+    internal static string EraseScreen(int type = 0)
+    {
+        return $"{ESCAPE_CSI}{type}J";
+    }
+
+    internal static string EraseLine(int type = 0)
+    {
+        return $"{ESCAPE_CSI}{type}K";
+    }
+
     internal static string GraphicsMode(params int[] codes)
     {
         return $"{ESCAPE_CSI}{string.Join(";", codes)}m";

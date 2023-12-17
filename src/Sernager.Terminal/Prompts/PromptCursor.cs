@@ -26,6 +26,11 @@ internal static class PromptCursor
 
     internal static void Move(EPromptCursorDirection direction, int amount = 1)
     {
+        if (amount == 0)
+        {
+            return;
+        }
+
         string ansiCode;
         switch (direction)
         {
@@ -44,6 +49,13 @@ internal static class PromptCursor
             default:
                 throw new NotImplementedException();
         }
+
+        PromptRenderer.Write(ansiCode);
+    }
+
+    internal static void MoveHorizontal(int x)
+    {
+        string ansiCode = AnsiCode.CursorHorizontalAbsolute(x);
 
         PromptRenderer.Write(ansiCode);
     }
