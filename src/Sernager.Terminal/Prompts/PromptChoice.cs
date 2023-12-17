@@ -1,19 +1,20 @@
 namespace Sernager.Terminal.Prompts;
 
-internal readonly record struct PromptChoice
+internal sealed class PromptChoice
 {
-    internal string Title { get; init; }
+    internal string Name { get; init; }
     internal string Value { get; init; }
+    internal bool IsSelected { get; set; } = false;
 
-    internal PromptChoice(string title)
+    internal PromptChoice(string name)
     {
-        Title = title;
-        Value = title;
+        Name = name;
+        Value = name;
     }
 
-    internal PromptChoice(string title, string value)
+    internal PromptChoice(string name, string value)
     {
-        Title = title;
+        Name = name;
         Value = value;
     }
 }
