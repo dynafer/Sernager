@@ -3,12 +3,12 @@ using System.Diagnostics;
 
 namespace Sernager.Core.Managers;
 
-internal static class ErrorManager
+public static class ErrorManager
 {
-    internal static EErrorLevel ErrorLevel { get; set; } = EErrorLevel.None;
+    public static EErrorLevel ErrorLevel { get; set; } = EErrorLevel.None;
 
     [StackTraceHidden]
-    internal static void Throw<T>(string message, params object?[] args)
+    public static void Throw<T>(string message, params object?[] args)
         where T : Exception
     {
         if (ErrorLevel == EErrorLevel.None)
@@ -29,7 +29,7 @@ internal static class ErrorManager
     }
 
     [StackTraceHidden]
-    internal static void ThrowFail<T>(string message, params object?[] args)
+    public static void ThrowFail<T>(string message, params object?[] args)
         where T : Exception
     {
         if (ErrorLevel == EErrorLevel.None)
