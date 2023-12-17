@@ -1,32 +1,32 @@
 namespace Sernager.Terminal.Prompts;
 
-internal readonly record struct AnsiCode
+internal static class AnsiCode
 {
     internal const string ESCAPE_CSI = "\u001b[";
 
-    internal static string CursorUp(int amount = 1)
+    internal static string CursorUp(int count = 1)
     {
-        return $"{ESCAPE_CSI}{amount}A";
+        return $"{ESCAPE_CSI}{count}A";
     }
 
-    internal static string CursorDown(int amount = 1)
+    internal static string CursorDown(int count = 1)
     {
-        return $"{ESCAPE_CSI}{amount}B";
+        return $"{ESCAPE_CSI}{count}B";
     }
 
-    internal static string CursorRight(int amount = 1)
+    internal static string CursorRight(int count = 1)
     {
-        return $"{ESCAPE_CSI}{amount}C";
+        return $"{ESCAPE_CSI}{count}C";
     }
 
-    internal static string CursorLeft(int amount = 1)
+    internal static string CursorLeft(int count = 1)
     {
-        return $"{ESCAPE_CSI}{amount}D";
+        return $"{ESCAPE_CSI}{count}D";
     }
 
-    internal static string CursorHorizontalAbsolute(int amount = 1)
+    internal static string CursorHorizontalAbsolute(int count = 1)
     {
-        return $"{ESCAPE_CSI}{amount}G";
+        return $"{ESCAPE_CSI}{count}G";
     }
 
     internal static string EraseScreen(int type = 0)
