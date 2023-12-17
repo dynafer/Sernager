@@ -1,30 +1,36 @@
-﻿using System.Resources;
+﻿using System.Globalization;
+using System.Resources;
 
 namespace Sernager.Resources;
 
-public class ResourceRetriever : IDisposable
+public static class ResourceRetriever
 {
     private static readonly string BASE_NAMESPACE = "Sernager.Resources";
-    private readonly string mLangCode = "EN";
+    public static string LangCode { get; set; } = CultureInfo.CurrentCulture.Name;
 
-    public ResourceRetriever(string langCode)
-    {
-        mLangCode = langCode;
-    }
-
-    public void Dispose()
-    {
-    }
-
-    public string GetString(string resourcePath)
+    public static string GetString(string resourcePath, string name)
     {
         try
         {
-            ResourceManager manager = new ResourceManager($"{BASE_NAMESPACE}.{resourcePath}", typeof(ResourceRetriever).Assembly);
+            ResourceManager manager = new ResourceManager($"{BASE_NAMESPACE}.{resourcePath}.{LangCode.ToLowerInvariant()}", typeof(ResourceRetriever).Assembly);
 
-            return manager.GetString(mLangCode) ?? string.Empty;
+            return manager.GetString(name) ?? string.Empty;
         }
-        catch (MissingManifestResourceException)
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    public static string GetString(CultureInfo culture, string resourcePath, string name)
+    {
+        try
+        {
+            ResourceManager manager = new ResourceManager($"{BASE_NAMESPACE}.{resourcePath}.{culture.Name.ToLowerInvariant()}", typeof(ResourceRetriever).Assembly);
+
+            return manager.GetString(name) ?? string.Empty;
+        }
+        catch
         {
             return string.Empty;
         }
