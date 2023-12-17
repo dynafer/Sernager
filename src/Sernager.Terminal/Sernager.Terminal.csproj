@@ -5,7 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <DocumentationFile>..\..\docs\projects\Sernager.Terminal.xml</DocumentationFile>
   </PropertyGroup>
 
@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sernager.Core\Sernager.Core.csproj" />
+    <ProjectReference Include="..\Sernager.Resources\Sernager.Resources.csproj" />
   </ItemGroup>
 
 </Project>
