@@ -1,6 +1,6 @@
 namespace Sernager.Terminal.Prompts.Components;
 
-internal interface IStyledComponent
+internal interface IPromptComponent
 {
     bool IsLineBreak { get; }
     string Render();

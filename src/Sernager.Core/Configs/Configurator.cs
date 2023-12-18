@@ -7,8 +7,8 @@ namespace Sernager.Core.Configs;
 
 internal static class Configurator
 {
-    private static string mConfigDir { get; set; } = null!;
-    private static string mConfigName { get; set; } = null!;
+    private static string mConfigDir = null!;
+    private static string mConfigName = null!;
     internal static Configuration Config { get; private set; } = null!;
     internal static bool IsInitialized => mConfigDir != null && Config != null;
 

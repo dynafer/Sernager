@@ -4,6 +4,6 @@ namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
 internal interface IBasePlugin
 {
-    string Prompt { get; set; }
-    List<IStyledComponent> Render();
+    string Prompt { get; }
+    List<IPromptComponent> Render();
 }

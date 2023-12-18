@@ -8,7 +8,7 @@ namespace Sernager.Core;
 
 public sealed class SernagerBuilder
 {
-    private string mConfigFilePath { get; set; } = string.Empty;
+    private string mConfigFilePath = string.Empty;
 
     public SernagerBuilder()
     {

@@ -6,7 +6,7 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteReaderTest : BaseFixture
 {
-    private ByteReader mReader { get; set; }
+    private ByteReader mReader;
 
     [SetUp]
     public void Setup()

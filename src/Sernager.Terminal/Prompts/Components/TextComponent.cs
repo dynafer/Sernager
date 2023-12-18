@@ -1,12 +1,12 @@
 namespace Sernager.Terminal.Prompts.Components;
 
-internal sealed class TextComponent : IStyledComponent
+internal sealed class TextComponent : IPromptComponent
 {
     private readonly record struct RGBColor(int R, int G, int B);
-    private EDecorationFlags mDecoration { get; set; } = EDecorationFlags.None;
-    private EColorFlags mTextColor { get; set; } = EColorFlags.Default;
-    private RGBColor? mRgbColor { get; set; }
-    private string mText { get; set; } = string.Empty;
+    private EDecorationFlags mDecoration = EDecorationFlags.None;
+    private EColorFlags mTextColor = EColorFlags.Default;
+    private RGBColor? mRgbColor;
+    private string mText = string.Empty;
     public bool IsLineBreak { get; private set; } = false;
 
     internal TextComponent SetDecoration(EDecorationFlags decoration)
@@ -44,7 +44,7 @@ internal sealed class TextComponent : IStyledComponent
         return this;
     }
 
-    string IStyledComponent.Render()
+    string IPromptComponent.Render()
     {
         List<int> codes = new List<int>();
 

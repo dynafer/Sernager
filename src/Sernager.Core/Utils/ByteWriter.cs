@@ -5,7 +5,7 @@ namespace Sernager.Core.Utils;
 
 internal sealed class ByteWriter : IDisposable
 {
-    private byte[] mBytes { get; set; } = Array.Empty<byte>();
+    private byte[] mBytes = Array.Empty<byte>();
 
     internal ByteWriter()
     {

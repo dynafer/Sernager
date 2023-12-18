@@ -5,7 +5,7 @@ namespace Sernager.Core.Utils;
 
 internal sealed class ByteReader : IDisposable
 {
-    private byte[] mBytes { get; set; }
+    private byte[] mBytes;
     internal int Position { get; private set; } = 0;
     internal int Length => mBytes.Length;
 

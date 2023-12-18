@@ -7,12 +7,12 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class JsonWrapperTest : BaseFixture
 {
-    private NormalObject mNormalObject { get; set; }
-    private NormalObject[] mTestArray { get; set; }
-    private UnserializableObject mUnserializableObject { get; set; }
-    private string mValidObjectJson { get; set; }
-    private string mValidArrayJson { get; set; }
-    private string?[] mInvalidCases { get; set; }
+    private NormalObject mNormalObject;
+    private NormalObject[] mTestArray;
+    private UnserializableObject mUnserializableObject;
+    private string mValidObjectJson;
+    private string mValidArrayJson;
+    private string?[] mInvalidCases;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()

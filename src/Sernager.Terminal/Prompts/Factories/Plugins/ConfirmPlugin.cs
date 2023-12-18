@@ -4,7 +4,7 @@ namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
 internal sealed class ConfirmPlugin : IBasePlugin
 {
-    public string Prompt { get; set; } = string.Empty;
+    public string Prompt { get; private set; } = string.Empty;
 
     internal ConfirmPlugin SetPrompt(string prompt)
     {
@@ -13,9 +13,9 @@ internal sealed class ConfirmPlugin : IBasePlugin
         return this;
     }
 
-    List<IStyledComponent> IBasePlugin.Render()
+    List<IPromptComponent> IBasePlugin.Render()
     {
-        List<IStyledComponent> components = new List<IStyledComponent>();
+        List<IPromptComponent> components = new List<IPromptComponent>();
 
         return components;
     }

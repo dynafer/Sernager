@@ -6,8 +6,8 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class EncryptorTest : BaseFixture
 {
-    private string mKey { get; set; }
-    private string mIV { get; set; }
+    private string mKey;
+    private string mIV;
 
     [SetUp]
     public void Setup()

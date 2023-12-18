@@ -1,14 +1,13 @@
 using Sernager.Core.Tests.Dummies;
 using Sernager.Core.Tests.Fixtures;
 using Sernager.Core.Utils;
-using YamlDotNet.Core;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
 public class YamlWrapperTest : BaseFixture
 {
-    private NormalObject mNormalObject { get; set; }
-    private NormalObject[] mTestArray { get; set; }
+    private NormalObject mNormalObject;
+    private NormalObject[] mTestArray;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()

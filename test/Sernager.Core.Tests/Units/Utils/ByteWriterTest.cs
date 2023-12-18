@@ -6,9 +6,9 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteWriterTest : BaseFixture
 {
-    private ByteWriter mWriter { get; set; }
-    private ByteWriter mWriterWithBytes { get; set; }
-    private byte[] mWithBytes { get; set; } = [1, 2, 3, 4, 5];
+    private ByteWriter mWriter;
+    private ByteWriter mWriterWithBytes;
+    private byte[] mWithBytes = [1, 2, 3, 4, 5];
 
     [SetUp]
     public void Setup()
