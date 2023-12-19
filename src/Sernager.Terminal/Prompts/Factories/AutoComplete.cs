@@ -1,3 +1,5 @@
+using Sernager.Resources;
+using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Helpers;
 
@@ -6,15 +8,34 @@ namespace Sernager.Terminal.Prompts.Factories;
 internal sealed class AutoComplete<TSearchable>
     where TSearchable : notnull
 {
+    private string? mPrompt = null;
+    private string? mNoResult = null;
     internal string Input { get; private set; } = string.Empty;
     internal int CursorPosition { get; private set; } = 0;
 
     internal AutoComplete()
     {
-        if (typeof(TSearchable) != typeof(string))
+        checkSearchableType();
+    }
+
+    internal string GetPrompt()
+    {
+        if (mPrompt == null)
         {
-            throw new ArgumentException("TSearchable must be a string.");
+            mPrompt = $"{ResourceRetriever.GetString("AutoComplete", "Prompt")}: ";
         }
+
+        return mPrompt;
+    }
+
+    internal string GetNoResult()
+    {
+        if (mNoResult == null)
+        {
+            mNoResult = $"{ResourceRetriever.GetString("AutoComplete", "NoResult")}";
+        }
+
+        return mNoResult;
     }
 
     internal void InterceptInput(ConsoleKeyInfo keyInfo)
@@ -76,6 +97,20 @@ internal sealed class AutoComplete<TSearchable>
         return indexes.ToArray();
     }
 
+    private void checkSearchableType()
+    {
+        if (typeof(TSearchable) == typeof(string))
+        {
+            return;
+        }
+        else if (typeof(TSearchable) == typeof(OptionItem))
+        {
+            return;
+        }
+
+        throw new InvalidCastException($"Cannot cast {nameof(TSearchable)} to {typeof(string)} or {typeof(OptionItem)}.");
+    }
+
     private void addChar(ConsoleKeyInfo keyInfo)
     {
         if (!KeyHelper.IsCharKey(keyInfo.Key))
@@ -103,8 +138,8 @@ internal sealed class AutoComplete<TSearchable>
         {
             if (CursorPosition > 0)
             {
-                Input = Input.Remove(CursorPosition, 1);
                 --CursorPosition;
+                Input = Input.Remove(CursorPosition, 1);
             }
         }
     }
