@@ -4,13 +4,11 @@ namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
 internal sealed class ConfirmPlugin : IBasePlugin
 {
-    public string Prompt { get; private set; } = string.Empty;
+    public string Prompt { get; set; } = string.Empty;
 
-    internal ConfirmPlugin SetPrompt(string prompt)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo)
     {
-        Prompt = prompt;
-
-        return this;
+        return true;
     }
 
     List<IPromptComponent> IBasePlugin.Render()

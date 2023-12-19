@@ -5,20 +5,18 @@ namespace Sernager.Terminal.Prompts.Factories.Plugins;
 internal sealed class InputPlugin : IBasePlugin
 {
     private AutoComplete<string>? mAutoComplete = null;
-    public string Prompt { get; private set; } = string.Empty;
-
-    internal InputPlugin SetPrompt(string prompt)
-    {
-        Prompt = prompt;
-
-        return this;
-    }
+    public string Prompt { get; set; } = string.Empty;
 
     internal InputPlugin UseAutoComplete()
     {
         mAutoComplete = new AutoComplete<string>();
 
         return this;
+    }
+
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo)
+    {
+        return true;
     }
 
     List<IPromptComponent> IBasePlugin.Render()

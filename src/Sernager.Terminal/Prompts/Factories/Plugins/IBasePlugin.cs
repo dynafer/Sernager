@@ -4,6 +4,7 @@ namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
 internal interface IBasePlugin
 {
-    string Prompt { get; }
+    string Prompt { get; set; }
+    bool Input(ConsoleKeyInfo keyInfo);
     List<IPromptComponent> Render();
 }

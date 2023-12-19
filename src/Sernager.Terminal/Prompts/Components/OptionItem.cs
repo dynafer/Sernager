@@ -31,12 +31,12 @@ internal sealed class OptionItem
         IsSelected = false;
     }
 
-    internal TextComponent ToTextComponent(bool bCurrent = false)
+    internal TextComponent ToTextComponent(bool bCurrentOrLast = false)
     {
         TextComponent component = new TextComponent()
-            .SetDecoration(getDecoration(bCurrent))
-            .SetTextColor(getColor(bCurrent))
-            .SetText(getPrefix(bCurrent) + Name);
+            .SetDecoration(getDecoration(bCurrentOrLast))
+            .SetTextColor(getColor(bCurrentOrLast))
+            .SetText(getPrefix(bCurrentOrLast) + Name);
 
         if (mType != EOptionTypeFlags.Hint)
         {
@@ -61,38 +61,40 @@ internal sealed class OptionItem
         return component;
     }
 
-    private string getPrefix(bool bCurrent)
+    private string getPrefix(bool bCurrentOrLast)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
-                return bCurrent ? ">  " : "   ";
+                return bCurrentOrLast ? ">  " : "   ";
             case EOptionTypeFlags.MultiSelect:
                 return IsSelected ? "[*] " : "[ ] ";
+            case EOptionTypeFlags.Hint:
+                return bCurrentOrLast ? "" : "/";
             default:
                 return string.Empty;
         }
     }
 
-    private EDecorationFlags getDecoration(bool bCurrent)
+    private EDecorationFlags getDecoration(bool bCurrentOrLast)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
             case EOptionTypeFlags.MultiSelect:
-                return bCurrent ? EDecorationFlags.Bold : EDecorationFlags.None;
+                return bCurrentOrLast ? EDecorationFlags.Bold : EDecorationFlags.None;
             default:
                 return EDecorationFlags.None;
         }
     }
 
-    private EColorFlags getColor(bool bCurrent)
+    private EColorFlags getColor(bool bCurrentOrLast)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
             case EOptionTypeFlags.MultiSelect:
-                return bCurrent ? EColorFlags.Cyan : EColorFlags.Default;
+                return bCurrentOrLast ? EColorFlags.Cyan : EColorFlags.Default;
             case EOptionTypeFlags.Hint:
                 return EColorFlags.BrightBlack;
             default:
