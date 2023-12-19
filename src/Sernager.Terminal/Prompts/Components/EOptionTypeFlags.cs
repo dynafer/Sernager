@@ -1,7 +1,7 @@
 namespace Sernager.Terminal.Prompts.Components;
 
 [Flags]
-public enum EOptionTypeFlags
+internal enum EOptionTypeFlags
 {
     None = 0,
     Select = 1 << 0,

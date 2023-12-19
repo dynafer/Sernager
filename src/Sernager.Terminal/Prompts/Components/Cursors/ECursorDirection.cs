@@ -1,6 +1,6 @@
 namespace Sernager.Terminal.Prompts.Components.Cursors;
 
-public enum ECursorDirection
+internal enum ECursorDirection
 {
     Up,
     Down,
