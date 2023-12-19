@@ -8,19 +8,24 @@ internal sealed class Pagination
 
     internal (int, int, int, int) GetRange()
     {
-        int halfPageSize = PageSize / 2;
+        if (PageSize >= Total)
+        {
+            return (0, Total, 0, 0);
+        }
+
+        int halfPageSize = (int)Math.Floor((float)(PageSize / 2));
         int start = Math.Max(0, Offset - halfPageSize);
         int end = Math.Min(Total, start + PageSize);
 
         int prevRest = 0;
-        if (PageSize < Total && start == 0)
+        if (start == 0)
         {
             prevRest = halfPageSize - Offset;
             end -= prevRest;
         }
 
         int nextRest = 0;
-        if (PageSize < Total && end > Total - halfPageSize)
+        if (end > Total - halfPageSize)
         {
             nextRest = Math.Max(0, PageSize - (end - start));
         }
