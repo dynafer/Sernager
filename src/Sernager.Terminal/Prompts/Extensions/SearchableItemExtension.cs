@@ -1,4 +1,5 @@
-using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Helpers;
+using System.Reflection;
 
 namespace Sernager.Terminal.Prompts.Extensions;
 
@@ -6,15 +7,20 @@ internal static class SearchableItemExtension
 {
     internal static string ToSuggestItem<T>(this T item)
     {
-        if (item is string str)
+        if (typeof(T) == typeof(string))
         {
-            return str;
+            return item?.ToString() ?? string.Empty;
         }
-        else if (item is OptionItem component)
+        else if (TypeHelper.IsOptionItem<T>())
         {
-            return component.Name;
+            PropertyInfo? nameProperty = typeof(T).GetProperty("Name");
+
+            if (nameProperty != null)
+            {
+                return nameProperty.GetValue(item, null)?.ToString() ?? string.Empty;
+            }
         }
 
-        throw new InvalidCastException($"Cannot cast {nameof(T)} to {typeof(string)}.");
+        throw new InvalidCastException($"Cannot cast {nameof(T)} to suggest item.");
     }
 }

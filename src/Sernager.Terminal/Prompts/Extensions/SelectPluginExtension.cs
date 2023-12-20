@@ -5,50 +5,42 @@ namespace Sernager.Terminal.Prompts.Extensions;
 
 internal static class SelectPluginExtension
 {
-    internal static SelectionPlugin AddOption(this SelectionPlugin plugin, string name)
+    internal static SelectionPlugin<T> AddOption<T>(this SelectionPlugin<T> plugin, string name, T value)
+        where T : notnull
     {
-        plugin.Options.Add(new OptionItem(EOptionTypeFlags.Select, name));
+        plugin.Options.Add(new OptionItem<T>(EOptionTypeFlags.Select, name, value));
 
         return plugin;
     }
 
-    internal static SelectionPlugin AddOption(this SelectionPlugin plugin, string name, string value)
-    {
-        plugin.Options.Add(new OptionItem(EOptionTypeFlags.Select, name, value));
-
-        return plugin;
-    }
-
-    internal static SelectionPlugin AddOptions(this SelectionPlugin plugin, params object[] options)
+    internal static SelectionPlugin<T> AddOptions<T>(this SelectionPlugin<T> plugin, params object[] options)
+        where T : notnull
     {
         foreach (object option in options)
         {
-            if (option is string optionString)
-            {
-                plugin.Options.Add(new OptionItem(EOptionTypeFlags.Select, optionString));
-            }
-            else if (option is object optionObject)
+            if (option is object optionObject)
             {
                 string? optionName = optionObject.GetType().GetProperty("Name")?.GetValue(optionObject, null)?.ToString();
-                string? optionValue = optionObject.GetType().GetProperty("Value")?.GetValue(optionObject, null)?.ToString();
+                T? optionValue = (T?)(optionObject.GetType().GetProperty("Value")?.GetValue(optionObject, null));
 
                 if (optionName == null || optionValue == null)
                 {
                     throw new ArgumentException("Option object must have Name and Value properties.");
                 }
 
-                plugin.Options.Add(new OptionItem(EOptionTypeFlags.Select, optionName, optionValue));
+                plugin.Options.Add(new OptionItem<T>(EOptionTypeFlags.Select, optionName, optionValue));
             }
             else
             {
-                throw new InvalidCastException($"Cannot cast {nameof(option)} to {typeof(string)} or {typeof(OptionItem)}.");
+                throw new InvalidCastException($"Cannot cast {nameof(option)} to OptionItem.");
             }
         }
 
         return plugin;
     }
 
-    internal static SelectionPlugin SetPageSize(this SelectionPlugin plugin, int pageSize)
+    internal static SelectionPlugin<T> SetPageSize<T>(this SelectionPlugin<T> plugin, int pageSize)
+        where T : notnull
     {
         plugin.Pagination.PageSize = pageSize;
 

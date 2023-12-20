@@ -1,5 +1,4 @@
 using Sernager.Resources;
-using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Helpers;
 
@@ -15,7 +14,7 @@ internal sealed class AutoComplete<TSearchable>
 
     internal AutoComplete()
     {
-        checkSearchableType();
+        TypeHelper.EnsureIsSearchable<TSearchable>();
     }
 
     internal string GetPrompt()
@@ -114,20 +113,6 @@ internal sealed class AutoComplete<TSearchable>
             .Select(item => Array.IndexOf(items, item));
 
         return indexes.ToArray();
-    }
-
-    private void checkSearchableType()
-    {
-        if (typeof(TSearchable) == typeof(string))
-        {
-            return;
-        }
-        else if (typeof(TSearchable) == typeof(OptionItem))
-        {
-            return;
-        }
-
-        throw new InvalidCastException($"Cannot cast {nameof(TSearchable)} to {typeof(string)} or {typeof(OptionItem)}.");
     }
 
     private void addChar(ConsoleKeyInfo keyInfo)

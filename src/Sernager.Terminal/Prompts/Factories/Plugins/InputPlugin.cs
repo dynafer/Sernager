@@ -7,6 +7,7 @@ internal sealed class InputPlugin : IBasePlugin
 {
     private AutoComplete<string> mInput = new AutoComplete<string>();
     private bool mbUseAutoComplete = false;
+    private Func<InputPlugin, string, bool>? mValidator = null;
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public bool ShouldShowHints { get; set; } = false;
@@ -19,11 +20,28 @@ internal sealed class InputPlugin : IBasePlugin
         return this;
     }
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo)
+    internal InputPlugin UseValidator(Func<InputPlugin, string, bool> validator)
+    {
+        mValidator = validator;
+
+        return this;
+    }
+
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
         switch (keyInfo.Key)
         {
             case ConsoleKey.Enter:
+                if (mValidator != null && !mValidator(this, mInput.Input))
+                {
+                    result = null!;
+
+                    return false;
+                }
+
+                result = mInput.Input;
+                Renderer.Writer.WriteLine();
+
                 return true;
             case ConsoleKey.Tab:
                 if (mbUseAutoComplete && Hints != null && Hints.Count > 0)
@@ -37,6 +55,8 @@ internal sealed class InputPlugin : IBasePlugin
 
                 break;
         }
+
+        result = null!;
 
         return false;
     }

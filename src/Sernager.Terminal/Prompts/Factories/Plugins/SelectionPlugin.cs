@@ -3,25 +3,29 @@ using Sernager.Terminal.Prompts.Components.Cursors;
 
 namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
-internal sealed class SelectionPlugin : IBasePlugin
+internal sealed class SelectionPlugin<TOptionValue> : IBasePlugin
+    where TOptionValue : notnull
 {
     public readonly Pagination Pagination = new Pagination();
-    public readonly List<OptionItem> Options = new List<OptionItem>();
-    private AutoComplete<OptionItem>? mAutoComplete = null;
+    public readonly List<OptionItem<TOptionValue>> Options = new List<OptionItem<TOptionValue>>();
+    private AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     public string Prompt { get; set; } = string.Empty;
 
-    internal SelectionPlugin UseAutoComplete()
+    internal SelectionPlugin<TOptionValue> UseAutoComplete()
     {
-        mAutoComplete = new AutoComplete<OptionItem>();
+        mAutoComplete = new AutoComplete<OptionItem<TOptionValue>>();
 
         return this;
     }
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
         switch (keyInfo.Key)
         {
             case ConsoleKey.Enter:
+                (List<OptionItem<TOptionValue>> options, int _) = getOptions();
+                result = options[Pagination.Offset].Value;
+
                 return true;
             case ConsoleKey.UpArrow:
                 Pagination.Prev();
@@ -39,22 +43,15 @@ internal sealed class SelectionPlugin : IBasePlugin
                 break;
         }
 
+        result = null!;
+
         return false;
     }
 
     List<IPromptComponent> IBasePlugin.Render()
     {
-        List<OptionItem> options = Options;
-        if (mAutoComplete != null)
-        {
-            int[] indexes = mAutoComplete.GetSuggestionIndexes(Options);
-            options = indexes.Select(i => Options[i]).ToList();
-            Pagination.Total = indexes.Length;
-        }
-        else
-        {
-            Pagination.Total = Options.Count;
-        }
+        (List<OptionItem<TOptionValue>> options, int total) = getOptions();
+        Pagination.Total = total;
 
         List<IPromptComponent> components =
         [
@@ -108,5 +105,16 @@ internal sealed class SelectionPlugin : IBasePlugin
         }
 
         return components;
+    }
+
+    private (List<OptionItem<TOptionValue>>, int) getOptions()
+    {
+        if (mAutoComplete != null)
+        {
+            int[] indexes = mAutoComplete.GetSuggestionIndexes(Options);
+            return (indexes.Select(i => Options[i]).ToList(), indexes.Length);
+        }
+
+        return (Options, Options.Count);
     }
 }

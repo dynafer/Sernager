@@ -1,20 +1,14 @@
 namespace Sernager.Terminal.Prompts.Components;
 
-internal sealed class OptionItem
+internal sealed class OptionItem<T>
+    where T : notnull
 {
     private readonly EOptionTypeFlags mType = EOptionTypeFlags.None;
     internal string Name { get; init; } = string.Empty;
-    internal string Value { get; init; } = string.Empty;
+    internal T Value { get; init; }
     internal bool IsSelected { get; private set; } = false;
 
-    internal OptionItem(EOptionTypeFlags type, string name)
-    {
-        mType = type;
-        Name = name;
-        Value = name;
-    }
-
-    internal OptionItem(EOptionTypeFlags type, string name, string value)
+    internal OptionItem(EOptionTypeFlags type, string name, T value)
     {
         mType = type;
         Name = name;
@@ -86,7 +80,7 @@ internal sealed class OptionItem
             case EOptionTypeFlags.MultiSelect:
                 return bCurrentOrEnds ? EColorFlags.Cyan : EColorFlags.Default;
             default:
-                throw new InvalidOperationException();
+                return EColorFlags.Default;
         }
     }
 }

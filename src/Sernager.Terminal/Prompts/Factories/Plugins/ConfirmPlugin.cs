@@ -6,8 +6,9 @@ internal sealed class ConfirmPlugin : IBasePlugin
 {
     public string Prompt { get; set; } = string.Empty;
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
+        result = null!;
         return true;
     }
 
