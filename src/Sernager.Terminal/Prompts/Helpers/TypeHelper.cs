@@ -1,4 +1,5 @@
 using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Factories.Plugins;
 
 namespace Sernager.Terminal.Prompts.Helpers;
 
@@ -6,8 +7,7 @@ internal static class TypeHelper
 {
     internal static bool IsOptionItem<T>()
     {
-        // FIX ME: This is a hacky way to check if T is OptionItem<T>.
-        return typeof(T).IsClass && typeof(T).IsInstanceOfType(typeof(OptionItem<>));
+        return typeof(T).IsClass && typeof(T).Namespace == typeof(OptionItem<>).Namespace && typeof(T).Name == typeof(OptionItem<>).Name;
     }
 
     internal static void EnsureIsSearchable<T>()
@@ -21,6 +21,32 @@ internal static class TypeHelper
             return;
         }
 
-        throw new InvalidCastException($"Cannot cast {typeof(T)} to searchable type.");
+        throw new NotSupportedException($"{typeof(T).Name} isn't supported as searchable type.");
+    }
+
+    internal static void EnsureIsPluginResultType<TResult>(IBasePlugin plugin)
+        where TResult : notnull
+    {
+        switch (plugin)
+        {
+            case ConfirmPlugin _:
+                if (typeof(TResult) == typeof(bool))
+                {
+                    return;
+                }
+
+                break;
+            case InputPlugin _:
+                if (typeof(TResult) == typeof(string))
+                {
+                    return;
+                }
+
+                break;
+            case SelectionPlugin<TResult> _:
+                return;
+        }
+
+        throw new NotSupportedException($"{plugin.GetType().Name} doesn't accept {typeof(TResult).Name} as result type.");
     }
 }

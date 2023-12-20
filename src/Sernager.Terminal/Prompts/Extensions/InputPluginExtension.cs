@@ -8,7 +8,7 @@ internal static class InputPluginExtension
     {
         if (plugin.Hints == null)
         {
-            throw new NullReferenceException("You must call UseAutoComplete() before adding hints.");
+            throw new InvalidOperationException("You must call UseAutoComplete() before adding hints.");
         }
 
         plugin.Hints.Add(hint);
@@ -20,7 +20,7 @@ internal static class InputPluginExtension
     {
         if (plugin.Hints == null)
         {
-            throw new NullReferenceException("You must call UseAutoComplete() before adding hints.");
+            throw new InvalidOperationException("You must call UseAutoComplete() before adding hints.");
         }
 
         plugin.Hints.AddRange(hints);

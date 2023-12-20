@@ -18,22 +18,7 @@ internal static class SelectPluginExtension
     {
         foreach (object option in options)
         {
-            if (option is object optionObject)
-            {
-                string? optionName = optionObject.GetType().GetProperty("Name")?.GetValue(optionObject, null)?.ToString();
-                T? optionValue = (T?)(optionObject.GetType().GetProperty("Value")?.GetValue(optionObject, null));
-
-                if (optionName == null || optionValue == null)
-                {
-                    throw new ArgumentException("Option object must have Name and Value properties.");
-                }
-
-                plugin.Options.Add(new OptionItem<T>(EOptionTypeFlags.Select, optionName, optionValue));
-            }
-            else
-            {
-                throw new InvalidCastException($"Cannot cast {nameof(option)} to OptionItem.");
-            }
+            plugin.Options.Add(option.ToOptionItem<T>(EOptionTypeFlags.Select));
         }
 
         return plugin;
