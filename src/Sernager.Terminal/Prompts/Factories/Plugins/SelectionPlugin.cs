@@ -66,11 +66,10 @@ internal sealed class SelectionPlugin : IBasePlugin
 
         if (mAutoComplete != null)
         {
-            components.Add(
-                new TextComponent()
-                    .SetTextColor(EColorFlags.BrightBlack)
-                    .SetText(mAutoComplete.GetPrompt())
-                    .UseLineBreak()
+            components.Add(new TextComponent()
+                .SetTextColor(EColorFlags.BrightBlack)
+                .SetText(mAutoComplete.GetPrompt())
+                .UseLineBreak()
             );
         }
 
@@ -99,15 +98,13 @@ internal sealed class SelectionPlugin : IBasePlugin
 
         if (mAutoComplete != null)
         {
-            CursorComponent cursor = new CursorComponent();
-
-            cursor.AddCursors(
-                new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
-                new { Direction = ECursorDirection.Right, Count = mAutoComplete.GetPrompt().Length + mAutoComplete.Input.Length },
-                new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 }
+            components.Add(new CursorComponent()
+                .AddCursors(
+                    new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
+                    new { Direction = ECursorDirection.Right, Count = mAutoComplete.GetPrompt().Length + mAutoComplete.Input.Length },
+                    new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 }
+                )
             );
-
-            components.Add(cursor);
         }
 
         return components;

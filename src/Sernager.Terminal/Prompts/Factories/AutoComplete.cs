@@ -56,6 +56,25 @@ internal sealed class AutoComplete<TSearchable>
         }
     }
 
+    internal void CompleteByTab(IEnumerable<TSearchable> searchableItems)
+    {
+        TSearchable[] items = searchableItems.ToArray();
+
+        if (items.Length == 0 || Input.Length == 0)
+        {
+            return;
+        }
+
+        int index = GetFirstSuggestionIndex(items);
+        if (index == -1)
+        {
+            return;
+        }
+
+        Input = items[index].ToSuggestItem();
+        CursorPosition = Input.Length;
+    }
+
     internal int GetFirstSuggestionIndex(IEnumerable<TSearchable> searchableItems)
     {
         TSearchable[] items = searchableItems.ToArray();
