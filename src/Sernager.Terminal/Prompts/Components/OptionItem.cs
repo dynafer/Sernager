@@ -31,17 +31,13 @@ internal sealed class OptionItem
         IsSelected = false;
     }
 
-    internal TextComponent ToTextComponent(bool bCurrentOrLast = false)
+    internal TextComponent ToTextComponent(bool bCurrentOrEnds = false)
     {
         TextComponent component = new TextComponent()
-            .SetDecoration(getDecoration(bCurrentOrLast))
-            .SetTextColor(getColor(bCurrentOrLast))
-            .SetText(getPrefix(bCurrentOrLast) + Name);
-
-        if (mType != EOptionTypeFlags.Hint)
-        {
-            component.UseLineBreak();
-        }
+            .SetDecoration(getDecoration(bCurrentOrEnds))
+            .SetTextColor(getColor(bCurrentOrEnds))
+            .SetText(getPrefix(bCurrentOrEnds) + Name)
+            .UseLineBreak();
 
         return component;
     }
@@ -51,52 +47,44 @@ internal sealed class OptionItem
         TextComponent component = new TextComponent()
             .SetDecoration(EDecorationFlags.None)
             .SetTextColor(EColorFlags.BrightBlack)
-            .SetText(getPrefix(false) + Name);
-
-        if (mType != EOptionTypeFlags.Hint)
-        {
-            component.UseLineBreak();
-        }
+            .SetText(getPrefix(false) + Name)
+            .UseLineBreak();
 
         return component;
     }
 
-    private string getPrefix(bool bCurrentOrLast)
+    private string getPrefix(bool bCurrentOrEnds)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
-                return bCurrentOrLast ? ">  " : "   ";
+                return bCurrentOrEnds ? ">  " : "   ";
             case EOptionTypeFlags.MultiSelect:
                 return IsSelected ? "[*] " : "[ ] ";
-            case EOptionTypeFlags.Hint:
-                return bCurrentOrLast ? "" : "/";
             default:
                 return string.Empty;
         }
     }
 
-    private EDecorationFlags getDecoration(bool bCurrentOrLast)
+    private EDecorationFlags getDecoration(bool bCurrentOrEnds)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
             case EOptionTypeFlags.MultiSelect:
-                return bCurrentOrLast ? EDecorationFlags.Bold : EDecorationFlags.None;
+                return bCurrentOrEnds ? EDecorationFlags.Bold : EDecorationFlags.None;
             default:
                 return EDecorationFlags.None;
         }
     }
 
-    private EColorFlags getColor(bool bCurrentOrLast)
+    private EColorFlags getColor(bool bCurrentOrEnds)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
             case EOptionTypeFlags.MultiSelect:
-                return bCurrentOrLast ? EColorFlags.Cyan : EColorFlags.Default;
-            case EOptionTypeFlags.Hint:
-                return EColorFlags.BrightBlack;
+                return bCurrentOrEnds ? EColorFlags.Cyan : EColorFlags.Default;
             default:
                 throw new InvalidOperationException();
         }
