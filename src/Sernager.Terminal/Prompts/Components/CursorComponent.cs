@@ -29,7 +29,7 @@ internal sealed class CursorComponent : IPromptComponent
 
             if (direction == null || count == null)
             {
-                throw new ArgumentException("Invalid cursor object");
+                throw new ArgumentException("Cursor object must have Direction and Count properties.");
             }
 
             PromptCursor promptCursor = new PromptCursor(direction.Value, count.Value);
