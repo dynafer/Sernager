@@ -6,6 +6,8 @@ namespace Sernager.Terminal.Prompts;
 
 internal static class Prompter
 {
+    internal readonly static TextWriter Writer = Console.Out;
+
     internal static TResult Prompt<TResult>(ITypePlugin<TResult> plugin)
         where TResult : notnull
     {
@@ -28,27 +30,28 @@ internal static class Prompter
     {
         TypeHelper.EnsureIsPluginResultType<TOptionValue>(plugin);
 
-        Renderer renderer = new Renderer();
-
         object result;
 
-        while (true)
+        using (Renderer renderer = new Renderer(Writer))
         {
-            renderer.Render(plugin.Render());
-
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
-            bool bBreak = plugin.Input(keyInfo, out result);
-
-            if (bBreak)
+            while (true)
             {
-                break;
-            }
-        }
+                renderer.Render(plugin.Render());
 
-        if (plugin.ShouldContinueToNextLine)
-        {
-            Renderer.Writer.WriteLine();
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                bool bBreak = plugin.Input(keyInfo, out result);
+
+                if (bBreak)
+                {
+                    break;
+                }
+            }
+
+            if (plugin.ShouldContinueToNextLine)
+            {
+                Writer.WriteLine();
+            }
         }
 
         return result.ToResult<TResult>();

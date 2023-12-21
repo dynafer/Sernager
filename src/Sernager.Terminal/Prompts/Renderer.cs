@@ -2,27 +2,37 @@ using Sernager.Terminal.Prompts.Components;
 
 namespace Sernager.Terminal.Prompts;
 
-internal sealed class Renderer
+internal sealed class Renderer : IDisposable
 {
-    public readonly static TextWriter Writer = Console.Out;
+    private TextWriter mWriter;
     private int mCurrentX = 0;
     private int mCurrentY = 0;
+
+    internal Renderer(TextWriter writer)
+    {
+        mWriter = writer;
+    }
+
+    public void Dispose()
+    {
+        mWriter = null!;
+    }
 
     internal void Render(List<IPromptComponent> components)
     {
         if (mCurrentX != 0)
         {
-            Writer.Write(AnsiCode.CursorLeft(mCurrentX));
+            mWriter.Write(AnsiCode.CursorLeft(mCurrentX));
             mCurrentX = 0;
         }
 
         if (mCurrentY != 0)
         {
-            Writer.Write(AnsiCode.CursorUp(mCurrentY));
+            mWriter.Write(AnsiCode.CursorUp(mCurrentY));
             mCurrentY = 0;
         }
 
-        Writer.Write(AnsiCode.EraseScreen());
+        mWriter.Write(AnsiCode.EraseScreen());
 
         foreach (IPromptComponent component in components)
         {
@@ -44,19 +54,21 @@ internal sealed class Renderer
 
             if (component.IsLineBreak)
             {
-                Writer.WriteLine(text);
+                mWriter.WriteLine(text);
 
                 mCurrentX = 0;
                 ++mCurrentY;
             }
             else
             {
-                Writer.Write(text);
+                mWriter.Write(text);
 
                 mCurrentX += text.Length;
             }
         }
 
-        Writer.Flush();
+        components.Clear();
+
+        mWriter.Flush();
     }
 }
