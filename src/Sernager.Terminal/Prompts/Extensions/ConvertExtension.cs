@@ -1,5 +1,6 @@
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
+using Sernager.Terminal.Prompts.Factories.Plugins;
 using Sernager.Terminal.Prompts.Helpers;
 using System.Reflection;
 
@@ -7,20 +8,6 @@ namespace Sernager.Terminal.Prompts.Extensions;
 
 internal static class ConvertExtension
 {
-    internal static OptionItem<T> ToOptionItem<T>(this object item, EOptionTypeFlags type)
-        where T : notnull
-    {
-        string? name = item.GetType().GetProperty("Name")?.GetValue(item, null)?.ToString();
-        T? value = (T?)(item.GetType().GetProperty("Value")?.GetValue(item, null));
-
-        if (name == null || value == null)
-        {
-            throw new ArgumentException($"Object must have Name and Value properties to be converted to {nameof(OptionItem<T>)}.");
-        }
-
-        return new OptionItem<T>(type, name, value);
-    }
-
     internal static PromptCursor ToPromptCursor(this object cursor)
     {
         ECursorDirection? direction = (ECursorDirection?)cursor.GetType().GetProperty("Direction")?.GetValue(cursor, null);
@@ -40,9 +27,9 @@ internal static class ConvertExtension
         {
             return item?.ToString() ?? string.Empty;
         }
-        else if (TypeHelper.IsOptionItem<T>())
+        else if (TypeHelper.Is<T, OptionItem<object>>())
         {
-            PropertyInfo? nameProperty = typeof(T).GetProperty("Name");
+            PropertyInfo? nameProperty = typeof(T).GetProperty("Name", BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (nameProperty != null)
             {
@@ -62,5 +49,19 @@ internal static class ConvertExtension
         }
 
         throw new InvalidCastException($"Cannot cast {result.GetType().Name} to {typeof(TResult).Name}.");
+    }
+
+    internal static EOptionTypeFlags ToOptionType<TOptionValue>(this ListBasePlugin<TOptionValue> plugin)
+        where TOptionValue : notnull
+    {
+        switch (plugin)
+        {
+            case MultiSelectionPlugin<TOptionValue> _:
+                return EOptionTypeFlags.MultiSelect;
+            case SelectionPlugin<TOptionValue> _:
+                return EOptionTypeFlags.Select;
+            default:
+                throw new NotSupportedException($"{plugin.GetType().Name} isn't supported as option type.");
+        }
     }
 }

@@ -3,7 +3,7 @@ using Sernager.Terminal.Prompts.Components.Cursors;
 
 namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
-internal sealed class InputPlugin : IBasePlugin
+internal sealed class InputPlugin : ITypePlugin<string>
 {
     private AutoComplete<string> mInput = new AutoComplete<string>();
     private bool mbUseAutoComplete = false;

@@ -5,18 +5,19 @@ namespace Sernager.Terminal.Prompts.Helpers;
 
 internal static class TypeHelper
 {
-    internal static bool IsOptionItem<T>()
+    internal static bool Is<TTarget, TCompare>()
     {
-        return typeof(T).IsClass && typeof(T).Namespace == typeof(OptionItem<>).Namespace && typeof(T).Name == typeof(OptionItem<>).Name;
+        return typeof(TTarget) == typeof(TCompare) || typeof(TTarget).Namespace == typeof(TCompare).Namespace && typeof(TTarget).Name == typeof(TCompare).Name;
     }
 
     internal static void EnsureIsSearchable<T>()
+        where T : notnull
     {
         if (typeof(T) == typeof(string))
         {
             return;
         }
-        else if (IsOptionItem<T>())
+        else if (Is<T, OptionItem<object>>())
         {
             return;
         }
@@ -43,6 +44,7 @@ internal static class TypeHelper
                 }
 
                 break;
+            case MultiSelectionPlugin<TResult> _:
             case SelectionPlugin<TResult> _:
                 return;
         }

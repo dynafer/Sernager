@@ -15,14 +15,9 @@ internal sealed class OptionItem<T>
         Value = value;
     }
 
-    internal void Select()
+    internal void ToggleSelection()
     {
-        IsSelected = true;
-    }
-
-    internal void Deselect()
-    {
-        IsSelected = false;
+        IsSelected = !IsSelected;
     }
 
     internal TextComponent ToTextComponent(bool bCurrentOrEnds = false)

@@ -2,7 +2,7 @@ using Sernager.Terminal.Prompts.Components;
 
 namespace Sernager.Terminal.Prompts.Factories.Plugins;
 
-internal sealed class ConfirmPlugin : IBasePlugin
+internal sealed class ConfirmPlugin : ITypePlugin<bool>
 {
     public string Prompt { get; set; } = string.Empty;
     public bool ShouldContinueToNextLine => true;
