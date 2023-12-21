@@ -8,13 +8,26 @@ internal sealed class ConfirmPlugin : IBasePlugin
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
+        switch (keyInfo.Key)
+        {
+            case ConsoleKey.Y:
+            case ConsoleKey.N:
+                result = keyInfo.Key == ConsoleKey.Y;
+                return true;
+        }
+
         result = null!;
-        return true;
+        return false;
     }
 
     List<IPromptComponent> IBasePlugin.Render()
     {
-        List<IPromptComponent> components = new List<IPromptComponent>();
+        List<IPromptComponent> components =
+        [
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetText($"{Prompt} [Y/n] ")
+        ];
 
         return components;
     }

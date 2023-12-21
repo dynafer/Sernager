@@ -26,6 +26,11 @@ internal sealed class SelectionPlugin<TOptionValue> : IBasePlugin
                 (List<OptionItem<TOptionValue>> options, int _) = getOptions();
                 result = options[Pagination.Offset].Value;
 
+                if (mAutoComplete != null)
+                {
+                    Renderer.Writer.WriteLine();
+                }
+
                 return true;
             case ConsoleKey.UpArrow:
                 Pagination.Prev();
