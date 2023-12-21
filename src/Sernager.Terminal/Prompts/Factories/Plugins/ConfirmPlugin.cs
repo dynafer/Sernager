@@ -14,7 +14,6 @@ internal sealed class ConfirmPlugin : IBasePlugin
             case ConsoleKey.Y:
             case ConsoleKey.N:
                 result = keyInfo.Key == ConsoleKey.Y;
-                Renderer.Writer.WriteLine();
 
                 return true;
         }
