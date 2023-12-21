@@ -5,6 +5,7 @@ namespace Sernager.Terminal.Prompts.Factories.Plugins;
 internal sealed class ConfirmPlugin : IBasePlugin
 {
     public string Prompt { get; set; } = string.Empty;
+    public bool ShouldContinueToNextLine => true;
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
@@ -13,6 +14,8 @@ internal sealed class ConfirmPlugin : IBasePlugin
             case ConsoleKey.Y:
             case ConsoleKey.N:
                 result = keyInfo.Key == ConsoleKey.Y;
+                Renderer.Writer.WriteLine();
+
                 return true;
         }
 

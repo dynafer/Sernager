@@ -10,6 +10,7 @@ internal sealed class SelectionPlugin<TOptionValue> : IBasePlugin
     public readonly List<OptionItem<TOptionValue>> Options = new List<OptionItem<TOptionValue>>();
     private AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     public string Prompt { get; set; } = string.Empty;
+    public bool ShouldContinueToNextLine => mAutoComplete != null;
 
     internal SelectionPlugin<TOptionValue> UseAutoComplete()
     {
@@ -25,11 +26,6 @@ internal sealed class SelectionPlugin<TOptionValue> : IBasePlugin
             case ConsoleKey.Enter:
                 (List<OptionItem<TOptionValue>> options, int _) = getOptions();
                 result = options[Pagination.Offset].Value;
-
-                if (mAutoComplete != null)
-                {
-                    Renderer.Writer.WriteLine();
-                }
 
                 return true;
             case ConsoleKey.UpArrow:

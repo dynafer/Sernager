@@ -11,6 +11,7 @@ internal sealed class InputPlugin : IBasePlugin
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public bool ShouldShowHints { get; set; } = false;
+    public bool ShouldContinueToNextLine => true;
 
     internal InputPlugin UseAutoComplete()
     {
@@ -40,7 +41,6 @@ internal sealed class InputPlugin : IBasePlugin
                 }
 
                 result = mInput.Input;
-                Renderer.Writer.WriteLine();
 
                 return true;
             case ConsoleKey.Tab:
