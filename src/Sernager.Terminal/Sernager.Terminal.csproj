@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <DocumentationFile>..\..\docs\projects\Sernager.Terminal.xml</DocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sernager.Core\Sernager.Core.csproj" />
     <ProjectReference Include="..\Sernager.Resources\Sernager.Resources.csproj" />
+    <Compile Include="..\Sernager.Core\Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
 </Project>
