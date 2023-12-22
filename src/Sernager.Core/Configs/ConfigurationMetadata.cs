@@ -95,14 +95,13 @@ internal sealed class ConfigurationMetadata : IDisposable
             int beginSaltLength = reader.ReadInt32();
             int endSaltLength = reader.ReadInt32();
 
-            reader.Skip(beginSaltLength);
             string key = reader.ReadString(keyLength);
             string iv = reader.ReadString(ivLength);
-            byte[] encryptedBytes = reader.ReadBytes(reader.Length - reader.Position - endSaltLength);
-            reader.Skip(endSaltLength);
+            byte[] encryptedBytes = reader.ReadBytes(reader.Length - reader.Position);
 
-            string json = Encryptor.Decrypt(encryptedBytes, key, iv);
-            Configuration? config = JsonWrapper.Deserialize<Configuration>(json);
+            string saltedData = Encryptor.Decrypt(encryptedBytes, key, iv);
+            saltedData = saltedData.Substring(beginSaltLength, saltedData.Length - beginSaltLength - endSaltLength);
+            Configuration? config = JsonWrapper.Deserialize<Configuration>(saltedData);
 
             if (config == null)
             {
@@ -138,8 +137,8 @@ internal sealed class ConfigurationMetadata : IDisposable
             Randomizer.GenerateRandomString(MIN_SIZE, MAX_SIZE)
         };
 
-        string json = JsonWrapper.Serialize(Config);
-        byte[] encrypted = Encryptor.Encrypt(json, key, iv);
+        string saltedData = $"{salts[0]}{JsonWrapper.Serialize(Config)}{salts[1]}";
+        byte[] encrypted = Encryptor.Encrypt(saltedData, key, iv);
 
         using (ByteWriter writer = new ByteWriter())
         {
@@ -147,11 +146,9 @@ internal sealed class ConfigurationMetadata : IDisposable
                 .WriteInt32(iv.Length)
                 .WriteInt32(salts[0].Length)
                 .WriteInt32(salts[1].Length)
-                .WriteString(salts[0])
                 .WriteString(key)
                 .WriteString(iv)
-                .WriteBytes(encrypted)
-                .WriteString(salts[1]);
+                .WriteBytes(encrypted);
 
             return writer.GetBytes();
         }
