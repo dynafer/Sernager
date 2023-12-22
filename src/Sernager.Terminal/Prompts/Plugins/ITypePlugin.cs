@@ -1,4 +1,4 @@
-namespace Sernager.Terminal.Prompts.Factories.Plugins;
+namespace Sernager.Terminal.Prompts.Plugins;
 
 internal interface ITypePlugin<TResult> : IBasePlugin
     where TResult : notnull

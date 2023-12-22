@@ -1,7 +1,8 @@
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
+using Sernager.Terminal.Prompts.Plugins.Utilities;
 
-namespace Sernager.Terminal.Prompts.Factories.Plugins;
+namespace Sernager.Terminal.Prompts.Plugins;
 
 internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     where TOptionValue : notnull

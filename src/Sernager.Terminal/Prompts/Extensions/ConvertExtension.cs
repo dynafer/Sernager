@@ -1,6 +1,6 @@
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
-using Sernager.Terminal.Prompts.Factories.Plugins;
+using Sernager.Terminal.Prompts.Plugins;
 using Sernager.Terminal.Prompts.Helpers;
 using System.Reflection;
 

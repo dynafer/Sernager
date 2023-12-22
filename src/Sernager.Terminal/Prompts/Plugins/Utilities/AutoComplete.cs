@@ -2,7 +2,7 @@ using Sernager.Resources;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Helpers;
 
-namespace Sernager.Terminal.Prompts.Factories;
+namespace Sernager.Terminal.Prompts.Plugins.Utilities;
 
 internal sealed class AutoComplete<TSearchable>
     where TSearchable : notnull

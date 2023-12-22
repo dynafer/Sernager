@@ -1,6 +1,6 @@
 using Sernager.Terminal.Prompts.Components;
 
-namespace Sernager.Terminal.Prompts.Factories.Plugins;
+namespace Sernager.Terminal.Prompts.Plugins;
 
 internal interface IBasePlugin
 {

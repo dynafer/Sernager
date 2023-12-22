@@ -1,4 +1,4 @@
-namespace Sernager.Terminal.Prompts.Factories;
+namespace Sernager.Terminal.Prompts.Plugins.Utilities;
 
 internal sealed class Pagination
 {

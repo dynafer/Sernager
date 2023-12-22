@@ -1,6 +1,7 @@
 using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Plugins.Utilities;
 
-namespace Sernager.Terminal.Prompts.Factories.Plugins;
+namespace Sernager.Terminal.Prompts.Plugins;
 
 internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValue>, IEnumerableResultBasePlugin<TOptionValue>
     where TOptionValue : notnull

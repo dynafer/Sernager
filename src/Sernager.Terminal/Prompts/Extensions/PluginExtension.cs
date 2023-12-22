@@ -1,4 +1,4 @@
-using Sernager.Terminal.Prompts.Factories.Plugins;
+using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Prompts.Extensions;
 

@@ -1,5 +1,5 @@
 using Sernager.Terminal.Prompts.Extensions;
-using Sernager.Terminal.Prompts.Factories.Plugins;
+using Sernager.Terminal.Prompts.Plugins;
 using Sernager.Terminal.Prompts.Helpers;
 
 namespace Sernager.Terminal.Prompts;
