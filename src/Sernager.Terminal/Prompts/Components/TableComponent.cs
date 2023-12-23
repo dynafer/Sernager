@@ -31,6 +31,8 @@ internal sealed class TableComponent : IPromptComponent
             return string.Empty;
         }
 
+        ensureRowCount();
+
         int[] widths = measureWidths();
         bool[][] grid = createTableGrid();
 
@@ -94,49 +96,16 @@ internal sealed class TableComponent : IPromptComponent
         return builder.ToString();
     }
 
-    private void addMiddleHorizontalEdgeBorder(StringBuilder builder, int[] widths, bool[][] grid, int curRowIndex)
+    private void ensureRowCount()
     {
-        if (!mUseBorder)
-        {
-            return;
-        }
+        int columnCount = Rows[0].Columns.Count;
 
-        builder.Append("├");
-
-        int index = 0;
-        foreach (Column column in Rows[curRowIndex].Columns)
+        for (int i = 1; i < Rows.Count; ++i)
         {
-            for (int j = 0; j < column.Colspan; ++j)
+            if (Rows[i].Columns.Count != columnCount)
             {
-                builder.Append('─', widths[index + j]);
-                if (index + j < widths.Length - 1)
-                {
-                    builder.Append(selectMiddlePartition(grid, curRowIndex, index + j, column.Colspan - j - 1));
-                }
+                throw new InvalidOperationException("All rows must have the same number of columns or colspan.");
             }
-
-            index += column.Colspan;
-            if (index >= widths.Length)
-            {
-                break;
-            }
-        }
-
-        builder.Append("┤");
-        builder.AppendLine();
-    }
-
-    private char selectMiddlePartition(bool[][] grid, int curRowIndex, int curColIndex, int remainingColspan = 0)
-    {
-        bool[] prevRow = grid[curRowIndex - 1];
-
-        if (remainingColspan > 0)
-        {
-            return prevRow[curColIndex] ? '┴' : '─';
-        }
-        else
-        {
-            return curColIndex + 1 < prevRow.Length && prevRow[curColIndex + 1] ? '┼' : '┬';
         }
     }
 
@@ -181,6 +150,52 @@ internal sealed class TableComponent : IPromptComponent
         if (bTop)
         {
             builder.AppendLine();
+        }
+    }
+
+    private void addMiddleHorizontalEdgeBorder(StringBuilder builder, int[] widths, bool[][] grid, int curRowIndex)
+    {
+        if (!mUseBorder)
+        {
+            return;
+        }
+
+        builder.Append("├");
+
+        int index = 0;
+        foreach (Column column in Rows[curRowIndex].Columns)
+        {
+            for (int j = 0; j < column.Colspan; ++j)
+            {
+                builder.Append('─', widths[index + j]);
+                if (index + j < widths.Length - 1)
+                {
+                    builder.Append(selectMiddlePartition(grid, curRowIndex, index + j, column.Colspan - j - 1));
+                }
+            }
+
+            index += column.Colspan;
+            if (index >= widths.Length)
+            {
+                break;
+            }
+        }
+
+        builder.Append("┤");
+        builder.AppendLine();
+    }
+
+    private char selectMiddlePartition(bool[][] grid, int curRowIndex, int curColIndex, int remainingColspan = 0)
+    {
+        bool[] prevRow = grid[curRowIndex - 1];
+
+        if (remainingColspan > 0)
+        {
+            return prevRow[curColIndex] ? '┴' : '─';
+        }
+        else
+        {
+            return curColIndex + 1 < prevRow.Length && prevRow[curColIndex + 1] ? '┼' : '┬';
         }
     }
 

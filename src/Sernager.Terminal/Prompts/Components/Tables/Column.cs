@@ -8,6 +8,11 @@ internal sealed class Column
 
     internal Column(TextComponent component, int colspan = 1)
     {
+        if (colspan < 1)
+        {
+            throw new ArgumentException("Colspan must be greater than 0.", nameof(colspan));
+        }
+
         Component = component;
         Length = component.Text.Length;
         Colspan = colspan;
