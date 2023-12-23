@@ -2,40 +2,11 @@ namespace Sernager.Terminal.Prompts.Components;
 
 internal sealed class TextComponent : IPromptComponent
 {
-    private readonly record struct RGBColor(int R, int G, int B);
-    private EDecorationFlags mDecoration = EDecorationFlags.None;
-    private EColorFlags mTextColor = EColorFlags.Default;
-    private RGBColor? mRgbColor;
-    private string mText = string.Empty;
-    public bool IsLineBreak { get; private set; } = false;
-
-    internal TextComponent SetDecoration(EDecorationFlags decoration)
-    {
-        mDecoration = decoration;
-
-        return this;
-    }
-
-    internal TextComponent SetTextColor(EColorFlags color)
-    {
-        mTextColor = color;
-
-        return this;
-    }
-
-    internal TextComponent SetTextColor(int r, int g, int b)
-    {
-        mRgbColor = new RGBColor(r, g, b);
-
-        return this;
-    }
-
-    internal TextComponent SetText(string text)
-    {
-        mText = text;
-
-        return this;
-    }
+    internal EDecorationFlags Decoration { get; set; } = EDecorationFlags.None;
+    internal EColorFlags TextColor { get; set; } = EColorFlags.Default;
+    internal RgbColor? RgbColor { get; set; } = null;
+    internal string Text { get; set; } = string.Empty;
+    public bool IsLineBreak { get; set; } = false;
 
     internal TextComponent UseLineBreak()
     {
@@ -48,27 +19,27 @@ internal sealed class TextComponent : IPromptComponent
     {
         List<int> codes = new List<int>();
 
-        if (mDecoration != EDecorationFlags.None)
+        if (Decoration != EDecorationFlags.None)
         {
             codes.Add(getDecorationCode());
         }
 
-        if (mTextColor != EColorFlags.Default)
+        if (TextColor != EColorFlags.Default)
         {
             codes.Add(getTextColorCode());
         }
 
-        if (mRgbColor.HasValue)
+        if (RgbColor.HasValue)
         {
             codes.AddRange(getTextRgbColorCode());
         }
 
-        return $"{AnsiCode.GraphicsMode(codes.ToArray())}{mText}{AnsiCode.ResetGraphicsMode()}";
+        return $"{AnsiCode.GraphicsMode(codes.ToArray())}{Text}{AnsiCode.ResetGraphicsMode()}";
     }
 
     private int getDecorationCode()
     {
-        return mDecoration switch
+        return Decoration switch
         {
             EDecorationFlags.Bold => 1,
             EDecorationFlags.Dim => 2,
@@ -82,7 +53,7 @@ internal sealed class TextComponent : IPromptComponent
 
     private int getTextColorCode()
     {
-        return mTextColor switch
+        return TextColor switch
         {
             EColorFlags.Black => 30,
             EColorFlags.Red => 31,
@@ -106,7 +77,7 @@ internal sealed class TextComponent : IPromptComponent
 
     private int[] getTextRgbColorCode()
     {
-        if (!mRgbColor.HasValue)
+        if (!RgbColor.HasValue)
         {
             return Array.Empty<int>();
         }
@@ -115,9 +86,9 @@ internal sealed class TextComponent : IPromptComponent
         [
             38,
             2,
-            mRgbColor.Value.R,
-            mRgbColor.Value.G,
-            mRgbColor.Value.B,
+            RgbColor.Value.R,
+            RgbColor.Value.G,
+            RgbColor.Value.B,
         ];
     }
 }

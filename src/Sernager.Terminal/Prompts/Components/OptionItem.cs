@@ -1,3 +1,5 @@
+using Sernager.Terminal.Prompts.Extensions.Components;
+
 namespace Sernager.Terminal.Prompts.Components;
 
 internal sealed class OptionItem<T>
