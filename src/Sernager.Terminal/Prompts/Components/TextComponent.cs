@@ -1,3 +1,5 @@
+using Sernager.Terminal.Prompts.Components.Texts;
+
 namespace Sernager.Terminal.Prompts.Components;
 
 internal sealed class TextComponent : IPromptComponent

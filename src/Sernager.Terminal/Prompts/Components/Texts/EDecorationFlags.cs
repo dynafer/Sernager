@@ -1,4 +1,4 @@
-namespace Sernager.Terminal.Prompts.Components;
+namespace Sernager.Terminal.Prompts.Components.Texts;
 
 [Flags]
 internal enum EDecorationFlags

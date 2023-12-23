@@ -1,4 +1,5 @@
 using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Components.Texts;
 
 namespace Sernager.Terminal.Prompts.Extensions.Components;
 

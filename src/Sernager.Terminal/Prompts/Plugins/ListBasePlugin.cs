@@ -1,5 +1,6 @@
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
+using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
 
