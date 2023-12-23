@@ -7,11 +7,19 @@ internal sealed class TableComponent : IPromptComponent
 {
     internal readonly List<Row> Rows = new List<Row>();
     private bool mUseBorder = false;
+    private bool mUseHeader = false;
     bool IPromptComponent.IsLineBreak => true;
 
     internal TableComponent UseBorder()
     {
         mUseBorder = true;
+
+        return this;
+    }
+
+    internal TableComponent UseHeader()
+    {
+        mUseHeader = true;
 
         return this;
     }
@@ -58,9 +66,13 @@ internal sealed class TableComponent : IPromptComponent
                     builder.Append(' ');
                 }
 
-                builder.Append(' ', padding);
+                builder.Append(' ', mUseHeader && i == 0
+                    ? padding
+                    : 1);
                 builder.Append(column.Render());
-                builder.Append(' ', padding + rest);
+                builder.Append(' ', mUseHeader && i == 0
+                    ? (padding + rest)
+                    : (padding * 2 + rest - 1));
 
                 index += column.Colspan;
                 if (index >= widths.Length)
