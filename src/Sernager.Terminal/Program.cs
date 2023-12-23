@@ -6,8 +6,11 @@ namespace Sernager.Terminal;
 
 internal class Program
 {
-    static void Main()
+    internal static void Main(params string[] args)
     {
-        Console.WriteLine("Hello World!");
+        Args.Init();
+        Args.Parse(args);
+
+        Startup.RegisterEvents();
     }
 }
