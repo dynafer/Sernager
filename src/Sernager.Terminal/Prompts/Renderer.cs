@@ -71,4 +71,9 @@ internal sealed class Renderer : IDisposable
 
         mWriter.Flush();
     }
+
+    internal void Render(IPromptComponent component)
+    {
+        Render(new List<IPromptComponent>() { component });
+    }
 }
