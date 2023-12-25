@@ -17,7 +17,7 @@ internal sealed class SettingBuilder : ISettingBuilder
         }
     }
 
-    public ISettingBuilder AddSettingName(string name, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public ISettingBuilder AddName(string name, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
         if (Configurator.Config.SettingNames.Contains(name))
         {
@@ -36,27 +36,27 @@ internal sealed class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    public ISettingBuilder AddSettingNames(params string[] names)
+    public ISettingBuilder AddNames(params string[] names)
     {
         foreach (string name in names)
         {
-            AddSettingName(name, EAddDataOption.SkipIfExists);
+            AddName(name, EAddDataOption.SkipIfExists);
         }
 
         return this;
     }
 
-    public ISettingBuilder AddSettingNames(IEnumerable<string> names, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public ISettingBuilder AddNames(IEnumerable<string> names, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
         foreach (string name in names)
         {
-            AddSettingName(name, option);
+            AddName(name, option);
         }
 
         return this;
     }
 
-    public ISettingBuilder RemoveSettingName(string name)
+    public ISettingBuilder RemoveName(string name)
     {
         if (!Configurator.Config.SettingNames.Contains(name))
         {
@@ -78,11 +78,11 @@ internal sealed class SettingBuilder : ISettingBuilder
         return this;
     }
 
-    public ISettingBuilder RemoveSettingNames(params string[] names)
+    public ISettingBuilder RemoveNames(params string[] names)
     {
         foreach (string name in names)
         {
-            RemoveSettingName(name);
+            RemoveName(name);
         }
 
         return this;
@@ -92,7 +92,7 @@ internal sealed class SettingBuilder : ISettingBuilder
     {
         if (!Configurator.Config.SettingNames.Contains(name))
         {
-            AddSettingName(name);
+            AddName(name);
         }
 
         if (!mSettingManagers.ContainsKey(name))

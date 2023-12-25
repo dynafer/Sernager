@@ -5,10 +5,10 @@ namespace Sernager.Core.Builders;
 
 public interface ISettingBuilder
 {
-    ISettingBuilder AddSettingName(string name, EAddDataOption option = EAddDataOption.SkipIfExists);
-    ISettingBuilder AddSettingNames(params string[] names);
-    ISettingBuilder AddSettingNames(IEnumerable<string> names, EAddDataOption option = EAddDataOption.SkipIfExists);
-    ISettingBuilder RemoveSettingName(string name);
-    ISettingBuilder RemoveSettingNames(params string[] names);
+    ISettingBuilder AddName(string name, EAddDataOption option = EAddDataOption.SkipIfExists);
+    ISettingBuilder AddNames(params string[] names);
+    ISettingBuilder AddNames(IEnumerable<string> names, EAddDataOption option = EAddDataOption.SkipIfExists);
+    ISettingBuilder RemoveName(string name);
+    ISettingBuilder RemoveNames(params string[] names);
     ISettingManager UseManager(string name);
 }

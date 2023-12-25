@@ -34,15 +34,7 @@ internal static class Configurator
             return;
         }
 
-        string extension = Path.GetExtension(filePath).ToLowerInvariant();
-        EConfigurationType? type = extension switch
-        {
-            ".yml" => EConfigurationType.Yaml,
-            ".yaml" => EConfigurationType.Yaml,
-            ".json" => EConfigurationType.Json,
-            ".srn" => EConfigurationType.Sernager,
-            _ => null,
-        };
+        EConfigurationType? type = SernagerBuilderUtil.GetConfigurationTypeOrNull(filePath);
 
         if (type == null)
         {
