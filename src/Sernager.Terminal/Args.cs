@@ -1,4 +1,5 @@
 using Sernager.Terminal.Attributes;
+using Sernager.Terminal.Models;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Tables;
@@ -10,43 +11,30 @@ namespace Sernager.Terminal;
 
 internal static class Args
 {
-    private static Dictionary<string, object> mValues = new Dictionary<string, object>();
-    private static Dictionary<string, ArgAttribute> mCommandAttributes = new Dictionary<string, ArgAttribute>();
+    internal static BuilderModel Model { get; private set; } = new BuilderModel();
+    private static Dictionary<string, (PropertyInfo, ArgAttribute, object?)> mCommandAttributes = new Dictionary<string, (PropertyInfo, ArgAttribute, object?)>();
     private static Dictionary<string, string> mShortNames = new Dictionary<string, string>();
 
     internal static void Init()
     {
-        Assembly currentAssembly = Assembly.GetExecutingAssembly();
-
-        string currentNamespace = currentAssembly.GetName().Name!;
-
-        Type[] types = currentAssembly.GetTypes()
-            .Where(type => type.Namespace != null
-                        && type.Namespace != currentNamespace
-                        && !type.Namespace.StartsWith($"{currentNamespace}.Attributes")
-                        && !type.Namespace.StartsWith($"{currentNamespace}.Prompts")
-            )
+        PropertyInfo[] properties = typeof(BuilderModel).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+            .Where(property => property.GetCustomAttribute<ArgAttribute>() != null)
             .ToArray();
 
-        foreach (Type type in types)
+        foreach (PropertyInfo property in properties)
         {
-            PropertyInfo[] propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            ArgAttribute? argAttribute = property.GetCustomAttribute<ArgAttribute>();
 
-            foreach (PropertyInfo propertyInfo in propertyInfos)
+            if (argAttribute == null)
             {
-                ArgAttribute? argAttribute = propertyInfo.GetCustomAttribute<ArgAttribute>();
+                continue;
+            }
 
-                if (argAttribute == null)
-                {
-                    continue;
-                }
+            mCommandAttributes.Add(argAttribute.Name, (property, argAttribute, property.GetValue(Model)));
 
-                mCommandAttributes.Add(argAttribute.Name, argAttribute);
-
-                if (!string.IsNullOrWhiteSpace(argAttribute.ShortName))
-                {
-                    mShortNames.Add(argAttribute.ShortName, argAttribute.Name);
-                }
+            if (!string.IsNullOrWhiteSpace(argAttribute.ShortName))
+            {
+                mShortNames.Add(argAttribute.ShortName, argAttribute.Name);
             }
         }
     }
@@ -84,15 +72,9 @@ internal static class Args
         mShortNames = null!;
     }
 
-    internal static T? GetValue<T>(string arg)
-        where T : notnull
+    internal static void Complete()
     {
-        if (!mValues.ContainsKey(arg))
-        {
-            return default;
-        }
-
-        return (T)mValues[arg];
+        Model = null!;
     }
 
     private static void parseArg(string arg, string? value = null)
@@ -106,37 +88,59 @@ internal static class Args
 
         arg = arg.Replace("-", string.Empty);
 
-        if (!mCommandAttributes.ContainsKey(arg))
+        if (!mCommandAttributes.ContainsKey(arg) && !mShortNames.ContainsKey(arg))
         {
             throw new ArgumentException($"Unknown argument: {arg}");
         }
 
-        if (mCommandAttributes[arg].IsBool)
+        if (mShortNames.ContainsKey(arg))
         {
-            if (value != null)
-            {
-                if (bool.TryParse(value, out bool result))
-                {
-                    mValues.Add(arg, result);
-                    return;
-                }
-                else if (value == "1" || value == "0")
-                {
-                    mValues.Add(arg, value == "1");
-                    return;
-                }
-            }
+            arg = mShortNames[arg];
+        }
 
-            mValues.Add(arg, true);
+        (PropertyInfo property, ArgAttribute attribute, object? defaultValue) = mCommandAttributes[arg];
+
+        if (property.GetValue(Model)?.Equals(defaultValue) == false)
+        {
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(value))
+        switch (property.PropertyType)
         {
-            throw new ArgumentException($"Argument {arg} requires {mCommandAttributes[arg].Value}");
-        }
+            case Type stringType when stringType == typeof(string):
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException($"Argument {arg} requires {attribute.Value}");
+                }
 
-        mValues.Add(arg, value);
+                property.SetValue(Model, value);
+                return;
+            }
+            case Type boolType when boolType == typeof(bool):
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    property.SetValue(Model, true);
+                    return;
+                }
+
+                if (bool.TryParse(value, out bool result))
+                {
+                    property.SetValue(Model, result);
+                    return;
+                }
+
+                if (value == "1" || value == "0")
+                {
+                    property.SetValue(Model, value == "1");
+                }
+
+                return;
+            }
+            default:
+                break;
+        }
     }
 
     private static void help()
@@ -159,19 +163,21 @@ internal static class Args
                 )
             );
 
-        foreach (KeyValuePair<string, ArgAttribute> command in mCommandAttributes)
+        foreach (KeyValuePair<string, (PropertyInfo, ArgAttribute, object?)> command in mCommandAttributes)
         {
+            (PropertyInfo _, ArgAttribute attribute, object? _) = command.Value;
+
             string arguments = $"--{command.Key}";
-            if (!string.IsNullOrWhiteSpace(command.Value.ShortName))
+            if (!string.IsNullOrWhiteSpace(attribute.ShortName))
             {
-                arguments += $", -{command.Value.ShortName}";
+                arguments += $", -{attribute.ShortName}";
             }
 
             table.AddRows(
                 new Row(
                     new TextComponent().SetText(arguments),
-                    new TextComponent().SetText(command.Value.Value),
-                    new TextComponent().SetText(command.Value.Description)
+                    new TextComponent().SetText(attribute.Value),
+                    new TextComponent().SetText(attribute.Description)
                 )
             );
         }
@@ -180,5 +186,7 @@ internal static class Args
         {
             renderer.Render(table);
         }
+
+        Environment.Exit(1);
     }
 }
