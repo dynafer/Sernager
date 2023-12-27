@@ -10,7 +10,7 @@ internal static class Randomizer
     {
         if (length < 0)
         {
-            ErrorManager.ThrowFail<ArgumentException>("Length cannot be negative");
+            ExceptionManager.ThrowFail<ArgumentException>("Length cannot be negative");
             return string.Empty;
         }
 
@@ -22,7 +22,7 @@ internal static class Randomizer
     {
         if (minLength < 0 || maxLength < 0 || minLength > maxLength)
         {
-            ErrorManager.ThrowFail<ArgumentException>("Length cannot be negative or min length cannot be greater than max length");
+            ExceptionManager.ThrowFail<ArgumentException>("Length cannot be negative or min length cannot be greater than max length");
             return string.Empty;
         }
 

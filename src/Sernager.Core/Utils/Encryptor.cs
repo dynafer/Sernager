@@ -10,7 +10,7 @@ internal static class Encryptor
     {
         if (value == null)
         {
-            ErrorManager.ThrowFail<ArgumentNullException>(nameof(value));
+            ExceptionManager.ThrowFail<ArgumentNullException>(nameof(value));
             return Array.Empty<byte>();
         }
 

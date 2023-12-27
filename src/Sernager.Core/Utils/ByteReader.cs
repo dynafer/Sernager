@@ -24,13 +24,13 @@ internal sealed class ByteReader : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
             return Array.Empty<byte>();
         }
 
         if (Position + length > mBytes.Length)
         {
-            ErrorManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
+            ExceptionManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
             return Array.Empty<byte>();
         }
 
@@ -47,7 +47,7 @@ internal sealed class ByteReader : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
             return 0;
         }
 
@@ -60,7 +60,7 @@ internal sealed class ByteReader : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
             return string.Empty;
         }
 
@@ -73,13 +73,13 @@ internal sealed class ByteReader : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
             return;
         }
 
         if (Position + length > mBytes.Length)
         {
-            ErrorManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
+            ExceptionManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
             return;
         }
 

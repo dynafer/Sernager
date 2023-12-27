@@ -23,7 +23,7 @@ internal sealed class SettingManager : ISettingManager
     {
         if (!File.Exists(filePath))
         {
-            ErrorManager.ThrowFail<FileNotFoundException>("Env file not found.", filePath);
+            ExceptionManager.ThrowFail<FileNotFoundException>("Env file not found.", filePath);
             return this;
         }
 

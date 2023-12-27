@@ -16,7 +16,7 @@ public sealed class SernagerBuilder
 
     public SernagerBuilder SetErrorLevel(EErrorLevel level)
     {
-        ErrorManager.ErrorLevel = level;
+        ExceptionManager.ErrorLevel = level;
 
         return this;
     }
@@ -25,7 +25,7 @@ public sealed class SernagerBuilder
     {
         if (!File.Exists(configPath))
         {
-            ErrorManager.ThrowFail<FileNotFoundException>("Config file not found.", configPath);
+            ExceptionManager.ThrowFail<FileNotFoundException>("Config file not found.", configPath);
         }
         else
         {

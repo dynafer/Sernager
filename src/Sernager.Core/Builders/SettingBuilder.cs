@@ -12,7 +12,7 @@ internal sealed class SettingBuilder : ISettingBuilder
     {
         if (!Configurator.IsInitialized)
         {
-            ErrorManager.ThrowFail<InvalidOperationException>("You must call SernagerBuilder.Build().");
+            ExceptionManager.ThrowFail<InvalidOperationException>("You must call SernagerBuilder.Build().");
             return;
         }
     }

@@ -37,7 +37,7 @@ internal sealed class ConfigurationMetadata : IDisposable
             case EConfigurationType.Sernager:
                 return fromSernagerBytes(reader.ReadBytes(reader.Length - reader.Position));
             default:
-                ErrorManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
+                ExceptionManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
                 return new ConfigurationMetadata(new Configuration());
         }
     }
@@ -53,7 +53,7 @@ internal sealed class ConfigurationMetadata : IDisposable
             case EConfigurationType.Sernager:
                 return toSernagerBytes();
             default:
-                ErrorManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
+                ExceptionManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
                 return Array.Empty<byte>();
         }
     }
@@ -65,7 +65,7 @@ internal sealed class ConfigurationMetadata : IDisposable
 
         if (config == null)
         {
-            ErrorManager.ThrowFail<YamlException>("Failed to deserialize configuration.");
+            ExceptionManager.ThrowFail<YamlException>("Failed to deserialize configuration.");
             return new ConfigurationMetadata(new Configuration());
         }
 
@@ -79,7 +79,7 @@ internal sealed class ConfigurationMetadata : IDisposable
 
         if (config == null)
         {
-            ErrorManager.ThrowFail<JsonException>("Failed to deserialize configuration.");
+            ExceptionManager.ThrowFail<JsonException>("Failed to deserialize configuration.");
             return new ConfigurationMetadata(new Configuration());
         }
 
@@ -105,7 +105,7 @@ internal sealed class ConfigurationMetadata : IDisposable
 
             if (config == null)
             {
-                ErrorManager.ThrowFail<SernagerException>("Failed to deserialize configuration.");
+                ExceptionManager.ThrowFail<SernagerException>("Failed to deserialize configuration.");
                 return new ConfigurationMetadata(new Configuration());
             }
 

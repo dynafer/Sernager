@@ -16,7 +16,7 @@ internal static class Configurator
     {
         if (IsInitialized)
         {
-            ErrorManager.ThrowFail<InvalidOperationException>("Configurator already initialized.");
+            ExceptionManager.ThrowFail<InvalidOperationException>("Configurator already initialized.");
             return;
         }
 
@@ -30,7 +30,7 @@ internal static class Configurator
     {
         if (IsInitialized)
         {
-            ErrorManager.ThrowFail<InvalidOperationException>("Configurator already initialized.");
+            ExceptionManager.ThrowFail<InvalidOperationException>("Configurator already initialized.");
             return;
         }
 
@@ -38,7 +38,7 @@ internal static class Configurator
 
         if (type == null)
         {
-            ErrorManager.ThrowFail<InvalidOperationException>("Invalid configuration file extension.");
+            ExceptionManager.ThrowFail<InvalidOperationException>("Invalid configuration file extension.");
             return;
         }
 
@@ -63,7 +63,7 @@ internal static class Configurator
     {
         if (!IsInitialized)
         {
-            ErrorManager.ThrowFail<InvalidOperationException>("Configurator hasn't initialized.");
+            ExceptionManager.ThrowFail<InvalidOperationException>("Configurator hasn't initialized.");
             return;
         }
 

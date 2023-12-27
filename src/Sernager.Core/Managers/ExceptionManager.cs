@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Sernager.Core.Managers;
 
-public static class ErrorManager
+public static class ExceptionManager
 {
     public static EErrorLevel ErrorLevel { get; set; } = EErrorLevel.None;
 

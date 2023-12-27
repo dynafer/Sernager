@@ -7,6 +7,6 @@ public class BaseFixture
 {
     public BaseFixture()
     {
-        ErrorManager.ErrorLevel = EErrorLevel.Exception;
+        ExceptionManager.ErrorLevel = EErrorLevel.Exception;
     }
 }

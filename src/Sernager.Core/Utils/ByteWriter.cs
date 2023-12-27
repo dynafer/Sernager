@@ -25,7 +25,7 @@ internal sealed class ByteWriter : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
             return this;
         }
 
@@ -43,7 +43,7 @@ internal sealed class ByteWriter : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
             return this;
         }
 
@@ -58,7 +58,7 @@ internal sealed class ByteWriter : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
             return this;
         }
 
@@ -73,7 +73,7 @@ internal sealed class ByteWriter : IDisposable
     {
         if (mBytes == null)
         {
-            ErrorManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
             return Array.Empty<byte>();
         }
 
