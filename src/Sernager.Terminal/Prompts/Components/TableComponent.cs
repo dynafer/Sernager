@@ -34,7 +34,6 @@ internal sealed class TableComponent : IPromptComponent
         ensureRowCount();
 
         int[] widths = measureWidths();
-        bool[][] grid = createTableGrid();
 
         StringBuilder builder = new StringBuilder();
 
@@ -44,10 +43,12 @@ internal sealed class TableComponent : IPromptComponent
         {
             if (i != 0)
             {
-                addMiddleHorizontalEdgeBorder(builder, widths, grid, i);
+                addMiddleHorizontalEdgeBorder(builder, widths, i);
             }
 
+            bool bHeaderRow = mUseHeader && i == 0;
             int index = 0;
+
             foreach (Column column in Rows[i].Columns)
             {
                 int padding = widths[index] - column.Length;
@@ -68,11 +69,11 @@ internal sealed class TableComponent : IPromptComponent
                     builder.Append(' ');
                 }
 
-                builder.Append(' ', mUseHeader && i == 0
+                builder.Append(' ', bHeaderRow
                     ? padding
                     : 1);
                 builder.Append(column.Render());
-                builder.Append(' ', mUseHeader && i == 0
+                builder.Append(' ', bHeaderRow
                     ? (padding + rest)
                     : (padding * 2 + rest - 1));
 
@@ -98,11 +99,11 @@ internal sealed class TableComponent : IPromptComponent
 
     private void ensureRowCount()
     {
-        int columnCount = Rows[0].Columns.Count;
+        int columnCount = Rows[0].TotalColumns;
 
         for (int i = 1; i < Rows.Count; ++i)
         {
-            if (Rows[i].Columns.Count != columnCount)
+            if (Rows[i].TotalColumns != columnCount)
             {
                 throw new InvalidOperationException("All rows must have the same number of columns or colspan.");
             }
@@ -127,9 +128,9 @@ internal sealed class TableComponent : IPromptComponent
         foreach (Column column in row.Columns)
         {
             int width = widths[index];
-            for (int j = 1; j < column.Colspan; ++j)
+            for (int i = 1; i < column.Colspan; ++i)
             {
-                width += widths[index + j] + 1;
+                width += widths[index + i] + 1;
             }
 
             builder.Append('─', width);
@@ -153,7 +154,7 @@ internal sealed class TableComponent : IPromptComponent
         }
     }
 
-    private void addMiddleHorizontalEdgeBorder(StringBuilder builder, int[] widths, bool[][] grid, int curRowIndex)
+    private void addMiddleHorizontalEdgeBorder(StringBuilder builder, int[] widths, int curRowIndex)
     {
         if (!mUseBorder)
         {
@@ -165,12 +166,12 @@ internal sealed class TableComponent : IPromptComponent
         int index = 0;
         foreach (Column column in Rows[curRowIndex].Columns)
         {
-            for (int j = 0; j < column.Colspan; ++j)
+            for (int i = 0; i < column.Colspan; ++i)
             {
-                builder.Append('─', widths[index + j]);
-                if (index + j < widths.Length - 1)
+                builder.Append('─', widths[index + i]);
+                if (index + i < widths.Length - 1)
                 {
-                    builder.Append(selectMiddlePartition(grid, curRowIndex, index + j, column.Colspan - j - 1));
+                    builder.Append(selectMiddlePartition(curRowIndex, index + i, column.Colspan - i - 1));
                 }
             }
 
@@ -185,76 +186,53 @@ internal sealed class TableComponent : IPromptComponent
         builder.AppendLine();
     }
 
-    private char selectMiddlePartition(bool[][] grid, int curRowIndex, int curColIndex, int remainingColspan = 0)
+    private char selectMiddlePartition(int curRowIndex, int curColIndex, int remainingColspan = 0)
     {
-        bool[] prevRow = grid[curRowIndex - 1];
+        List<bool> prevRowGrid = Rows[curRowIndex - 1].RowGrid;
 
         if (remainingColspan > 0)
         {
-            return prevRow[curColIndex] ? '┴' : '─';
+            return prevRowGrid[curColIndex] ? '┴' : '─';
         }
         else
         {
-            return curColIndex + 1 < prevRow.Length && prevRow[curColIndex + 1] ? '┼' : '┬';
+            return curColIndex + 1 < prevRowGrid.Count && prevRowGrid[curColIndex + 1] ? '┼' : '┬';
         }
-    }
-
-    private bool[][] createTableGrid()
-    {
-        bool[][] grid = new bool[Rows.Count][];
-
-        for (int i = 0; i < Rows.Count; ++i)
-        {
-            grid[i] = Rows[i].RowGrid.ToArray();
-        }
-
-        return grid;
     }
 
     private int[] measureWidths()
     {
         int[] widths = new int[Rows[0].Widths.Count];
 
-        Rows[0].Widths.CopyTo(widths);
-
-        for (int i = 1; i < Rows.Count; ++i)
+        foreach (Row row in Rows)
         {
-            Row row = Rows[i];
-
-            for (int j = 0; j < row.Widths.Count; ++j)
+            for (int i = 0; i < row.Widths.Count; ++i)
             {
-                if (!row.RowGrid[j])
+                if (!row.RowGrid[i])
                 {
                     continue;
                 }
 
-                int colspanWidth = widths[j];
+                int colspanWidth = widths[i];
                 int colspan = 1;
-                for (int k = j + 1; k < row.Widths.Count; ++k)
+                for (int j = i + 1; j < row.Widths.Count && !row.RowGrid[j]; ++j)
                 {
-                    if (row.RowGrid[k])
-                    {
-                        break;
-                    }
-
-                    colspanWidth += widths[k];
+                    colspanWidth += widths[j];
                     ++colspan;
                 }
 
                 if (colspan == 1)
                 {
-                    widths[j] = Math.Max(widths[j], row.Widths[j]);
-                    continue;
+                    widths[i] = Math.Max(widths[i], row.Widths[i]);
                 }
-
-                if (colspanWidth < row.Widths[j])
+                else if (colspanWidth < row.Widths[i])
                 {
-                    int restWidth = row.Widths[j] - colspanWidth;
-                    restWidth = (int)Math.Ceiling((float)(restWidth / colspan)) + (restWidth % 2);
+                    int averageWidth = row.Widths[i] - colspanWidth;
+                    averageWidth = (int)Math.Ceiling((float)(averageWidth / colspan)) + (averageWidth % 2);
 
-                    for (int k = j; k < j + colspan; ++k)
+                    for (int j = i; j < i + colspan; ++j)
                     {
-                        widths[k] += restWidth;
+                        widths[j] += averageWidth;
                     }
                 }
             }
