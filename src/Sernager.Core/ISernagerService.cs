@@ -1,8 +1,8 @@
-using Sernager.Core.Builders;
+using Sernager.Core.Managers;
 
 namespace Sernager.Core;
 
 public interface ISernagerService
 {
-    ISettingBuilder Setting { get; }
+    ISettingManager ManageSetting(string settingName);
 }

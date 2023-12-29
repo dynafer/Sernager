@@ -1,6 +1,6 @@
 namespace Sernager.Core;
 
-public class SernagerException : Exception
+public sealed class SernagerException : Exception
 {
     public SernagerException()
     {
