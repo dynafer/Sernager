@@ -55,10 +55,7 @@ internal static class Prompter
                 }
             }
 
-            if (plugin.ShouldContinueToNextLine)
-            {
-                Writer.WriteLine();
-            }
+            renderer.Render(plugin.RenderLast());
         }
 
         return result.ToResult<TResult>();

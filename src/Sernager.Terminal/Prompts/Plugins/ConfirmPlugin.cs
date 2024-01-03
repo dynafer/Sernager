@@ -1,4 +1,5 @@
 using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 
@@ -6,8 +7,8 @@ namespace Sernager.Terminal.Prompts.Plugins;
 
 internal sealed class ConfirmPlugin : ITypePlugin<bool>
 {
+    private string mResult = string.Empty;
     public string Prompt { get; set; } = string.Empty;
-    public bool ShouldContinueToNextLine => true;
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
@@ -16,6 +17,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
             case ConsoleKey.Y:
             case ConsoleKey.N:
                 result = keyInfo.Key == ConsoleKey.Y;
+                mResult = keyInfo.Key.ToString();
 
                 return true;
         }
@@ -31,6 +33,26 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetText($"{Prompt} [Y/n] ")
+        ];
+
+        return components;
+    }
+
+    List<IPromptComponent> IBasePlugin.RenderLast()
+    {
+        List<IPromptComponent> components =
+        [
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetText(Prompt),
+            new CursorComponent()
+                .AddCursors(
+                    new { Direction = ECursorDirection.Right, Count = 1 }
+                ),
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetTextColor(EColorFlags.Green)
+                .SetText(mResult)
         ];
 
         return components;

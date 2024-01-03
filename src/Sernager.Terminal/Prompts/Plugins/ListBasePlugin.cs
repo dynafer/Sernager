@@ -13,33 +13,9 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     public readonly List<OptionItem<TOptionValue>> Options = new List<OptionItem<TOptionValue>>();
     private protected AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     public string Prompt { get; set; } = string.Empty;
-    public bool ShouldContinueToNextLine => mAutoComplete != null;
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
-        switch (keyInfo.Key)
-        {
-            case ConsoleKey.Enter:
-                (List<OptionItem<TOptionValue>> options, int _) = getOptions();
-                result = options[Pagination.Offset].Value;
-
-                return true;
-            case ConsoleKey.UpArrow:
-                Pagination.Prev();
-                break;
-            case ConsoleKey.DownArrow:
-                Pagination.Next();
-                break;
-            default:
-                if (mAutoComplete != null)
-                {
-                    mAutoComplete.InterceptInput(keyInfo);
-                    Pagination.Home();
-                }
-
-                break;
-        }
-
         result = null!;
 
         return false;
@@ -106,6 +82,11 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
         }
 
         return components;
+    }
+
+    List<IPromptComponent> IBasePlugin.RenderLast()
+    {
+        return new List<IPromptComponent>();
     }
 
     private protected (List<OptionItem<TOptionValue>>, int) getOptions()

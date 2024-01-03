@@ -1,4 +1,7 @@
 using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Components.Cursors;
+using Sernager.Terminal.Prompts.Components.Texts;
+using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Prompts.Plugins;
@@ -6,6 +9,8 @@ namespace Sernager.Terminal.Prompts.Plugins;
 internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValue>, IEnumerableResultBasePlugin<TOptionValue>
     where TOptionValue : notnull
 {
+    private List<string> mResult = new List<string>();
+
     internal MultiSelectionPlugin<TOptionValue> UseAutoComplete()
     {
         mAutoComplete = new AutoComplete<OptionItem<TOptionValue>>();
@@ -21,6 +26,7 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
             {
                 (List<OptionItem<TOptionValue>> options, int _) = getOptions();
                 result = options.Select(x => x.Value);
+                mResult = options.Select(x => x.Name).ToList();
 
                 return true;
             }
@@ -49,5 +55,26 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
         result = null!;
 
         return false;
+    }
+
+    List<IPromptComponent> IBasePlugin.RenderLast()
+    {
+        List<IPromptComponent> components =
+        [
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetText(Prompt),
+            new CursorComponent()
+                .AddCursors(
+                    new { Direction = ECursorDirection.Right, Count = 1 }
+                ),
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetTextColor(EColorFlags.Green)
+                .SetText(string.Join(", ", mResult))
+                .UseLineBreak(),
+        ];
+
+        return components;
     }
 }

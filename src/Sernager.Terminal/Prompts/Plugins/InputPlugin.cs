@@ -14,7 +14,6 @@ internal sealed class InputPlugin : ITypePlugin<string>
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public bool ShouldShowHints { get; set; } = false;
-    public bool ShouldContinueToNextLine => true;
 
     internal InputPlugin UseAutoComplete()
     {
@@ -108,6 +107,25 @@ internal sealed class InputPlugin : ITypePlugin<string>
         components.Add(new CursorComponent()
             .AddCursor(ECursorDirection.HorizontalAbsolute, startPosition + mInput.CursorPosition)
         );
+
+        return components;
+    }
+
+    List<IPromptComponent> IBasePlugin.RenderLast()
+    {
+        List<IPromptComponent> components = [
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetText(Prompt),
+            new CursorComponent()
+                .AddCursors(
+                    new { Direction = ECursorDirection.Right, Count = 1 }
+                ),
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetTextColor(EColorFlags.Green)
+                .SetText(mInput.Input)
+        ];
 
         return components;
     }
