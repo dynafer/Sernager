@@ -1,3 +1,3 @@
-namespace Sernager.Terminal.Models.Histories;
+namespace Sernager.Terminal.Models;
 
 internal delegate void HistoryResultHandler(object result);

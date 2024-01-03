@@ -1,3 +1,4 @@
+using Sernager.Core.Configs;
 using Sernager.Core.Managers;
 
 namespace Sernager.Core;
@@ -26,5 +27,10 @@ internal sealed class SernagerService : ISernagerService
         }
 
         return new GroupManager(groupName);
+    }
+
+    string[] ISernagerService.GetGroupNames()
+    {
+        return Configurator.Config.Groups.Keys.ToArray();
     }
 }

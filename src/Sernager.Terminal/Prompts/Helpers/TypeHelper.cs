@@ -28,6 +28,11 @@ internal static class TypeHelper
     internal static void EnsureIsPluginResultType<TResult>(IBasePlugin plugin)
         where TResult : notnull
     {
+        if (typeof(TResult) == typeof(object))
+        {
+            return;
+        }
+
         switch (plugin)
         {
             case ConfirmPlugin _:

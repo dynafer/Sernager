@@ -8,6 +8,13 @@ internal static class Prompter
 {
     internal readonly static TextWriter Writer = Console.Out;
 
+    internal static object Prompt(IBasePlugin plugin)
+    {
+        object result = startPrompt<object, object>(plugin);
+
+        return result;
+    }
+
     internal static TResult Prompt<TResult>(ITypePlugin<TResult> plugin)
         where TResult : notnull
     {

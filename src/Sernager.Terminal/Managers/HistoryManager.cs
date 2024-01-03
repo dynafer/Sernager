@@ -1,13 +1,13 @@
 using Sernager.Terminal.Models;
 
-namespace Sernager.Terminal.Helpers;
+namespace Sernager.Terminal.Managers;
 
 internal static class HistoryManager
 {
     private static readonly Dictionary<Guid, HistoryModel> mHistories = new Dictionary<Guid, HistoryModel>();
     private static readonly Stack<Guid> mHistoryStacks = new Stack<Guid>();
 
-    internal static void AddWithoutRun(HistoryModel history)
+    internal static void Run(HistoryModel history, bool bSkip = false)
     {
         if (!mHistories.ContainsKey(history.Id))
         {
@@ -15,17 +15,30 @@ internal static class HistoryManager
         }
 
         mHistoryStacks.Push(history.Id);
+
+        if (bSkip)
+        {
+            return;
+        }
+
+        history.RunWithPrompt();
     }
 
-    internal static void Run(HistoryModel history)
+    internal static void Run(Guid historyId, bool bSkip = false)
     {
-        if (!mHistories.ContainsKey(history.Id))
+        if (!mHistories.ContainsKey(historyId))
         {
-            mHistories.Add(history.Id, history);
+            return;
         }
 
-        mHistoryStacks.Push(history.Id);
-        history.RunWithPrompt();
+        mHistoryStacks.Push(historyId);
+
+        if (bSkip)
+        {
+            return;
+        }
+
+        mHistories[historyId].RunWithPrompt();
     }
 
     internal static void Prev()
@@ -35,7 +48,9 @@ internal static class HistoryManager
             return;
         }
 
-        Guid historyId = mHistoryStacks.Pop();
+        mHistoryStacks.Pop();
+
+        Guid historyId = mHistoryStacks.Peek();
         mHistories[historyId].RunWithPrompt();
     }
 

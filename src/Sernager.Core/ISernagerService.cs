@@ -6,4 +6,5 @@ public interface ISernagerService
 {
     ISettingManager ManageSetting(string settingName);
     IGroupManager ManageGroup(string groupName);
+    string[] GetGroupNames();
 }
