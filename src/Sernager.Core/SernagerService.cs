@@ -1,5 +1,6 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Managers;
+using Sernager.Core.Options;
 
 namespace Sernager.Core;
 
@@ -32,5 +33,10 @@ internal sealed class SernagerService : ISernagerService
     string[] ISernagerService.GetGroupNames()
     {
         return Configurator.Config.Groups.Keys.ToArray();
+    }
+
+    void ISernagerService.SaveAs(EConfigurationType type)
+    {
+        Configurator.SaveAsFile(type);
     }
 }

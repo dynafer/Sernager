@@ -41,6 +41,23 @@ internal static class Args
         }
     }
 
+    internal static string[] GetCommands(string[] args)
+    {
+        List<string> commandArgs = new List<string>();
+
+        foreach (string arg in args)
+        {
+            if (arg.StartsWith("--") || arg.StartsWith("-"))
+            {
+                break;
+            }
+
+            commandArgs.Add(arg);
+        }
+
+        return commandArgs.ToArray();
+    }
+
     internal static void Parse(string[] args)
     {
         if (args.Length == 0)

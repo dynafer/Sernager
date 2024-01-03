@@ -21,6 +21,7 @@ internal static class Configurator
         }
 
         mConfigDir = Path.GetFullPath(Directory.GetCurrentDirectory());
+        mConfigName = "sernager";
         Config = new Configuration();
 
         Debug.WriteLine("Configurator initialized.");
