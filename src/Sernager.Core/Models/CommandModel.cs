@@ -1,10 +1,11 @@
 namespace Sernager.Core.Models;
 
-internal sealed class CommandModel
+public sealed class CommandModel
 {
     public string Name { get; init; } = string.Empty;
     public string ShortName { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
+    public List<string> UsedSettings { get; init; } = new List<string>();
     private object mCommand = null!;
     public object Command
     {
@@ -12,7 +13,7 @@ internal sealed class CommandModel
         {
             return mCommand;
         }
-        init
+        set
         {
             if (value is string)
             {

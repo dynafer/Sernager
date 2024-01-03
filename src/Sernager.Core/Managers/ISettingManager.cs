@@ -5,6 +5,7 @@ namespace Sernager.Core.Managers;
 
 public interface ISettingManager
 {
+    void RemoveSetting();
     ISettingManager AddEnvFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists);
     string? GetEnvVariableOrNull(string key);
     ReadOnlyDictionary<string, string> GetEnvVariables();

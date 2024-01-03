@@ -4,15 +4,27 @@ namespace Sernager.Core;
 
 internal sealed class SernagerService : ISernagerService
 {
-    public ISettingManager ManageSetting(string settingName)
+    ISettingManager ISernagerService.ManageSetting(string settingName)
     {
         ISettingManager manager;
 
-        if (CacheManager.TryGet(settingName, out manager))
+        if (CacheManager.TryGet($"Setting-{settingName}", out manager))
         {
             return manager;
         }
 
         return new SettingManager(settingName);
+    }
+
+    IGroupManager ISernagerService.ManageGroup(string groupName)
+    {
+        IGroupManager manager;
+
+        if (CacheManager.TryGet($"Group-{groupName}", out manager))
+        {
+            return manager;
+        }
+
+        return new GroupManager(groupName);
     }
 }

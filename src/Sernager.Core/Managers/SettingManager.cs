@@ -7,7 +7,8 @@ namespace Sernager.Core.Managers;
 
 internal sealed class SettingManager : ISettingManager
 {
-    private Dictionary<string, string> mSettings { get; set; }
+    private string mName;
+    private Dictionary<string, string> mSettings;
 
     internal SettingManager(string name)
     {
@@ -16,7 +17,16 @@ internal sealed class SettingManager : ISettingManager
             Configurator.Config.Settings.Add(name, new Dictionary<string, string>());
         }
 
+        mName = name;
         mSettings = Configurator.Config.Settings[name];
+    }
+
+    public void RemoveSetting()
+    {
+        mSettings.Clear();
+        mSettings = null!;
+        Configurator.Config.Settings.Remove(mName);
+        mName = null!;
     }
 
     public ISettingManager AddEnvFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists)
