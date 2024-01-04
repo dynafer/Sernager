@@ -4,9 +4,9 @@ using Sernager.Core.Models;
 
 namespace Sernager.Core.Extensions;
 
-public static class GroupManagerExtension
+public static class CommandManagerExtension
 {
-    public static IGroupManager AddGroup(this IGroupManager manager, GroupModel groupModel)
+    public static ICommandManager AddGroup(this ICommandManager manager, GroupModel groupModel)
     {
         if (existsInGroup(groupModel))
         {
@@ -16,14 +16,14 @@ public static class GroupManagerExtension
 
         Guid id = Guid.NewGuid();
 
-        Configurator.Config.SubGroups.Add(id, groupModel);
+        Configurator.Config.CommandSubGroups.Add(id, groupModel);
 
         manager.CurrentGroup.Items.Add(id);
 
         return manager;
     }
 
-    public static IGroupManager AddCommand(this IGroupManager manager, CommandModel commandModel)
+    public static ICommandManager AddCommand(this ICommandManager manager, CommandModel commandModel)
     {
         if (existsInCommands(commandModel))
         {
@@ -42,8 +42,8 @@ public static class GroupManagerExtension
 
     private static bool existsInGroup(GroupModel groupModel)
     {
-        return Configurator.Config.Groups.Values.Where(x => x == groupModel).FirstOrDefault() != null ||
-               Configurator.Config.SubGroups.Values.Where(x => x == groupModel).FirstOrDefault() != null;
+        return Configurator.Config.CommandMainGroups.Values.Where(x => x == groupModel).FirstOrDefault() != null ||
+               Configurator.Config.CommandSubGroups.Values.Where(x => x == groupModel).FirstOrDefault() != null;
     }
 
     private static bool existsInCommands(CommandModel commandModel)

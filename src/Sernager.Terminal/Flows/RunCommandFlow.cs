@@ -9,7 +9,7 @@ internal static class RunCommandFlow
 {
     internal static void Run()
     {
-        (string, string)[] options = Program.Service.GetGroupNames()
+        (string, string)[] options = Program.Service.GetCommandGroupNames()
             .Select(x => (x, x))
             .ToArray();
 
@@ -18,24 +18,13 @@ internal static class RunCommandFlow
             .SetPageSize(5)
             .UseAutoComplete()
             .AddOptions(options)
-            .AddOptions(
-                ("Back", "Back"),
-                ("Exit", "Exit")
-            );
+            .AddFlowCommonOptions();
 
         HistoryResultHandler handler = (object result) =>
         {
-            switch (result)
+            if (!FlowManager.TryHandleCommonOptions((string)result))
             {
-                case "Back":
-                    HistoryManager.Prev();
-                    break;
-                case "Exit":
-                    Environment.Exit(0);
-                    break;
-                default:
-                    RunCommand((string)result);
-                    break;
+                RunCommand((string)result);
             }
         };
 

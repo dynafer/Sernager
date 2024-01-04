@@ -6,33 +6,33 @@ namespace Sernager.Core;
 
 internal sealed class SernagerService : ISernagerService
 {
-    ISettingManager ISernagerService.ManageSetting(string settingName)
+    IEnvironmentManager ISernagerService.ManageEnvironmentGroup(string groupName, string shortName, string description)
     {
-        ISettingManager manager;
+        IEnvironmentManager manager;
 
-        if (CacheManager.TryGet($"Setting-{settingName}", out manager))
+        if (CacheManager.TryGet($"Environment-Group-{groupName}", out manager))
         {
             return manager;
         }
 
-        return new SettingManager(settingName);
+        return new EnvironmentManager(groupName, shortName, description);
     }
 
-    IGroupManager ISernagerService.ManageGroup(string groupName)
+    ICommandManager ISernagerService.ManageCommandGroup(string groupName, string shortName, string description)
     {
-        IGroupManager manager;
+        ICommandManager manager;
 
-        if (CacheManager.TryGet($"Group-{groupName}", out manager))
+        if (CacheManager.TryGet($"Command-Group-{groupName}", out manager))
         {
             return manager;
         }
 
-        return new GroupManager(groupName);
+        return new CommandManager(groupName, shortName, description);
     }
 
-    string[] ISernagerService.GetGroupNames()
+    string[] ISernagerService.GetCommandGroupNames()
     {
-        return Configurator.Config.Groups.Keys.ToArray();
+        return Configurator.Config.CommandMainGroups.Keys.ToArray();
     }
 
     void ISernagerService.SaveAs(EConfigurationType type)

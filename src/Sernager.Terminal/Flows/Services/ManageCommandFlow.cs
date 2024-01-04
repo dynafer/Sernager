@@ -1,6 +1,6 @@
 namespace Sernager.Terminal.Flows.Services;
 
-internal static class ManageSettingsFlow
+internal static class ManageCommandFlow
 {
     internal static void Run()
     {

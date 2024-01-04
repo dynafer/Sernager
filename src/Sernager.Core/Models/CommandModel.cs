@@ -5,7 +5,7 @@ public sealed class CommandModel
     public string Name { get; init; } = string.Empty;
     public string ShortName { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
-    public List<string> UsedSettings { get; init; } = new List<string>();
+    public List<string> UsedEnvironmentGroups { get; init; } = new List<string>();
     private object mCommand = null!;
     public object Command
     {

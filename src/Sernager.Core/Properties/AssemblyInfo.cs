@@ -1,7 +1,7 @@
 using System.Reflection;
 
 [assembly: AssemblyTitle("Sernager")]
-[assembly: AssemblyDescription("Sernager is a tool for managing envs, configs, settings, and commands.")]
+[assembly: AssemblyDescription("Sernager is a tool for managing envs, configs, and commands.")]
 [assembly: AssemblyCompany("Sernager")]
 [assembly: AssemblyProduct("Sernager")]
 [assembly: AssemblyTrademark("Sernager")]

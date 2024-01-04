@@ -7,7 +7,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows;
 
-internal static class ManageServicesFlow
+internal static class ManageServiceFlow
 {
     internal static void Run()
     {
@@ -16,31 +16,27 @@ internal static class ManageServicesFlow
             .SetPageSize(5)
             .UseAutoComplete()
             .AddOptions(
-                ("Manage settings", "ManageSettings"),
-                ("Manage groups", "ManageGroups"),
-                ("Save as ...", "SaveAs"),
-                ("Back", "Back"),
-                ("Exit", "Exit")
-            );
+                ("Manage environments", "ManageEnvironments"),
+                ("Manage commands", "ManageCommands"),
+                ("Save as ...", "SaveAs")
+            )
+            .AddFlowCommonOptions();
 
         HistoryResultHandler handler = (object result) =>
         {
             switch (result)
             {
-                case "ManageSettings":
-                    ManageSettingsFlow.Run();
+                case "ManageEnvironments":
+                    ManageEnvironmentFlow.Run();
                     break;
-                case "ManageGroups":
-                    ManageGroupsFlow.Run();
+                case "ManageCommands":
+                    ManageCommandFlow.Run();
                     break;
                 case "SaveAs":
                     SaveAs();
                     break;
-                case "Back":
-                    HistoryManager.Prev();
-                    break;
                 default:
-                    Environment.Exit(0);
+                    FlowManager.TryHandleCommonOptions((string)result);
                     break;
             }
         };
@@ -59,26 +55,15 @@ internal static class ManageServicesFlow
             .SetPageSize(5)
             .UseAutoComplete()
             .AddOptions(options)
-            .AddOptions(
-                ("Back", "Back"),
-                ("Exit", "Exit")
-            );
+            .AddFlowCommonOptions();
 
         HistoryResultHandler handler = (object result) =>
         {
-            switch (result)
+            if (!FlowManager.TryHandleCommonOptions((string)result))
             {
-                case "Back":
-                    HistoryManager.Prev();
-                    break;
-                case "Exit":
-                    Environment.Exit(0);
-                    break;
-                default:
-                    EConfigurationType type = Enum.Parse<EConfigurationType>((string)result);
-                    Program.Service.SaveAs(type);
-                    HistoryManager.Prev();
-                    break;
+                EConfigurationType type = Enum.Parse<EConfigurationType>((string)result);
+                Program.Service.SaveAs(type);
+                HistoryManager.Prev();
             }
         };
 

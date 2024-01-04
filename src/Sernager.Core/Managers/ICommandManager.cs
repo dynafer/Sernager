@@ -2,12 +2,12 @@ using Sernager.Core.Models;
 
 namespace Sernager.Core.Managers;
 
-public interface IGroupManager
+public interface ICommandManager
 {
     GroupModel CurrentGroup { get; }
     void RemoveMainGroup();
     void RemoveCurrentGroup();
-    IGroupManager UseItem(Guid id);
-    IGroupManager PrevGroup();
+    ICommandManager UseItem(Guid id);
+    ICommandManager PrevGroup();
     List<GroupItemModel> GetItems();
 }
