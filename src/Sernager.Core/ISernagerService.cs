@@ -5,8 +5,9 @@ namespace Sernager.Core;
 
 public interface ISernagerService
 {
-    IEnvironmentManager ManageEnvironmentGroup(string groupName, string shortName = "", string description = "");
     ICommandManager ManageCommandGroup(string groupName, string shortName = "", string description = "");
+    IEnvironmentManager ManageEnvironmentGroup(string groupName);
     string[] GetCommandGroupNames();
+    string[] GetEnvironmentGroupNames();
     void SaveAs(EConfigurationType type = EConfigurationType.Sernager);
 }

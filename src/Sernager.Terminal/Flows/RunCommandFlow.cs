@@ -7,20 +7,27 @@ namespace Sernager.Terminal.Flows;
 
 internal static class RunCommandFlow
 {
-    internal static void Run()
+    internal const string NAME = "RunCommand";
+
+    internal static void Run(bool bSkip = false)
     {
-        (string, string)[] options = Program.Service.GetCommandGroupNames()
-            .Select(x => (x, x))
-            .ToArray();
+        HistoryPromptPluginHandler pluginHandler = () =>
+        {
+            (string, string)[] options = Program.Service.GetCommandGroupNames()
+                .Select(x => (x, x))
+                .ToArray();
 
-        IBasePlugin plugin = new SelectionPlugin<string>()
-            .SetPrompt("Choose a group or command:")
-            .SetPageSize(5)
-            .UseAutoComplete()
-            .AddOptions(options)
-            .AddFlowCommonOptions();
+            IBasePlugin plugin = new SelectionPlugin<string>()
+                .SetPrompt("Choose a group or command:")
+                .SetPageSize(5)
+                .UseAutoComplete()
+                .AddOptions(options)
+                .AddFlowCommonOptions();
 
-        HistoryResultHandler handler = (object result) =>
+            return plugin;
+        };
+
+        HistoryResultHandler resultHandler = (object result) =>
         {
             if (!FlowManager.TryHandleCommonOptions((string)result))
             {
@@ -28,7 +35,7 @@ internal static class RunCommandFlow
             }
         };
 
-        FlowManager.RunFlow("RunCommand", plugin, handler);
+        FlowManager.RunFlow(NAME, pluginHandler, resultHandler, bSkip);
     }
 
     internal static void RunCommand(string command)

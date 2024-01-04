@@ -9,27 +9,32 @@ namespace Sernager.Terminal.Flows;
 
 internal static class ManageServiceFlow
 {
+    internal const string NAME = "ManageServices";
+
     internal static void Run()
     {
-        IBasePlugin plugin = new SelectionPlugin<string>()
-            .SetPrompt("Choose an option:")
-            .SetPageSize(5)
-            .UseAutoComplete()
-            .AddOptions(
-                ("Manage environments", "ManageEnvironments"),
-                ("Manage commands", "ManageCommands"),
-                ("Save as ...", "SaveAs")
-            )
-            .AddFlowCommonOptions();
+        HistoryPromptPluginHandler pluginHandler = () =>
+        {
+            return new SelectionPlugin<string>()
+                .SetPrompt("Choose an option:")
+                .SetPageSize(5)
+                .UseAutoComplete()
+                .AddOptions(
+                    ("Manage environments", ManageEnvironmentFlow.NAME),
+                    ("Manage commands", ManageCommandFlow.NAME),
+                    ("Save as ...", "SaveAs")
+                )
+                .AddFlowCommonOptions();
+        };
 
-        HistoryResultHandler handler = (object result) =>
+        HistoryResultHandler resultHandler = (object result) =>
         {
             switch (result)
             {
-                case "ManageEnvironments":
+                case ManageEnvironmentFlow.NAME:
                     ManageEnvironmentFlow.Run();
                     break;
-                case "ManageCommands":
+                case ManageCommandFlow.NAME:
                     ManageCommandFlow.Run();
                     break;
                 case "SaveAs":
@@ -41,23 +46,28 @@ internal static class ManageServiceFlow
             }
         };
 
-        FlowManager.RunFlow("ManageServices", plugin, handler);
+        FlowManager.RunFlow(NAME, pluginHandler, resultHandler);
     }
 
     internal static void SaveAs()
     {
-        (string, string)[] options = Enum.GetNames<EConfigurationType>()
-            .Select(x => (x, x))
-            .ToArray();
+        HistoryPromptPluginHandler pluginHandler = () =>
+        {
+            (string, string)[] options = Enum.GetNames<EConfigurationType>()
+                .Select(x => (x, x))
+                .ToArray();
 
-        IBasePlugin plugin = new SelectionPlugin<string>()
-            .SetPrompt("Choose a configuration type:")
-            .SetPageSize(5)
-            .UseAutoComplete()
-            .AddOptions(options)
-            .AddFlowCommonOptions();
+            IBasePlugin plugin = new SelectionPlugin<string>()
+                .SetPrompt("Choose a configuration type:")
+                .SetPageSize(5)
+                .UseAutoComplete()
+                .AddOptions(options)
+                .AddFlowCommonOptions();
 
-        HistoryResultHandler handler = (object result) =>
+            return plugin;
+        };
+
+        HistoryResultHandler resultHandler = (object result) =>
         {
             if (!FlowManager.TryHandleCommonOptions((string)result))
             {
@@ -67,6 +77,6 @@ internal static class ManageServiceFlow
             }
         };
 
-        FlowManager.RunFlow("SaveAs", plugin, handler);
+        FlowManager.RunFlow("SaveAs", pluginHandler, resultHandler);
     }
 }

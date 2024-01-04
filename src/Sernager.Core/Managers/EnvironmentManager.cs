@@ -8,75 +8,73 @@ namespace Sernager.Core.Managers;
 
 internal sealed class EnvironmentManager : IEnvironmentManager
 {
-    private EnvironmentModel mEnvrionmentGroup;
+    private EnvironmentModel mEnvironmentGroup;
 
-    internal EnvironmentManager(string name, string shortName, string description)
+    internal EnvironmentManager(string name)
     {
         if (!Configurator.Config.EnvironmentGroups.ContainsKey(name))
         {
             EnvironmentModel environmentModel = new EnvironmentModel
             {
-                Name = name,
-                ShortName = shortName,
-                Description = description
+                Name = name
             };
 
             Configurator.Config.EnvironmentGroups.Add(name, environmentModel);
         }
 
-        mEnvrionmentGroup = Configurator.Config.EnvironmentGroups[name];
+        mEnvironmentGroup = Configurator.Config.EnvironmentGroups[name];
     }
 
     public void RemoveGroup()
     {
-        Configurator.Config.EnvironmentGroups.Remove(mEnvrionmentGroup.Name);
-        mEnvrionmentGroup = null!;
+        Configurator.Config.EnvironmentGroups.Remove(mEnvironmentGroup.Name);
+        mEnvironmentGroup = null!;
     }
 
     public IEnvironmentManager AddPreFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
-        tryAddFile(mEnvrionmentGroup.PreVariables, filePath, option);
+        tryAddFile(mEnvironmentGroup.PreVariables, filePath, option);
 
         return this;
     }
 
     public IEnvironmentManager AddFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
-        tryAddFile(mEnvrionmentGroup.Variables, filePath, option);
+        tryAddFile(mEnvironmentGroup.Variables, filePath, option);
 
         return this;
     }
 
     public string? GetPreVariableOrNull(string key)
     {
-        return getVariableOrNull(mEnvrionmentGroup.PreVariables, key);
+        return getVariableOrNull(mEnvironmentGroup.PreVariables, key);
     }
 
     public string? GetVariableOrNull(string key)
     {
-        return getVariableOrNull(mEnvrionmentGroup.Variables, key);
+        return getVariableOrNull(mEnvironmentGroup.Variables, key);
     }
 
     public ReadOnlyDictionary<string, string> GetPreVariables()
     {
-        return getVariables(mEnvrionmentGroup.PreVariables);
+        return getVariables(mEnvironmentGroup.PreVariables);
     }
 
     public ReadOnlyDictionary<string, string> GetVariables()
     {
-        return getVariables(mEnvrionmentGroup.Variables);
+        return getVariables(mEnvironmentGroup.Variables);
     }
 
     public IEnvironmentManager SetPreVariable(string key, string value, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
-        setVariable(mEnvrionmentGroup.PreVariables, key, value, option);
+        setVariable(mEnvironmentGroup.PreVariables, key, value, option);
 
         return this;
     }
 
     public IEnvironmentManager SetVariable(string key, string value, EAddDataOption option = EAddDataOption.SkipIfExists)
     {
-        setVariable(mEnvrionmentGroup.Variables, key, value, option);
+        setVariable(mEnvironmentGroup.Variables, key, value, option);
 
         return this;
     }
@@ -85,7 +83,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
     {
         foreach (KeyValuePair<string, string> variable in variables)
         {
-            setVariable(mEnvrionmentGroup.PreVariables, variable.Key, variable.Value, option);
+            setVariable(mEnvironmentGroup.PreVariables, variable.Key, variable.Value, option);
         }
 
         return this;
@@ -95,7 +93,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
     {
         foreach (KeyValuePair<string, string> variable in variables)
         {
-            setVariable(mEnvrionmentGroup.Variables, variable.Key, variable.Value, option);
+            setVariable(mEnvironmentGroup.Variables, variable.Key, variable.Value, option);
         }
 
         return this;
@@ -103,14 +101,14 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
     public IEnvironmentManager RemovePreVariable(string key)
     {
-        removeVariable(mEnvrionmentGroup.PreVariables, key);
+        removeVariable(mEnvironmentGroup.PreVariables, key);
 
         return this;
     }
 
     public IEnvironmentManager RemoveVariable(string key)
     {
-        removeVariable(mEnvrionmentGroup.Variables, key);
+        removeVariable(mEnvironmentGroup.Variables, key);
 
         return this;
     }
@@ -119,7 +117,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
     {
         foreach (string key in keys)
         {
-            removeVariable(mEnvrionmentGroup.PreVariables, key);
+            removeVariable(mEnvironmentGroup.PreVariables, key);
         }
 
         return this;
@@ -129,7 +127,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
     {
         foreach (string key in keys)
         {
-            removeVariable(mEnvrionmentGroup.Variables, key);
+            removeVariable(mEnvironmentGroup.Variables, key);
         }
 
         return this;

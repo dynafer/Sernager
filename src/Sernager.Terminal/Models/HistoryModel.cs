@@ -1,24 +1,23 @@
 using Sernager.Terminal.Prompts;
-using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Models;
 
 internal sealed class HistoryModel
 {
     internal Guid Id { get; private init; }
-    private IBasePlugin mPlugin { get; init; }
+    private HistoryPromptPluginHandler mPluginHandler { get; init; }
     private HistoryResultHandler mResultHandler { get; init; }
 
-    internal HistoryModel(IBasePlugin plugin, HistoryResultHandler resultHandler)
+    internal HistoryModel(HistoryPromptPluginHandler pluginHandler, HistoryResultHandler resultHandler)
     {
         Id = Guid.NewGuid();
-        mPlugin = plugin;
+        mPluginHandler = pluginHandler;
         mResultHandler = resultHandler;
     }
 
     internal void RunWithPrompt()
     {
-        object result = Prompter.Prompt(mPlugin);
+        object result = Prompter.Prompt(mPluginHandler());
         mResultHandler(result);
     }
 

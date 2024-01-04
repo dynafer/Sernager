@@ -18,24 +18,27 @@ internal static class FlowManager
 
     internal static void Home(bool bSkip = false)
     {
-        IBasePlugin plugin = new SelectionPlugin<string>()
-            .SetPrompt("Choose an option:")
-            .SetPageSize(5)
-            .UseAutoComplete()
-            .AddOptions(
-                ("Run command", "RunCommand"),
-                ("Manage services", "ManageServices"),
-                ("Exit", "Exit")
-            );
+        HistoryPromptPluginHandler pluginHandler = () =>
+        {
+            return new SelectionPlugin<string>()
+                .SetPrompt("Choose an option:")
+                .SetPageSize(5)
+                .UseAutoComplete()
+                .AddOptions(
+                    ("Run command", RunCommandFlow.NAME),
+                    ("Manage services", ManageServiceFlow.NAME),
+                    ("Exit", "Exit")
+                );
+        };
 
-        HistoryResultHandler handler = (object result) =>
+        HistoryResultHandler resultHandler = (object result) =>
         {
             switch (result)
             {
-                case "RunCommand":
+                case RunCommandFlow.NAME:
                     RunCommandFlow.Run();
                     break;
-                case "ManageServices":
+                case ManageServiceFlow.NAME:
                     ManageServiceFlow.Run();
                     break;
                 default:
@@ -44,14 +47,14 @@ internal static class FlowManager
             }
         };
 
-        RunFlow("Home", plugin, handler, bSkip);
+        RunFlow("Home", pluginHandler, resultHandler, bSkip);
     }
 
-    internal static void RunFlow(string key, IBasePlugin plugin, HistoryResultHandler handler, bool bSkip = false)
+    internal static void RunFlow(string key, HistoryPromptPluginHandler pluginHandler, HistoryResultHandler resultHandler, bool bSkip = false)
     {
         if (!mHistoryIds.ContainsKey(key))
         {
-            HistoryModel model = new HistoryModel(plugin, handler);
+            HistoryModel model = new HistoryModel(pluginHandler, resultHandler);
 
             mHistoryIds.Add(key, model.Id);
 

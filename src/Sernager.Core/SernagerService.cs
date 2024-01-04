@@ -6,18 +6,6 @@ namespace Sernager.Core;
 
 internal sealed class SernagerService : ISernagerService
 {
-    IEnvironmentManager ISernagerService.ManageEnvironmentGroup(string groupName, string shortName, string description)
-    {
-        IEnvironmentManager manager;
-
-        if (CacheManager.TryGet($"Environment-Group-{groupName}", out manager))
-        {
-            return manager;
-        }
-
-        return new EnvironmentManager(groupName, shortName, description);
-    }
-
     ICommandManager ISernagerService.ManageCommandGroup(string groupName, string shortName, string description)
     {
         ICommandManager manager;
@@ -30,9 +18,26 @@ internal sealed class SernagerService : ISernagerService
         return new CommandManager(groupName, shortName, description);
     }
 
+    IEnvironmentManager ISernagerService.ManageEnvironmentGroup(string groupName)
+    {
+        IEnvironmentManager manager;
+
+        if (CacheManager.TryGet($"Environment-Group-{groupName}", out manager))
+        {
+            return manager;
+        }
+
+        return new EnvironmentManager(groupName);
+    }
+
     string[] ISernagerService.GetCommandGroupNames()
     {
         return Configurator.Config.CommandMainGroups.Keys.ToArray();
+    }
+
+    string[] ISernagerService.GetEnvironmentGroupNames()
+    {
+        return Configurator.Config.EnvironmentGroups.Keys.ToArray();
     }
 
     void ISernagerService.SaveAs(EConfigurationType type)
