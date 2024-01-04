@@ -46,7 +46,13 @@ internal static class Configurator
         using (ByteReader reader = new ByteReader(File.ReadAllBytes(filePath)))
         using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type.Value))
         {
-            mConfigDir = Path.GetFullPath(Path.GetDirectoryName(filePath) ?? "./");
+            string currentDirectoryName = Path.GetDirectoryName(filePath) ?? "./";
+            if (string.IsNullOrWhiteSpace(currentDirectoryName))
+            {
+                currentDirectoryName = "./";
+            }
+
+            mConfigDir = Path.GetFullPath(currentDirectoryName);
             mConfigName = Path.GetFileNameWithoutExtension(filePath);
             Config = metadata.Config;
         }
