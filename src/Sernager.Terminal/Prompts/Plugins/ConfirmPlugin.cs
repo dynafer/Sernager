@@ -53,6 +53,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetTextColor(EColorFlags.Green)
                 .SetText(mResult)
+                .UseLineBreak(),
         ];
 
         return components;

@@ -10,7 +10,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
 {
     private AutoComplete<string> mInput = new AutoComplete<string>();
     private bool mbUseAutoComplete = false;
-    private Func<InputPlugin, string, bool>? mValidator = null;
+    private Func<string, bool>? mValidator = null;
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public bool ShouldShowHints { get; set; } = false;
@@ -23,7 +23,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
         return this;
     }
 
-    internal InputPlugin UseValidator(Func<InputPlugin, string, bool> validator)
+    internal InputPlugin UseValidator(Func<string, bool> validator)
     {
         mValidator = validator;
 
@@ -35,7 +35,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
         switch (keyInfo.Key)
         {
             case ConsoleKey.Enter:
-                if (mValidator != null && !mValidator(this, mInput.Input))
+                if (mValidator != null && !mValidator(mInput.Input))
                 {
                     result = null!;
 
@@ -125,6 +125,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetTextColor(EColorFlags.Green)
                 .SetText(mInput.Input)
+                .UseLineBreak(),
         ];
 
         return components;

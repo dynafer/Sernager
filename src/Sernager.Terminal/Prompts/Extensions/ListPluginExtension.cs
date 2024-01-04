@@ -37,4 +37,12 @@ internal static class ListPluginExtension
 
         return plugin;
     }
+
+    internal static MultiSelectionPlugin<T> SetPageSize<T>(this MultiSelectionPlugin<T> plugin, int pageSize)
+        where T : notnull
+    {
+        plugin.Pagination.PageSize = pageSize;
+
+        return plugin;
+    }
 }
