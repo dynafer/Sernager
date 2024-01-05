@@ -8,6 +8,7 @@ public interface ISernagerService
     ICommandManager ManageCommandGroup(string groupName, string shortName = "", string description = "");
     IEnvironmentManager ManageEnvironmentGroup(string groupName);
     string[] GetCommandGroupNames();
+    string[] GetCommandGroupShortNames();
     string[] GetEnvironmentGroupNames();
     void SaveAs(EConfigurationType type = EConfigurationType.Sernager);
 }

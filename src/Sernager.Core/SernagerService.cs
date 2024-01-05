@@ -35,6 +35,11 @@ internal sealed class SernagerService : ISernagerService
         return Configurator.Config.CommandMainGroups.Keys.ToArray();
     }
 
+    string[] ISernagerService.GetCommandGroupShortNames()
+    {
+        return Configurator.Config.CommandMainGroups.Values.Select(x => x.ShortName).ToArray();
+    }
+
     string[] ISernagerService.GetEnvironmentGroupNames()
     {
         return Configurator.Config.EnvironmentGroups.Keys.ToArray();
