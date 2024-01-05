@@ -12,10 +12,10 @@ internal static class PluginExtension
         return plugin;
     }
 
-    internal static T SetDescription<T>(this T plugin, string description)
+    internal static T AddDescription<T>(this T plugin, params string[] description)
         where T : IBasePlugin
     {
-        plugin.Description = description;
+        plugin.Description.AddRange(description);
 
         return plugin;
     }

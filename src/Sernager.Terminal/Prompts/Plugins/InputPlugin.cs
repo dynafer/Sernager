@@ -13,7 +13,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
     private InputValidator? mValidator = null;
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public List<string> Description { get; init; } = new List<string>();
     public bool ShouldShowHints { get; set; } = false;
 
     internal InputPlugin SetInitialInput(string input)
@@ -117,16 +117,22 @@ internal sealed class InputPlugin : ITypePlugin<string>
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(Description))
+        if (Description.Count > 0)
         {
-            components.AddRange([
-                new LineBreakComponent(),
-                new TextComponent()
-                    .SetTextColor(EColorFlags.BrightBlack)
-                    .SetText(Description),
-                new CursorComponent()
-                    .AddCursor(ECursorDirection.Up, 1)
-            ]);
+            components.Add(new LineBreakComponent());
+            components.AddRange(
+                Description
+                    .Select((string description) =>
+                    {
+                        return new TextComponent()
+                            .SetTextColor(EColorFlags.BrightBlack)
+                            .SetText(description)
+                            .UseLineBreak();
+                    })
+            );
+            components.Add(new CursorComponent()
+                .AddCursor(ECursorDirection.Up, Description.Count + 1)
+            );
         }
 
         if (mValidator != null && mValidator.ErrorMessage != null)
@@ -139,7 +145,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                 new CursorComponent()
                     .AddCursor(
                         ECursorDirection.Up,
-                        !string.IsNullOrWhiteSpace(Description) ? 2 : 1
+                        Description.Count + 1
                     )
             ]);
         }

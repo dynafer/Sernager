@@ -9,7 +9,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
 {
     private string mResult = string.Empty;
     public string Prompt { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public List<string> Description { get; private init; } = new List<string>();
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
@@ -36,14 +36,19 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
                 .SetText($"{Prompt} [Y/n] ")
         ];
 
-        if (!string.IsNullOrWhiteSpace(Description))
+        if (Description.Count > 0)
         {
-            components.AddRange([
-                new LineBreakComponent(),
-                new TextComponent()
-                    .SetTextColor(EColorFlags.BrightBlack)
-                    .SetText(Description)
-            ]);
+            components.Add(new LineBreakComponent());
+            components.AddRange(
+                Description
+                    .Select((string description) =>
+                    {
+                        return new TextComponent()
+                            .SetTextColor(EColorFlags.BrightBlack)
+                            .SetText(description)
+                            .UseLineBreak();
+                    })
+            );
         }
 
         return components;

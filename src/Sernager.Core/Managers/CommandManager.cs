@@ -5,8 +5,8 @@ namespace Sernager.Core.Managers;
 
 internal sealed class CommandManager : ICommandManager
 {
-    private GroupModel mMainGroup;
     private Stack<Guid> mParents = new Stack<Guid>();
+    public GroupModel MainGroup { get; private set; }
     public GroupModel CurrentGroup { get; private set; }
 
     internal CommandManager(string name, string shortName, string description)
@@ -23,24 +23,24 @@ internal sealed class CommandManager : ICommandManager
             Configurator.Config.CommandMainGroups.Add(name, groupModel);
         }
 
-        mMainGroup = Configurator.Config.CommandMainGroups[name];
-        CurrentGroup = mMainGroup;
+        MainGroup = Configurator.Config.CommandMainGroups[name];
+        CurrentGroup = MainGroup;
     }
 
     public void RemoveMainGroup()
     {
         CurrentGroup = null!;
 
-        removeItems(mMainGroup);
+        removeItems(MainGroup);
 
-        mMainGroup.Items.Clear();
-        Configurator.Config.CommandMainGroups.Remove(mMainGroup.Name);
-        mMainGroup = null!;
+        MainGroup.Items.Clear();
+        Configurator.Config.CommandMainGroups.Remove(MainGroup.Name);
+        MainGroup = null!;
     }
 
     public void RemoveCurrentGroup()
     {
-        if (CurrentGroup == mMainGroup)
+        if (CurrentGroup == MainGroup)
         {
             RemoveMainGroup();
             return;
@@ -51,9 +51,49 @@ internal sealed class CommandManager : ICommandManager
         removeItems(CurrentGroup);
 
         Guid id = mParents.Peek();
-        CurrentGroup = Configurator.Config.CommandSubGroups[id];
+        CurrentGroup = Configurator.Config.CommandSubgroups[id];
 
         CurrentGroup.Items.Remove(currentId);
+    }
+
+    public void RemoveItem(Guid Id)
+    {
+        if (!CurrentGroup.Items.Contains(Id))
+        {
+            ExceptionManager.Throw<SernagerException>($"Item not found in group. Id: {Id}");
+            return;
+        }
+
+        if (Configurator.Config.CommandSubgroups.ContainsKey(Id))
+        {
+            removeItems(Configurator.Config.CommandSubgroups[Id]);
+            Configurator.Config.CommandSubgroups.Remove(Id);
+        }
+        else if (Configurator.Config.Commands.ContainsKey(Id))
+        {
+            Configurator.Config.Commands.Remove(Id);
+        }
+        else
+        {
+            ExceptionManager.Throw<SernagerException>($"Item not found. Id: {Id}");
+        }
+
+        CurrentGroup.Items.Remove(Id);
+    }
+
+    public bool IsCommand(Guid id)
+    {
+        return Configurator.Config.Commands.ContainsKey(id);
+    }
+
+    public CommandModel GetCommand(Guid id)
+    {
+        if (!Configurator.Config.Commands.ContainsKey(id))
+        {
+            ExceptionManager.Throw<SernagerException>($"Command not found. Id: {id}");
+        }
+
+        return Configurator.Config.Commands[id];
     }
 
     public ICommandManager UseItem(Guid id)
@@ -70,10 +110,10 @@ internal sealed class CommandManager : ICommandManager
             return this;
         }
 
-        if (Configurator.Config.CommandSubGroups.ContainsKey(id))
+        if (Configurator.Config.CommandSubgroups.ContainsKey(id))
         {
             mParents.Push(id);
-            CurrentGroup = Configurator.Config.CommandSubGroups[id];
+            CurrentGroup = Configurator.Config.CommandSubgroups[id];
         }
         else if (Configurator.Config.Commands.ContainsKey(id))
         {
@@ -87,11 +127,25 @@ internal sealed class CommandManager : ICommandManager
         return this;
     }
 
+    public string[] GetPath()
+    {
+        List<string> path = [
+            MainGroup.Name
+        ];
+
+        foreach (Guid id in mParents)
+        {
+            path.Add(Configurator.Config.CommandSubgroups[id].Name);
+        }
+
+        return path.ToArray();
+    }
+
     public ICommandManager PrevGroup()
     {
         if (mParents.Count == 0)
         {
-            CurrentGroup = mMainGroup;
+            CurrentGroup = MainGroup;
 
             return this;
         }
@@ -99,9 +153,21 @@ internal sealed class CommandManager : ICommandManager
         mParents.Pop();
 
         Guid id = mParents.Peek();
-        CurrentGroup = Configurator.Config.CommandSubGroups[id];
+        CurrentGroup = Configurator.Config.CommandSubgroups[id];
 
         return this;
+    }
+
+    public GroupModel GetPrevGroup()
+    {
+        if (mParents.Count <= 1)
+        {
+            return MainGroup;
+        }
+
+        Guid id = mParents.ElementAt(mParents.Count - 2);
+
+        return Configurator.Config.CommandSubgroups[id];
     }
 
     public List<GroupItemModel> GetItems()
@@ -110,12 +176,12 @@ internal sealed class CommandManager : ICommandManager
 
         foreach (Guid id in CurrentGroup.Items)
         {
-            if (Configurator.Config.CommandSubGroups.ContainsKey(id))
+            if (Configurator.Config.CommandSubgroups.ContainsKey(id))
             {
                 items.Add(new GroupItemModel()
                 {
                     Id = id,
-                    Item = Configurator.Config.CommandSubGroups[id]
+                    Item = Configurator.Config.CommandSubgroups[id]
                 });
             }
             else if (Configurator.Config.Commands.ContainsKey(id))
@@ -139,9 +205,10 @@ internal sealed class CommandManager : ICommandManager
     {
         foreach (Guid id in model.Items)
         {
-            if (Configurator.Config.CommandSubGroups.ContainsKey(id))
+            if (Configurator.Config.CommandSubgroups.ContainsKey(id))
             {
-                removeItems(Configurator.Config.CommandSubGroups[id]);
+                removeItems(Configurator.Config.CommandSubgroups[id]);
+                Configurator.Config.CommandSubgroups.Remove(id);
             }
             else if (Configurator.Config.Commands.ContainsKey(id))
             {

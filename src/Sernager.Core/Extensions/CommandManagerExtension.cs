@@ -1,4 +1,5 @@
 using Sernager.Core.Configs;
+using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
 
@@ -6,17 +7,18 @@ namespace Sernager.Core.Extensions;
 
 public static class CommandManagerExtension
 {
-    public static ICommandManager AddGroup(this ICommandManager manager, GroupModel groupModel)
+    public static ICommandManager AddSubgroup(this ICommandManager manager, string groupName, string shortName, string description)
     {
-        if (existsInGroup(groupModel))
+        GroupModel groupModel = new GroupModel
         {
-            ExceptionManager.Throw<SernagerException>($"Group {groupModel.Name} already exists.");
-            return manager;
-        }
+            Name = groupName,
+            ShortName = shortName,
+            Description = description
+        };
 
         Guid id = Guid.NewGuid();
 
-        Configurator.Config.CommandSubGroups.Add(id, groupModel);
+        Configurator.Config.CommandSubgroups.Add(id, groupModel);
 
         manager.CurrentGroup.Items.Add(id);
 
@@ -25,12 +27,6 @@ public static class CommandManagerExtension
 
     public static ICommandManager AddCommand(this ICommandManager manager, CommandModel commandModel)
     {
-        if (existsInCommands(commandModel))
-        {
-            ExceptionManager.Throw<SernagerException>($"Command {commandModel.Name} already exists.");
-            return manager;
-        }
-
         Guid id = Guid.NewGuid();
 
         Configurator.Config.Commands.Add(id, commandModel);
@@ -40,14 +36,71 @@ public static class CommandManagerExtension
         return manager;
     }
 
-    private static bool existsInGroup(GroupModel groupModel)
+    public static bool ChangeCurrentGroupName(this ICommandManager manager, string name)
     {
-        return Configurator.Config.CommandMainGroups.Values.Where(x => x == groupModel).FirstOrDefault() != null ||
-               Configurator.Config.CommandSubGroups.Values.Where(x => x == groupModel).FirstOrDefault() != null;
+        if (!ManagerHelper.CanUseCommandGroupName(name))
+        {
+            return false;
+        }
+
+        if (manager.MainGroup == manager.CurrentGroup)
+        {
+            Configurator.Config.CommandMainGroups.Remove(manager.MainGroup.Name);
+            Configurator.Config.CommandMainGroups.Add(name, manager.MainGroup);
+        }
+
+        manager.CurrentGroup.Name = name;
+
+        return true;
     }
 
-    private static bool existsInCommands(CommandModel commandModel)
+    public static bool ChangeCurrentGroupShortName(this ICommandManager manager, string shortName)
     {
-        return Configurator.Config.Commands.Values.Where(x => x == commandModel).FirstOrDefault() != null;
+        if (!ManagerHelper.CanUseCommandGroupName(shortName))
+        {
+            return false;
+        }
+
+        manager.CurrentGroup.ShortName = shortName;
+
+        return true;
+    }
+
+    public static void ChangeCurrentGroupDescription(this ICommandManager manager, string description)
+    {
+        manager.CurrentGroup.Description = description;
+    }
+
+    public static bool CanUseName(this ICommandManager manager, string name, bool bCheckPrevious)
+    {
+        if (bCheckPrevious)
+        {
+            GroupModel prevGroup = manager.GetPrevGroup();
+
+            return manager.CurrentGroup.Name != name &&
+                   !prevGroup.Items
+                       .Where(Configurator.Config.CommandSubgroups.ContainsKey)
+                       .Select(x => Configurator.Config.CommandSubgroups[x])
+                       .Where(x => x.Name == name || x.ShortName == name)
+                       .Any() &&
+                   !prevGroup.Items
+                       .Where(Configurator.Config.Commands.ContainsKey)
+                       .Select(x => Configurator.Config.Commands[x])
+                       .Where(x => x.Name == name || x.ShortName == name)
+                       .Any();
+        }
+        else
+        {
+            return !manager.CurrentGroup.Items
+                       .Where(Configurator.Config.CommandSubgroups.ContainsKey)
+                       .Select(x => Configurator.Config.CommandSubgroups[x])
+                       .Where(x => x.Name == name || x.ShortName == name)
+                       .Any() &&
+                   !manager.CurrentGroup.Items
+                       .Where(Configurator.Config.Commands.ContainsKey)
+                       .Select(x => Configurator.Config.Commands[x])
+                       .Where(x => x.Name == name || x.ShortName == name)
+                       .Any();
+        }
     }
 }

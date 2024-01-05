@@ -13,7 +13,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     public readonly List<OptionItem<TOptionValue>> Options = new List<OptionItem<TOptionValue>>();
     private protected AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     public string Prompt { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public List<string> Description { get; init; } = new List<string>();
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
@@ -35,12 +35,17 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                 .UseLineBreak(),
         ];
 
-        if (!string.IsNullOrWhiteSpace(Description))
+        if (Description.Count > 0)
         {
-            components.Add(new TextComponent()
-                .SetTextColor(EColorFlags.BrightBlack)
-                .SetText(Description)
-                .UseLineBreak()
+            components.AddRange(
+                Description
+                    .Select((string description) =>
+                    {
+                        return new TextComponent()
+                            .SetTextColor(EColorFlags.BrightBlack)
+                            .SetText(description)
+                            .UseLineBreak();
+                    })
             );
         }
 

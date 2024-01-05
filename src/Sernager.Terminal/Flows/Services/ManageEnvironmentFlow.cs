@@ -1,3 +1,4 @@
+using Sernager.Core.Helpers;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Models;
 using Sernager.Terminal.Prompts.Extensions;
@@ -24,8 +25,8 @@ internal static class ManageEnvironmentFlow
                 .UseAutoComplete()
                 .AddOptions(options)
                 .AddOptions(
-                    ("Add a group", $"{NAME}.AddGroup"),
-                    ("Remove a group(s)", $"{NAME}.RemoveGroups")
+                    ("Add a group", "AddGroup"),
+                    ("Remove a group(s)", "RemoveGroups")
                 )
                 .AddFlowCommonOptions();
 
@@ -38,10 +39,10 @@ internal static class ManageEnvironmentFlow
             {
                 switch (result)
                 {
-                    case $"{NAME}.AddGroup":
+                    case "AddGroup":
                         AddGroup();
                         break;
-                    case $"{NAME}.RemoveGroups":
+                    case "RemoveGroups":
                         RemoveGroups();
                         break;
                     default:
@@ -63,12 +64,12 @@ internal static class ManageEnvironmentFlow
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
-                            (string input) => string.IsNullOrWhiteSpace(input),
+                            string.IsNullOrWhiteSpace,
                             null,
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string input) => !Program.Service.GetEnvironmentGroupNames().Contains(input),
+                            ManagerHelper.CanUseEnvironmentGroupName,
                             "Group name already exists.",
                             EInputValidatorHandlerType.Default
                         )

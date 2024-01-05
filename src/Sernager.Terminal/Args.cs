@@ -65,7 +65,7 @@ internal static class Args
             return;
         }
 
-        if (args.Contains("help") || args.Contains("-h") || args.Contains("--help"))
+        if (args[0] == "help" || args[0] == "-h" || args[0] == "--help")
         {
             help();
             return;

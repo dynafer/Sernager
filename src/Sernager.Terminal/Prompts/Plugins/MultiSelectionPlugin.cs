@@ -25,8 +25,8 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
             case ConsoleKey.Enter:
             {
                 (List<OptionItem<TOptionValue>> options, int _) = getOptions();
-                result = options.Select(x => x.Value);
-                mResult = options.Select(x => x.Name).ToList();
+                result = options.Where(x => x.IsSelected).Select(x => x.Value);
+                mResult = options.Where(x => x.IsSelected).Select(x => x.Name).ToList();
 
                 return true;
             }

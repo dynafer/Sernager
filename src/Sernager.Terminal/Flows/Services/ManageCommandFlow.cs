@@ -1,3 +1,6 @@
+using Sernager.Core.Helpers;
+using Sernager.Terminal.Flows.Helpers;
+using Sernager.Terminal.Flows.Services.Commands;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Models;
 using Sernager.Terminal.Prompts;
@@ -20,13 +23,13 @@ internal static class ManageCommandFlow
                 .ToArray();
 
             IBasePlugin plugin = new SelectionPlugin<string>()
-                .SetPrompt("Choose an option:")
+                .SetPrompt("Choose a group or an option:")
                 .SetPageSize(5)
                 .UseAutoComplete()
                 .AddOptions(options)
                 .AddOptions(
-                    ("Add a group", $"{NAME}.AddGroup"),
-                    ("Remove a group(s)", $"{NAME}.RemoveGroups")
+                    ("Add a group", "AddGroup"),
+                    ("Remove a group(s)", "RemoveGroups")
                 )
                 .AddFlowCommonOptions();
 
@@ -39,14 +42,14 @@ internal static class ManageCommandFlow
             {
                 switch (result)
                 {
-                    case $"{NAME}.AddGroup":
+                    case "AddGroup":
                         AddGroup();
                         break;
-                    case $"{NAME}.RemoveGroups":
+                    case "RemoveGroups":
                         RemoveGroups();
                         break;
                     default:
-                        // FIX ME: Handle manage selected group
+                        ManageCommandGroupFlow.Run(Program.Service.ManageCommandGroup((string)result));
                         break;
                 }
             }
@@ -59,20 +62,17 @@ internal static class ManageCommandFlow
     {
         HistoryPromptPluginHandler pluginHandler = () =>
         {
-            string[] groupNames = Program.Service.GetCommandGroupNames();
-            string[] groupShortNames = Program.Service.GetCommandGroupShortNames();
-
             return new InputPlugin()
                 .SetPrompt("Enter a command group name without white spaces (Cancel: Empty input)")
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
-                            (string input) => string.IsNullOrWhiteSpace(input),
+                            string.IsNullOrWhiteSpace,
                             null,
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string input) => !groupNames.Contains(input) && !groupShortNames.Contains(input),
+                            ManagerHelper.CanUseCommandGroupName,
                             "The name already exists.",
                             EInputValidatorHandlerType.Default
                         )
@@ -90,11 +90,8 @@ internal static class ManageCommandFlow
                 return;
             }
 
-            string[] groupNames = Program.Service.GetCommandGroupNames();
-            string[] groupShortNames = Program.Service.GetCommandGroupShortNames();
-
-            string shortName = promptShortName(groupName);
-            string description = promptDescription();
+            string shortName = Prompter.Prompt(CommandGroupFlowHelper.CreateShortNamePromptPlugin(string.Empty, true));
+            string description = Prompter.Prompt(ManageFlowHelper.CreateDescriptionPromptPlugin(string.Empty, true));
 
             Program.Service.ManageCommandGroup(groupName, shortName, description);
 
@@ -134,47 +131,5 @@ internal static class ManageCommandFlow
         };
 
         FlowManager.RunFlow($"{NAME}.RemoveGroups", pluginHandler, resultHandler);
-    }
-
-    private static string promptShortName(string groupName)
-    {
-        string[] groupNames = Program.Service.GetCommandGroupNames();
-        string[] groupShortNames = Program.Service.GetCommandGroupShortNames();
-
-        string shortName = Prompter.Prompt(
-            new InputPlugin()
-                .SetPrompt("Enter a short name for the command group (Skip: Empty input)")
-                .UseValidator(new InputValidator()
-                    .AddRules(
-                        (
-                            string.IsNullOrWhiteSpace,
-                            null,
-                            EInputValidatorHandlerType.ReturnWhenTrue
-                        ),
-                        (
-                            (string shortNameInput) => shortNameInput != groupName,
-                            "The name cannot be the same as the group name.",
-                            EInputValidatorHandlerType.Default
-                        ),
-                        (
-                            (string shortNameInput) => !groupNames.Contains(shortNameInput) && !groupShortNames.Contains(shortNameInput),
-                            "The name already exists.",
-                            EInputValidatorHandlerType.Default
-                        )
-                    )
-                )
-        );
-
-        return shortName;
-    }
-
-    private static string promptDescription()
-    {
-        string description = Prompter.Prompt(
-            new InputPlugin()
-                .SetPrompt("Enter a description for the command group (Skip: Empty input)")
-        );
-
-        return description;
     }
 }
