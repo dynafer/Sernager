@@ -10,7 +10,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
 {
     private AutoComplete<string> mInput = new AutoComplete<string>();
     private bool mbUseAutoComplete = false;
-    private Func<string, bool>? mValidator = null;
+    private InputValidator? mValidator = null;
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public bool ShouldShowHints { get; set; } = false;
@@ -23,7 +23,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
         return this;
     }
 
-    internal InputPlugin UseValidator(Func<string, bool> validator)
+    internal InputPlugin UseValidator(InputValidator validator)
     {
         mValidator = validator;
 
@@ -32,10 +32,15 @@ internal sealed class InputPlugin : ITypePlugin<string>
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
+        if (mValidator != null)
+        {
+            mValidator.ErrorMessage = null;
+        }
+
         switch (keyInfo.Key)
         {
             case ConsoleKey.Enter:
-                if (mValidator != null && !mValidator(mInput.Input))
+                if (mValidator != null && !mValidator.Validate(mInput.Input))
                 {
                     result = null!;
 
@@ -102,6 +107,22 @@ internal sealed class InputPlugin : ITypePlugin<string>
                     .SetText(Hints[suggestionIndex].Substring(mInput.Input.Length))
                 );
             }
+        }
+
+        if (mValidator != null && mValidator.ErrorMessage != null)
+        {
+            components.Add(new TextComponent()
+                .UseLineBreak()
+            );
+
+            components.Add(new TextComponent()
+                .SetTextColor(EColorFlags.Red)
+                .SetText(mValidator.ErrorMessage)
+            );
+
+            components.Add(new CursorComponent()
+                .AddCursor(ECursorDirection.Up, 1)
+            );
         }
 
         components.Add(new CursorComponent()

@@ -2,6 +2,7 @@ using Sernager.Terminal.Managers;
 using Sernager.Terminal.Models;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
+using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Flows.Services;
 
@@ -23,8 +24,8 @@ internal static class ManageEnvironmentFlow
                 .UseAutoComplete()
                 .AddOptions(options)
                 .AddOptions(
-                    ("Add a group", "AddGroup"),
-                    ("Remove a group(s)", "RemoveGroups")
+                    ("Add a group", $"{NAME}.AddGroup"),
+                    ("Remove a group(s)", $"{NAME}.RemoveGroups")
                 )
                 .AddFlowCommonOptions();
 
@@ -37,10 +38,10 @@ internal static class ManageEnvironmentFlow
             {
                 switch (result)
                 {
-                    case "AddGroup":
+                    case $"{NAME}.AddGroup":
                         AddGroup();
                         break;
-                    case "RemoveGroups":
+                    case $"{NAME}.RemoveGroups":
                         RemoveGroups();
                         break;
                     default:
@@ -59,22 +60,20 @@ internal static class ManageEnvironmentFlow
         {
             return new InputPlugin()
                 .SetPrompt("Enter an environment group name without white spaces (Cancel: Empty input)")
-                .UseValidator((string input) =>
-                {
-                    input = input.Replace(" ", string.Empty);
-
-                    if (string.IsNullOrWhiteSpace(input))
-                    {
-                        return true;
-                    }
-
-                    if (Program.Service.GetEnvironmentGroupNames().Contains(input))
-                    {
-                        return false;
-                    }
-
-                    return true;
-                });
+                .UseValidator(new InputValidator()
+                    .AddRules(
+                        (
+                            (string input) => string.IsNullOrWhiteSpace(input),
+                            null,
+                            EInputValidatorHandlerType.ReturnWhenTrue
+                        ),
+                        (
+                            (string input) => !Program.Service.GetEnvironmentGroupNames().Contains(input),
+                            "Group name already exists.",
+                            EInputValidatorHandlerType.Default
+                        )
+                    )
+                );
         };
 
         HistoryResultHandler resultHandler = (object result) =>
@@ -89,7 +88,7 @@ internal static class ManageEnvironmentFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow("AddGroup", pluginHandler, resultHandler);
+        FlowManager.RunFlow($"{NAME}.AddGroup", pluginHandler, resultHandler);
     }
 
     internal static void RemoveGroups()
@@ -101,7 +100,7 @@ internal static class ManageEnvironmentFlow
                 .ToArray();
 
             IBasePlugin plugin = new MultiSelectionPlugin<string>()
-                .SetPrompt("Choose a group(s) to remove (Cancel: No selection):")
+                .SetPrompt("Choose an environment group(s) to remove (Cancel: No selection):")
                 .SetPageSize(5)
                 .UseAutoComplete()
                 .AddOptions(options);
@@ -121,6 +120,6 @@ internal static class ManageEnvironmentFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow("RemoveGroups", pluginHandler, resultHandler);
+        FlowManager.RunFlow($"{NAME}.RemoveGroups", pluginHandler, resultHandler);
     }
 }
