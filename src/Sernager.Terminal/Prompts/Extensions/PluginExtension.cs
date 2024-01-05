@@ -11,4 +11,12 @@ internal static class PluginExtension
 
         return plugin;
     }
+
+    internal static T SetDescription<T>(this T plugin, string description)
+        where T : IBasePlugin
+    {
+        plugin.Description = description;
+
+        return plugin;
+    }
 }

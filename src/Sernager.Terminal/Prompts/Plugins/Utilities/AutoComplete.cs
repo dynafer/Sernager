@@ -9,7 +9,7 @@ internal sealed class AutoComplete<TSearchable>
 {
     private string? mPrompt = null;
     private string? mNoResult = null;
-    internal string Input { get; private set; } = string.Empty;
+    internal string Input { get; set; } = string.Empty;
     internal int CursorPosition { get; private set; } = 0;
 
     internal AutoComplete()
@@ -35,6 +35,12 @@ internal sealed class AutoComplete<TSearchable>
         }
 
         return mNoResult;
+    }
+
+    internal void SetInitialInput(string input)
+    {
+        Input = input;
+        CursorPosition = input.Length;
     }
 
     internal void InterceptInput(ConsoleKeyInfo keyInfo)

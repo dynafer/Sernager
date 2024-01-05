@@ -13,6 +13,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     public readonly List<OptionItem<TOptionValue>> Options = new List<OptionItem<TOptionValue>>();
     private protected AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     public string Prompt { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
@@ -34,10 +35,19 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                 .UseLineBreak(),
         ];
 
-        if (mAutoComplete != null)
+        if (!string.IsNullOrWhiteSpace(Description))
         {
             components.Add(new TextComponent()
                 .SetTextColor(EColorFlags.BrightBlack)
+                .SetText(Description)
+                .UseLineBreak()
+            );
+        }
+
+        if (mAutoComplete != null)
+        {
+            components.Add(new TextComponent()
+                .SetTextColor(EColorFlags.Magenta)
                 .SetText(mAutoComplete.GetPrompt())
             );
 
@@ -72,11 +82,20 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
 
         if (mAutoComplete != null)
         {
+            if (end == 0)
+            {
+                components.Add(new TextComponent()
+                    .SetTextColor(EColorFlags.Red)
+                    .SetText(mAutoComplete.GetNoResult())
+                    .UseLineBreak()
+                );
+            }
+
             components.Add(new CursorComponent()
                 .AddCursors(
                     new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
                     new { Direction = ECursorDirection.Right, Count = mAutoComplete.GetPrompt().Length + mAutoComplete.CursorPosition },
-                    new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 }
+                    new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 + (end == 0 ? 1 : 0) }
                 )
             );
         }

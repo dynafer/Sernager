@@ -13,7 +13,15 @@ internal sealed class InputPlugin : ITypePlugin<string>
     private InputValidator? mValidator = null;
     public List<string>? Hints { get; private set; } = null;
     public string Prompt { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public bool ShouldShowHints { get; set; } = false;
+
+    internal InputPlugin SetInitialInput(string input)
+    {
+        mInput.SetInitialInput(input);
+
+        return this;
+    }
 
     internal InputPlugin UseAutoComplete()
     {
@@ -109,20 +117,31 @@ internal sealed class InputPlugin : ITypePlugin<string>
             }
         }
 
+        if (!string.IsNullOrWhiteSpace(Description))
+        {
+            components.AddRange([
+                new LineBreakComponent(),
+                new TextComponent()
+                    .SetTextColor(EColorFlags.BrightBlack)
+                    .SetText(Description),
+                new CursorComponent()
+                    .AddCursor(ECursorDirection.Up, 1)
+            ]);
+        }
+
         if (mValidator != null && mValidator.ErrorMessage != null)
         {
-            components.Add(new TextComponent()
-                .UseLineBreak()
-            );
-
-            components.Add(new TextComponent()
-                .SetTextColor(EColorFlags.Red)
-                .SetText(mValidator.ErrorMessage)
-            );
-
-            components.Add(new CursorComponent()
-                .AddCursor(ECursorDirection.Up, 1)
-            );
+            components.AddRange([
+                new LineBreakComponent(),
+                new TextComponent()
+                    .SetTextColor(EColorFlags.Red)
+                    .SetText(mValidator.ErrorMessage),
+                new CursorComponent()
+                    .AddCursor(
+                        ECursorDirection.Up,
+                        !string.IsNullOrWhiteSpace(Description) ? 2 : 1
+                    )
+            ]);
         }
 
         components.Add(new CursorComponent()
