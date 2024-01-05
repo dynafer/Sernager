@@ -87,7 +87,9 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
 
         if (mAutoComplete != null)
         {
-            if (end == 0)
+            bool bNoResult = mAutoComplete.Input.Length != 0 && end == 0;
+
+            if (bNoResult)
             {
                 components.Add(new TextComponent()
                     .SetTextColor(EColorFlags.Red)
@@ -100,7 +102,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                 .AddCursors(
                     new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
                     new { Direction = ECursorDirection.Right, Count = mAutoComplete.GetPrompt().Length + mAutoComplete.CursorPosition },
-                    new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 + (end == 0 ? 1 : 0) }
+                    new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 + (bNoResult ? 1 : 0) }
                 )
             );
         }

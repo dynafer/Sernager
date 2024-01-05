@@ -14,6 +14,7 @@ internal static class YamlWrapper
 
         ISerializer serializer = new SerializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .WithQuotingNecessaryStrings(true)
             .Build();
 
         return serializer.Serialize(obj);

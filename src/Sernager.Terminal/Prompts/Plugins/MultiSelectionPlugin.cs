@@ -18,6 +18,21 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
         return this;
     }
 
+    internal MultiSelectionPlugin<TOptionValue> SetInitialSelections(params string[] selections)
+    {
+        foreach (string selection in selections)
+        {
+            OptionItem<TOptionValue>? option = Options.FirstOrDefault(x => x.Name == selection);
+
+            if (option != null)
+            {
+                option.ToggleSelection();
+            }
+        }
+
+        return this;
+    }
+
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
         switch (keyInfo.Key)

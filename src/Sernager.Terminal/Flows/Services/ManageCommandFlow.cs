@@ -110,7 +110,7 @@ internal static class ManageCommandFlow
                 .ToArray();
 
             IBasePlugin plugin = new MultiSelectionPlugin<string>()
-                .SetPrompt("Choose a command group(s) to remove (Cancel: No selection):")
+                .SetPrompt("Select a command group(s) to remove (Cancel: No selection):")
                 .SetPageSize(5)
                 .UseAutoComplete()
                 .AddOptions(options);

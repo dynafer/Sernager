@@ -101,7 +101,7 @@ internal static class ManageEnvironmentFlow
                 .ToArray();
 
             IBasePlugin plugin = new MultiSelectionPlugin<string>()
-                .SetPrompt("Choose an environment group(s) to remove (Cancel: No selection):")
+                .SetPrompt("Select an environment group(s) to remove (Cancel: No selection):")
                 .SetPageSize(5)
                 .UseAutoComplete()
                 .AddOptions(options);

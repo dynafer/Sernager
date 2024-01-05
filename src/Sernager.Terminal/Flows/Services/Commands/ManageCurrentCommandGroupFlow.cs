@@ -200,13 +200,24 @@ internal static class ManageCurrentCommandGroupFlow
 
             string shortName = Prompter.Prompt(CommandFlowHelper.CreateShortNamePromptPlugin(manager));
             string description = Prompter.Prompt(ManageFlowHelper.CreateDescriptionPromptPlugin(string.Empty, true));
-            // FIX ME: Add environment groups and commands
+            string[] environmentGroups = Prompter.Prompt(CommandFlowHelper.CreateEnvironmentListPromptPlugin()).ToArray();
+            string command = Prompter.Prompt(CommandFlowHelper.CreateCommandPromptPlugin());
+            bool bCommandArray = false;
+
+            if (!string.IsNullOrWhiteSpace(command))
+            {
+                bCommandArray = Prompter.Prompt(CommandFlowHelper.CreateCommandArrayPromptPlugin());
+            }
 
             CommandModel commandModel = new CommandModel()
             {
                 Name = groupName,
                 ShortName = shortName,
-                Description = description
+                Description = description,
+                UsedEnvironmentGroups = environmentGroups.ToList(),
+                Command = bCommandArray
+                    ? CommandFlowHelper.ToCommandArray(command)
+                    : command
             };
 
             manager.AddCommand(commandModel);
@@ -288,7 +299,7 @@ internal static class ManageCurrentCommandGroupFlow
                 .ToArray();
 
             IBasePlugin plugin = new MultiSelectionPlugin<Guid>()
-                .SetPrompt("Choose a group or a command to remove (Cancel: No selection):")
+                .SetPrompt("Select a group or a command to remove (Cancel: No selection):")
                 .AddDescription(CommandGroupFlowHelper.CreatePromptDescriptions(manager))
                 .SetPageSize(5)
                 .UseAutoComplete()
