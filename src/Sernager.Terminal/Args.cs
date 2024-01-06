@@ -17,7 +17,7 @@ internal static class Args
     private static Dictionary<string, TArgInfo> mArgInfos = new Dictionary<string, TArgInfo>();
     private static Dictionary<string, string> mShortNames = new Dictionary<string, string>();
 
-    internal static void Init()
+    static Args()
     {
         PropertyInfo[] properties = typeof(BuilderModel).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
             .Where(property => property.GetCustomAttribute<ArgAttribute>() != null)

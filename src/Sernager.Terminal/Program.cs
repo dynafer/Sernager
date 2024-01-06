@@ -16,7 +16,6 @@ internal class Program
 
         string[] commands = Args.GetCommands(args);
 
-        Args.Init();
         Args.Parse(args);
 
         Service = Startup.InitializeSernager();

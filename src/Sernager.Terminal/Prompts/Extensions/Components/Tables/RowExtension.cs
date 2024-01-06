@@ -9,7 +9,7 @@ internal static class RowExtension
     {
         row.TotalColumns += column.Colspan;
 
-        row.Widths.Add(column.Length + Row.PaddingOfTwoSides);
+        row.Widths.Add(column.Length + Row.PADDING_TWO_SIDES);
         row.RowGrid.Add(true);
 
         if (column.Colspan > 1)
