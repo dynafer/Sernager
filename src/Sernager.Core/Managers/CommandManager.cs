@@ -46,9 +46,16 @@ internal sealed class CommandManager : ICommandManager
             return;
         }
 
+        removeItems(CurrentGroup);
+
         Guid currentId = mParents.Pop();
 
-        removeItems(CurrentGroup);
+        if (mParents.Count == 0)
+        {
+            CurrentGroup = MainGroup;
+            CurrentGroup.Items.Remove(currentId);
+            return;
+        }
 
         Guid id = mParents.Peek();
         CurrentGroup = Configurator.Config.CommandSubgroups[id];

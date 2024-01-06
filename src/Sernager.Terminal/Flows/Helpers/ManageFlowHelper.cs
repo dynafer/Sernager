@@ -6,19 +6,34 @@ namespace Sernager.Terminal.Flows.Helpers;
 
 internal static class ManageFlowHelper
 {
-    internal static string CreateCommandPath(this ICommandManager manager, string delimiter)
+    internal static string CreateCommandGroupPath(this ICommandManager manager, string delimiter)
     {
         return string.Join(delimiter, manager.GetPath());
     }
 
-    internal static string CreateCommandFlowName(this ICommandManager manager, string prefix)
+    internal static string CreateCommandPath(this ICommandManager manager, string delimiter, string commandName)
     {
-        return $"{manager.CreateCommandPath(".")}.{prefix}";
+        return $"{manager.CreateCommandGroupPath(delimiter)}{delimiter}{commandName}";
     }
 
-    internal static string CreateCommandFlowName(this ICommandManager manager, string prefix, string flowName)
+    internal static string CreateCommandGroupFlowName(this ICommandManager manager, string prefix)
     {
-        return $"{manager.CreateCommandFlowName(prefix)}.{flowName}";
+        return $"{manager.CreateCommandGroupPath(".")}.{prefix}";
+    }
+
+    internal static string CreateCommandGroupFlowName(this ICommandManager manager, string prefix, string flowName)
+    {
+        return $"{manager.CreateCommandGroupFlowName(prefix)}.{flowName}";
+    }
+
+    internal static string CreateCommandFlowName(this ICommandManager manager, string prefix, string commandName)
+    {
+        return $"{manager.CreateCommandPath(".", commandName)}.{prefix}";
+    }
+
+    internal static string CreateCommandFlowName(this ICommandManager manager, string prefix, string commandName, string flowName)
+    {
+        return $"{manager.CreateCommandFlowName(prefix, commandName)}.{flowName}";
     }
 
     internal static ITypePlugin<string> CreateDescriptionPromptPlugin(string description, bool bSkip)

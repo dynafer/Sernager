@@ -88,6 +88,6 @@ internal static class ManageCommandGroupFlow
             }
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME), pluginHandler, resultHandler);
     }
 }

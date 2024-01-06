@@ -30,7 +30,8 @@ internal static class ManageCurrentCommandGroupFlow
                     ("Edit description", "EditDescription"),
                     ("Add a command", "AddCommand"),
                     ("Add a subgroup", "AddSubgroup"),
-                    ("Remove a item(s)", "RemoveItems")
+                    ("Remove a item(s)", "RemoveItems"),
+                    ("Remove this group", "RemoveGroup")
                 )
                 .AddFlowCommonOptions();
 
@@ -61,6 +62,10 @@ internal static class ManageCurrentCommandGroupFlow
                     case "RemoveItems":
                         RemoveItems(manager);
                         break;
+                    case "RemoveGroup":
+                        manager.RemoveCurrentGroup();
+                        HistoryManager.Prev(2);
+                        break;
                     default:
                         HistoryManager.Prev();
                         break;
@@ -68,7 +73,7 @@ internal static class ManageCurrentCommandGroupFlow
             }
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME), pluginHandler, resultHandler);
     }
 
     internal static void EditName(ICommandManager manager)
@@ -109,7 +114,7 @@ internal static class ManageCurrentCommandGroupFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME, "EditName"), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME, "EditName"), pluginHandler, resultHandler);
     }
 
     internal static void EditShortName(ICommandManager manager)
@@ -138,7 +143,7 @@ internal static class ManageCurrentCommandGroupFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME, "EditShortName"), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME, "EditShortName"), pluginHandler, resultHandler);
     }
 
     internal static void EditDescription(ICommandManager manager)
@@ -150,20 +155,12 @@ internal static class ManageCurrentCommandGroupFlow
 
         HistoryResultHandler resultHandler = (object result) =>
         {
-            string description = (string)result;
-
-            if (string.IsNullOrWhiteSpace(description))
-            {
-                HistoryManager.Prev();
-                return;
-            }
-
-            manager.ChangeCurrentGroupDescription(description);
+            manager.ChangeCurrentGroupDescription((string)result);
 
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME, "EditDescription"), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME, "EditDescription"), pluginHandler, resultHandler);
     }
 
     internal static void AddCommand(ICommandManager manager)
@@ -225,7 +222,7 @@ internal static class ManageCurrentCommandGroupFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME, "AddCommand"), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME, "AddCommand"), pluginHandler, resultHandler);
     }
 
     internal static void AddSubgroup(ICommandManager manager)
@@ -268,7 +265,7 @@ internal static class ManageCurrentCommandGroupFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME, "AddSubgroup"), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME, "AddSubgroup"), pluginHandler, resultHandler);
     }
 
     internal static void RemoveItems(ICommandManager manager)
@@ -320,6 +317,6 @@ internal static class ManageCurrentCommandGroupFlow
             HistoryManager.Prev();
         };
 
-        FlowManager.RunFlow(manager.CreateCommandFlowName(NAME, "RemoveItems"), pluginHandler, resultHandler);
+        FlowManager.RunFlow(manager.CreateCommandGroupFlowName(NAME, "RemoveItems"), pluginHandler, resultHandler);
     }
 }

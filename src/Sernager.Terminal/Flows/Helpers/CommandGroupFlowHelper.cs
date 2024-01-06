@@ -73,7 +73,7 @@ internal static class CommandGroupFlowHelper
             description.Add($"Description: {manager.CurrentGroup.Description}");
         }
 
-        description.Add($"Path: {manager.CreateCommandPath(" > ")}");
+        description.Add($"Path: {manager.CreateCommandGroupPath(" > ")}");
 
         return description.ToArray();
     }

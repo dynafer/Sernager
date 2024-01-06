@@ -1,3 +1,4 @@
+using Sernager.Core.Managers;
 using Sernager.Terminal.Models;
 
 namespace Sernager.Terminal.Managers;
@@ -54,26 +55,31 @@ internal static class HistoryManager
         mHistories[historyId].RunWithPrompt();
     }
 
-    internal static void PrevTo(HistoryModel history)
+    internal static void Prev(int count)
     {
+        if (count < 1)
+        {
+            ExceptionManager.ThrowFail<ArgumentException>("Count must be greater than 0.");
+            return;
+        }
+
         if (mHistoryStacks.Count == 0)
         {
             return;
         }
 
-        Guid prevHistoryId = mHistoryStacks.Pop();
-
-        while (prevHistoryId != history.Id)
+        for (int i = 0; i < count; ++i)
         {
-            if (mHistoryStacks.Count == 0)
+            if (mHistoryStacks.Count <= 1)
             {
-                return;
+                break;
             }
 
-            prevHistoryId = mHistoryStacks.Pop();
+            mHistoryStacks.Pop();
         }
 
-        mHistories[prevHistoryId].RunWithPrompt();
+        Guid historyId = mHistoryStacks.Peek();
+        mHistories[historyId].RunWithPrompt();
     }
 
     internal static void GoHome()

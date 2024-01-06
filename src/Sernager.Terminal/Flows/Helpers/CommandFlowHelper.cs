@@ -118,7 +118,7 @@ internal static class CommandFlowHelper
             description.Add($"Description: {commandModel.Description}");
         }
 
-        description.Add($"Path: {manager.CreateCommandPath(" > ")}.{commandModel.Name}");
+        description.Add($"Path: {manager.CreateCommandPath(" > ", commandModel.Name)}");
 
         return description.ToArray();
     }
