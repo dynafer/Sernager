@@ -14,6 +14,7 @@ public interface ICommandManager
     ICommandManager UseItem(Guid id);
     string[] GetPath();
     ICommandManager PrevGroup();
+    ICommandManager GoMainGroup();
     GroupModel GetPrevGroup();
     List<GroupItemModel> GetItems();
 }

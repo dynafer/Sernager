@@ -71,23 +71,36 @@ public static class CommandManagerExtension
         manager.CurrentGroup.Description = description;
     }
 
-    public static bool CanUseName(this ICommandManager manager, string name, bool bCheckPrevious)
+    public static bool CanUseName(this ICommandManager manager, string name, bool bCheckFromPrevious)
     {
-        if (bCheckPrevious)
+        if (bCheckFromPrevious)
         {
             GroupModel prevGroup = manager.GetPrevGroup();
 
-            return manager.CurrentGroup.Name != name &&
-                   !prevGroup.Items
-                       .Where(Configurator.Config.CommandSubgroups.ContainsKey)
-                       .Select(x => Configurator.Config.CommandSubgroups[x])
-                       .Where(x => x.Name == name || x.ShortName == name)
-                       .Any() &&
-                   !prevGroup.Items
-                       .Where(Configurator.Config.Commands.ContainsKey)
-                       .Select(x => Configurator.Config.Commands[x])
-                       .Where(x => x.Name == name || x.ShortName == name)
-                       .Any();
+            bool bUsable = manager.CurrentGroup.Name != name;
+
+            if (manager.CurrentGroup == manager.MainGroup)
+            {
+                bUsable &= !Configurator.Config.CommandMainGroups
+                    .Where(x => x.Key == name || x.Value.Name == name || x.Value.ShortName == name)
+                    .Any();
+            }
+            else
+            {
+                bUsable &= !prevGroup.Items
+                    .Where(Configurator.Config.CommandSubgroups.ContainsKey)
+                    .Select(x => Configurator.Config.CommandSubgroups[x])
+                    .Where(x => x.Name == name || x.ShortName == name)
+                    .Any();
+            }
+
+            bUsable &= !prevGroup.Items
+                .Where(Configurator.Config.Commands.ContainsKey)
+                .Select(x => Configurator.Config.Commands[x])
+                .Where(x => x.Name == name || x.ShortName == name)
+                .Any();
+
+            return bUsable;
         }
         else
         {

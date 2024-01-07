@@ -1,10 +1,8 @@
 using Sernager.Core.Managers;
-using Sernager.Terminal.Prompts.Extensions;
-using Sernager.Terminal.Prompts.Plugins;
 
-namespace Sernager.Terminal.Flows.Helpers;
+namespace Sernager.Terminal.Flows.Extensions;
 
-internal static class ManageFlowHelper
+internal static class FlowCommandManagerExtension
 {
     internal static string CreateCommandGroupPath(this ICommandManager manager, string delimiter)
     {
@@ -34,14 +32,5 @@ internal static class ManageFlowHelper
     internal static string CreateCommandFlowName(this ICommandManager manager, string prefix, string commandName, string flowName)
     {
         return $"{manager.CreateCommandFlowName(prefix, commandName)}.{flowName}";
-    }
-
-    internal static ITypePlugin<string> CreateDescriptionPromptPlugin(string description, bool bSkip)
-    {
-        string promptSkipText = bSkip ? " (Skip: Empty input)" : "";
-
-        return new InputPlugin()
-            .SetPrompt($"Enter a description for the command group{promptSkipText}")
-            .SetInitialInput(description);
     }
 }

@@ -1,100 +1,124 @@
-using Sernager.Core;
+using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows;
-using Sernager.Terminal.Models;
-using Sernager.Terminal.Prompts.Components;
-using Sernager.Terminal.Prompts.Extensions;
-using Sernager.Terminal.Prompts.Plugins;
+using System.Reflection;
 
 namespace Sernager.Terminal.Managers;
 
 internal static class FlowManager
 {
-    private static readonly Dictionary<string, Guid> mHistoryIds = new Dictionary<string, Guid>();
+    private static readonly BindingFlags BINDING_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+    private static Dictionary<string, Type> mFlowTypes = new Dictionary<string, Type>();
+    private static Stack<IFlow> mFlowStack = new Stack<IFlow>();
+    private static IFlow mHomeFlow = new HomeFlow();
+    internal static int PageSize
+    {
+        get
+        {
+            int maxPromptSize = 4;
+            if (Console.WindowHeight - maxPromptSize < 1)
+            {
+                return 1;
+            }
+            else
+            {
+                return Console.WindowHeight - maxPromptSize;
+            }
+        }
+    }
+    internal static bool IsManagementMode { get; set; } = false;
+
+    static FlowManager()
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        foreach (Type type in assembly.GetTypes())
+        {
+            if (type.GetCustomAttribute<FlowAttribute>() is FlowAttribute attribute)
+            {
+                if (string.IsNullOrEmpty(attribute.Name))
+                {
+                    attribute.Name = type.Name.Replace("Flow", string.Empty);
+                }
+
+                string attachedName = attribute.Name;
+                if (!string.IsNullOrEmpty(attribute.Alias))
+                {
+                    attachedName = $"{attribute.Alias}.{attribute.Name}";
+                }
+
+                mFlowTypes.Add(attachedName, type);
+            }
+        }
+    }
 
     internal static void Start(string[] commands)
     {
-        Home(commands.Length > 0);
+        mHomeFlow.Prompt();
     }
 
-    internal static void Home(bool bSkip = false)
+    internal static void RunFlow(string flowName)
     {
-        HistoryPromptPluginHandler pluginHandler = () =>
-        {
-            return new SelectionPlugin<string>()
-                .SetPrompt("Choose an option:")
-                .SetPageSize(5)
-                .UseAutoComplete()
-                .AddOptions(
-                    ("Run command", RunCommandFlow.NAME),
-                    ("Manage services", ManageServiceFlow.NAME),
-                    ("Exit", "Exit")
-                );
-        };
+        tryCreateFlow(flowName);
 
-        HistoryResultHandler resultHandler = (object result) =>
+        runLastFlow();
+    }
+
+    internal static void RunFlow(string flowName, params object[] parameters)
+    {
+        tryCreateFlow(flowName, parameters);
+
+        runLastFlow();
+    }
+
+    internal static void RunPreviousFlow()
+    {
+        if (mFlowStack.Count == 0)
         {
-            switch (result)
+            mHomeFlow.Prompt();
+            return;
+        }
+
+        mFlowStack.Pop();
+
+        runLastFlow();
+    }
+
+    internal static void RunPreviousFlow(int count)
+    {
+        if (count < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater than 0.");
+        }
+
+        for (int i = 0; i < count; ++i)
+        {
+            if (mFlowStack.Count == 0)
             {
-                case RunCommandFlow.NAME:
-                    RunCommandFlow.Run();
-                    break;
-                case ManageServiceFlow.NAME:
-                    ManageServiceFlow.Run();
-                    break;
-                default:
-                    Environment.Exit(0);
-                    break;
+                break;
             }
-        };
 
-        RunFlow("Home", pluginHandler, resultHandler, bSkip);
-    }
-
-    internal static void RunFlow(string key, HistoryPromptPluginHandler pluginHandler, HistoryResultHandler resultHandler, bool bSkip = false)
-    {
-        if (!mHistoryIds.ContainsKey(key))
-        {
-            HistoryModel model = new HistoryModel(pluginHandler, resultHandler);
-
-            mHistoryIds.Add(key, model.Id);
-
-            HistoryManager.Run(model, bSkip);
+            mFlowStack.Pop();
         }
-        else
-        {
-            HistoryManager.Run(mHistoryIds[key], bSkip);
-        }
+
+        runLastFlow();
     }
 
-    internal static TPlugin AddFlowCommonOptions<TPlugin>(this TPlugin plugin)
-        where TPlugin : ListBasePlugin<string>
+    internal static void GoHome()
     {
-        EOptionTypeFlags optionType = plugin.ToOptionType();
+        mFlowStack.Clear();
 
-        plugin.Options.Add(new OptionItem<string>(optionType, "Back", "Back"));
-        plugin.Options.Add(new OptionItem<string>(optionType, "Exit", "Exit"));
-
-        return plugin;
+        mHomeFlow.Prompt();
     }
 
-    internal static TPlugin AddFlowCommonOptions<TPlugin, TOptionValue>(this TPlugin plugin, TOptionValue backOption, TOptionValue exitOption)
-        where TPlugin : ListBasePlugin<TOptionValue>
-        where TOptionValue : notnull
-    {
-        EOptionTypeFlags optionType = plugin.ToOptionType();
-
-        plugin.Options.Add(new OptionItem<TOptionValue>(optionType, "Back", backOption));
-        plugin.Options.Add(new OptionItem<TOptionValue>(optionType, "Exit", exitOption));
-
-        return plugin;
-    }
-
-    internal static bool TryHandleCommonOptions(string result)
+    internal static bool TryHandleCommonSelectionResult(string result)
     {
         switch (result)
         {
             case "Back":
-                HistoryManager.Prev();
+                RunPreviousFlow();
+                return true;
+            case "Home":
+                GoHome();
                 return true;
             case "Exit":
                 Environment.Exit(0);
@@ -104,22 +128,70 @@ internal static class FlowManager
         }
     }
 
-    internal static bool TryHandleCommonOptions<TOptionValue>(TOptionValue result, TOptionValue backOption, TOptionValue exitOption)
+    internal static bool TryHandleCommonSelectionResult<TOptionValue>(TOptionValue result, TOptionValue backOption, TOptionValue homeOption, TOptionValue exitOption)
         where TOptionValue : notnull
     {
-        if (EqualityComparer<TOptionValue>.Default.Equals(result, backOption))
-        {
-            HistoryManager.Prev();
-            return true;
-        }
-        else if (EqualityComparer<TOptionValue>.Default.Equals(result, exitOption))
+        if (EqualityComparer<TOptionValue>.Default.Equals(result, exitOption))
         {
             Environment.Exit(0);
+            return true;
+        }
+        else if (EqualityComparer<TOptionValue>.Default.Equals(result, homeOption))
+        {
+            GoHome();
+            return true;
+        }
+        else if (EqualityComparer<TOptionValue>.Default.Equals(result, backOption))
+        {
+            RunPreviousFlow();
             return true;
         }
         else
         {
             return false;
         }
+    }
+
+    private static bool tryCreateFlow(string flowName, object[]? paramters = null)
+    {
+        Type? flowType;
+
+        if (!mFlowTypes.TryGetValue(flowName, out flowType))
+        {
+            return false;
+        }
+
+        IFlow? flow;
+
+        if (paramters == null)
+        {
+            flow = (IFlow?)flowType.GetConstructor(BINDING_FLAGS, Type.EmptyTypes)?.Invoke(null);
+        }
+        else
+        {
+            flow = (IFlow?)flowType.GetConstructor(BINDING_FLAGS, paramters.Select(parameter => parameter.GetType()).ToArray())?.Invoke(paramters);
+        }
+
+        if (flow == null)
+        {
+            return false;
+        }
+
+        mFlowStack.Push(flow);
+
+        return true;
+    }
+
+    private static void runLastFlow()
+    {
+        if (mFlowStack.Count == 0)
+        {
+            mHomeFlow.Prompt();
+            return;
+        }
+
+        mFlowStack
+            .Peek()
+            .Prompt();
     }
 }

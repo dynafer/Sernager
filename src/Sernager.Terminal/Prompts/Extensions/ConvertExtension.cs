@@ -1,7 +1,7 @@
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
-using Sernager.Terminal.Prompts.Plugins;
 using Sernager.Terminal.Prompts.Helpers;
+using Sernager.Terminal.Prompts.Plugins;
 using System.Reflection;
 
 namespace Sernager.Terminal.Prompts.Extensions;

@@ -165,6 +165,14 @@ internal sealed class CommandManager : ICommandManager
         return this;
     }
 
+    public ICommandManager GoMainGroup()
+    {
+        mParents.Clear();
+        CurrentGroup = MainGroup;
+
+        return this;
+    }
+
     public GroupModel GetPrevGroup()
     {
         if (mParents.Count <= 1)
