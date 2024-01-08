@@ -35,6 +35,7 @@ internal sealed class HomeFlow : IFlow
                 break;
             case "ManageEnvironments":
                 FlowManager.IsManagementMode = true;
+                FlowManager.RunFlow("Environment.Main");
                 break;
             case "SaveAs":
                 FlowManager.RunFlow("SaveAs");

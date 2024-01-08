@@ -48,7 +48,7 @@ internal sealed class RemoveItemFlow : IFlow
             new MultiSelectionPlugin<Guid>()
                 .SetPrompt("Select a group or a command to remove (Cancel: No selection):")
                 .AddFlowDescriptions(mManager)
-                .SetPageSize(5)
+                .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options)
         ).ToArray();

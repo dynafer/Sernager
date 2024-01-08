@@ -17,12 +17,15 @@ public class MainFlow : IFlow
             .Select(x => (x, x))
             .ToList();
 
+        string addCommandGroupId = Guid.NewGuid().ToString();
+        string removeCommandGroupId = Guid.NewGuid().ToString();
+
         if (FlowManager.IsManagementMode)
         {
             prompt = "Choose a group or an option:";
             options.AddRange([
-                ("Add a group", "AddCommandGroup"),
-                ("Remove a group(s)", "RemoveCommandGroup")
+                ("Add a group", addCommandGroupId),
+                ("Remove a group(s)", removeCommandGroupId)
             ]);
         }
 
@@ -40,17 +43,18 @@ public class MainFlow : IFlow
             return;
         }
 
-        switch (result)
+        if (result == addCommandGroupId)
         {
-            case "AddCommandGroup":
-                FlowManager.RunFlow("Command.Main.AddGroup");
-                break;
-            case "RemoveCommandGroup":
-                FlowManager.RunFlow("Command.Main.RemoveGroup");
-                break;
-            default:
-                FlowManager.RunFlow("Command.CurrentGroup", Program.Service.ManageCommandGroup(result));
-                break;
+            FlowManager.RunFlow("Command.Main.AddGroup");
+            return;
         }
+
+        if (result == removeCommandGroupId)
+        {
+            FlowManager.RunFlow("Command.Main.RemoveGroup");
+            return;
+        }
+
+        FlowManager.RunFlow("Command.CurrentGroup", Program.Service.ManageCommandGroup(result));
     }
 }
