@@ -2,7 +2,6 @@ using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
 using Sernager.Terminal.Attributes;
-using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Extensions;
@@ -78,13 +77,13 @@ internal sealed class AddCommandFlow : IFlow
                 .AddOptions(environmentGroupOptions)
         ).ToArray();
 
-        string command = Prompter.Prompt(
-            new InputPlugin()
-                .SetPrompt("Enter a command (Skip: Empty input)")
-        );
+        List<string> command = Prompter.Prompt(
+            new EditorPlugin()
+                .SetPrompt("Add a command (Skip: Empty input)")
+        ).ToList();
 
         bool bCommandArray = false;
-        if (!string.IsNullOrWhiteSpace(command))
+        if (command.Count > 0)
         {
             bCommandArray = Prompter.Prompt(
                 new ConfirmPlugin()
@@ -97,13 +96,16 @@ internal sealed class AddCommandFlow : IFlow
             Name = name,
             ShortName = shortName,
             Description = description,
-            UsedEnvironmentGroups = environmentGroups.ToList(),
-            Command = command
+            UsedEnvironmentGroups = environmentGroups.ToList()
         };
 
         if (bCommandArray)
         {
-            commandModel.ToCommandAsArray();
+            commandModel.Command = command.ToArray();
+        }
+        else
+        {
+            commandModel.Command = string.Join(" ", command);
         }
 
         mManager.AddCommand(commandModel);

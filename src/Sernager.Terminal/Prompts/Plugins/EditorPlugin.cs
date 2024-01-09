@@ -15,13 +15,21 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
     private SCursor mCursor = new SCursor();
     private bool mbCommandMode = true;
     private string mCommandResult = string.Empty;
+    private bool mbRendered = false;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; private init; } = new List<string>();
     private int mMaxEditorHeight => Console.WindowHeight - Description.Count - 2;
     public bool ShouldShowCursor => true;
 
-    internal EditorPlugin SetInitialLines(params string[] lines)
+    internal EditorPlugin SetInitialLines(params string[] rawLines)
     {
+        List<string> lines = [];
+
+        foreach (string rawLine in rawLines)
+        {
+            lines.AddRange(rawLine.Split('\n'));
+        }
+
         mOriginalLines = lines.ToList();
         mLines = lines.ToList();
 
@@ -102,6 +110,12 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
 
     List<IPromptComponent> IBasePlugin.Render()
     {
+        if (!mbRendered)
+        {
+            mbRendered = true;
+            mCurrentEditorY = mLines.Count - mMaxEditorHeight;
+        }
+
         List<IPromptComponent> components =
         [
             new TextComponent()

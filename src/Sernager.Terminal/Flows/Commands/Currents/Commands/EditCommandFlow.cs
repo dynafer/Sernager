@@ -1,6 +1,5 @@
 using Sernager.Core.Models;
 using Sernager.Terminal.Attributes;
-using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Extensions;
@@ -20,37 +19,56 @@ internal sealed class EditCommandFlow : IFlow
 
     void IFlow.Prompt()
     {
-        string oldCommand = mCommandModel.Command switch
+        List<string> initialLines = new List<string>();
+
+        switch (mCommandModel.Command)
         {
-            string[] commandArray => string.Join(" ", commandArray),
-            string commandString => commandString,
-            _ => throw new ArgumentException("Command must be a string or string[]")
-        };
+            case string[] commandArray:
+                if (commandArray.Length > 0)
+                {
+                    initialLines.AddRange(commandArray);
+                }
 
-        string command = Prompter.Prompt(
-            new InputPlugin()
-                .SetPrompt("Enter a command (Cancel: Same input)")
-                .SetInitialInput(oldCommand)
-        );
+                break;
+            case string commandString:
+                if (!string.IsNullOrWhiteSpace(commandString))
+                {
+                    initialLines.Add(commandString);
+                }
 
-        if (command == oldCommand)
+                break;
+            default:
+                break;
+        }
+
+        List<string> command = Prompter.Prompt(
+            new EditorPlugin()
+                .SetPrompt("Edit a command")
+                .SetInitialLines(initialLines.ToArray())
+        )
+        .Where(x => !string.IsNullOrWhiteSpace(x))
+        .ToList();
+
+        if (Enumerable.SequenceEqual(initialLines, command))
         {
             FlowManager.RunPreviousFlow();
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(command))
+        if (command.Count > 0)
         {
             bool bCommandArray = Prompter.Prompt(
                 new ConfirmPlugin()
                     .SetPrompt("Do you want to save the command as an array?")
             );
 
-            mCommandModel.Command = command;
-
             if (bCommandArray)
             {
-                mCommandModel.ToCommandAsArray();
+                mCommandModel.Command = command.ToArray();
+            }
+            else
+            {
+                mCommandModel.Command = string.Join(" ", command);
             }
         }
         else

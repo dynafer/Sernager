@@ -138,6 +138,11 @@ internal static class FlowManager
         runLastFlow();
     }
 
+    internal static void RunLastFlow()
+    {
+        runLastFlow();
+    }
+
     internal static void GoHome()
     {
         mFlowStack.Clear();
