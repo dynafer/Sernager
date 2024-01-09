@@ -12,7 +12,7 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 [Flow(Alias = "Environment.Manage")]
 internal sealed class ChangeAdditionModeFlow : IFlow
 {
-    private IEnvironmentManager mManager;
+    private readonly IEnvironmentManager mManager;
 
     internal ChangeAdditionModeFlow(IEnvironmentManager manager)
     {

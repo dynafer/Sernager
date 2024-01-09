@@ -11,8 +11,8 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 [Flow(Alias = "Environment.Manage")]
 internal sealed class EditEnvironmentVaraibleFlow : IFlow
 {
-    private IEnvironmentManager mManager;
-    private bool mbPre;
+    private readonly IEnvironmentManager mManager;
+    private readonly bool mbPre;
 
     internal EditEnvironmentVaraibleFlow(IEnvironmentManager manager, bool bPre)
     {

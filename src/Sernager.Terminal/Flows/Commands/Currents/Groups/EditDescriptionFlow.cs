@@ -10,7 +10,7 @@ namespace Sernager.Terminal.Flows.Commands.Currents.Groups;
 [Flow(Alias = "Command.CurrentGroup.Manage")]
 internal sealed class EditDescriptionFlow : IFlow
 {
-    private ICommandManager mManager;
+    private readonly ICommandManager mManager;
 
     internal EditDescriptionFlow(ICommandManager manager)
     {

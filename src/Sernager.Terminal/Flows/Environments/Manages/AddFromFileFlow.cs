@@ -8,8 +8,8 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 [Flow(Alias = "Environment.Manage")]
 internal sealed class AddFromFileFlow : IFlow
 {
-    private IEnvironmentManager mManager;
-    private bool mbPre;
+    private readonly IEnvironmentManager mManager;
+    private readonly bool mbPre;
 
     internal AddFromFileFlow(IEnvironmentManager manager, bool bPre)
     {

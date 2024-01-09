@@ -11,7 +11,7 @@ namespace Sernager.Terminal.Flows.Commands.Currents.Commands;
 [Flow(Alias = "Command.CurrentCommand.Manage")]
 internal sealed class EditCommandFlow : IFlow
 {
-    private CommandModel mCommandModel;
+    private readonly CommandModel mCommandModel;
 
     internal EditCommandFlow(CommandModel commandModel)
     {

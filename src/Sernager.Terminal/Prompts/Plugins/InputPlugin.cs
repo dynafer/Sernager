@@ -8,7 +8,7 @@ namespace Sernager.Terminal.Prompts.Plugins;
 
 internal sealed class InputPlugin : ITypePlugin<string>
 {
-    private AutoComplete<string> mInput = new AutoComplete<string>();
+    private readonly AutoComplete<string> mInput = new AutoComplete<string>();
     private bool mbUseAutoComplete = false;
     private InputValidator? mValidator = null;
     public List<string>? Hints { get; private set; } = null;

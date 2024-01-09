@@ -5,7 +5,7 @@ namespace Sernager.Core.Managers;
 
 internal sealed class CommandManager : ICommandManager
 {
-    private Stack<Guid> mParents = new Stack<Guid>();
+    private readonly Stack<Guid> mParents = new Stack<Guid>();
     public GroupModel MainGroup { get; private set; }
     public GroupModel CurrentGroup { get; private set; }
 

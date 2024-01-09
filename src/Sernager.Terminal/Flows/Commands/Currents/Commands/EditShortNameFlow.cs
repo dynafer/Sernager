@@ -13,8 +13,8 @@ namespace Sernager.Terminal.Flows.Commands.Currents.Commands;
 [Flow(Alias = "Command.CurrentCommand.Manage")]
 internal sealed class EditShortNameFlow : IFlow
 {
-    private ICommandManager mManager;
-    private CommandModel mCommandModel;
+    private readonly ICommandManager mManager;
+    private readonly CommandModel mCommandModel;
 
     internal EditShortNameFlow(ICommandManager manager, CommandModel commandModel)
     {

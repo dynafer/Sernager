@@ -8,10 +8,10 @@ namespace Sernager.Terminal.Managers;
 internal static class FlowManager
 {
     private static readonly BindingFlags BINDING_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-    private static Dictionary<string, Type> mFlowTypes = new Dictionary<string, Type>();
-    private static Stack<IFlow> mFlowStack = new Stack<IFlow>();
+    private static readonly Dictionary<string, Type> mFlowTypes = new Dictionary<string, Type>();
+    private static readonly Stack<IFlow> mFlowStack = new Stack<IFlow>();
     private static Queue<string> mCommandQueue = null!;
-    private static IFlow mHomeFlow;
+    private static readonly IFlow mHomeFlow;
     internal static int PageSize
     {
         get

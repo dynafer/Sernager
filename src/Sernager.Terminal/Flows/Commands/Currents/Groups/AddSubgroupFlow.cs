@@ -12,7 +12,7 @@ namespace Sernager.Terminal.Flows.Commands.Currents.Groups;
 [Flow(Alias = "Command.CurrentGroup.Manage")]
 internal sealed class AddSubgroupFlow : IFlow
 {
-    private ICommandManager mManager;
+    private readonly ICommandManager mManager;
 
     internal AddSubgroupFlow(ICommandManager manager)
     {

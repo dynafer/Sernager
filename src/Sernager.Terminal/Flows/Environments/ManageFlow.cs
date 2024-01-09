@@ -11,7 +11,7 @@ namespace Sernager.Terminal.Flows.Environments;
 [Flow(Alias = "Environment")]
 internal sealed class ManageFlow : IFlow
 {
-    private IEnvironmentManager mManager;
+    private readonly IEnvironmentManager mManager;
 
     internal ManageFlow(IEnvironmentManager manager)
     {

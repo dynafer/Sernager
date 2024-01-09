@@ -11,7 +11,7 @@ namespace Sernager.Terminal.Flows.Commands.Currents;
 [Flow(Alias = "Command.CurrentGroup", Name = "Manage")]
 internal sealed class ManageGroupFlow : IFlow
 {
-    private ICommandManager mManager;
+    private readonly ICommandManager mManager;
 
     internal ManageGroupFlow(ICommandManager manager)
     {

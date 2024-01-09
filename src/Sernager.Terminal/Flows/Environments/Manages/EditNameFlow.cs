@@ -13,7 +13,7 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 [Flow(Alias = "Environment.Manage")]
 internal sealed class EditNameFlow : IFlow
 {
-    private IEnvironmentManager mManager;
+    private readonly IEnvironmentManager mManager;
 
     internal EditNameFlow(IEnvironmentManager manager)
     {

@@ -12,9 +12,9 @@ namespace Sernager.Terminal.Flows.Commands.Currents;
 [Flow(Alias = "Command.CurrentCommand", Name = "Manage")]
 internal sealed class ManageCommandFlow : IFlow
 {
-    private ICommandManager mManager;
-    private Guid mCommandId;
-    private CommandModel mCommandModel;
+    private readonly ICommandManager mManager;
+    private readonly Guid mCommandId;
+    private readonly CommandModel mCommandModel;
 
     internal ManageCommandFlow(ICommandManager manager, Guid commandId)
     {

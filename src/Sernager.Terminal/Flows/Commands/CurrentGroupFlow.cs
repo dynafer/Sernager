@@ -12,8 +12,8 @@ namespace Sernager.Terminal.Flows.Commands;
 [Flow(Alias = "Command")]
 internal sealed class CurrentGroupFlow : IFlow
 {
-    private ICommandManager mManager;
-    private Dictionary<string, Guid> mFixedOptions;
+    private readonly ICommandManager mManager;
+    private readonly Dictionary<string, Guid> mFixedOptions;
 
     internal CurrentGroupFlow(ICommandManager manager)
     {

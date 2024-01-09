@@ -10,8 +10,8 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 [Flow(Alias = "Environment.Manage")]
 internal sealed class SetVariableFlow : IFlow
 {
-    private IEnvironmentManager mManager;
-    private bool mbPre;
+    private readonly IEnvironmentManager mManager;
+    private readonly bool mbPre;
 
     internal SetVariableFlow(IEnvironmentManager manager, bool bPre)
     {
