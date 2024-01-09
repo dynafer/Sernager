@@ -56,6 +56,26 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
+    public IEnvironmentManager AddPreLines(params string[] lines)
+    {
+        foreach (string line in lines)
+        {
+            tryAddLine(EnvironmentGroup.PreVariables, line);
+        }
+
+        return this;
+    }
+
+    public IEnvironmentManager AddLines(params string[] lines)
+    {
+        foreach (string line in lines)
+        {
+            tryAddLine(EnvironmentGroup.Variables, line);
+        }
+
+        return this;
+    }
+
     public string? GetPreVariableOrNull(string key)
     {
         return getVariableOrNull(EnvironmentGroup.PreVariables, key);
@@ -158,36 +178,42 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             string? line;
             while ((line = reader.ReadLine()) != null)
             {
-                line = line.Trim();
-                if (line.StartsWith('#'))
-                {
-                    continue;
-                }
-
-                string[] keyValue = line.Split('#')[0].Split('=');
-                if (keyValue.Length != 2)
-                {
-                    Debug.WriteLine($"Invalid environment variable format: {line}");
-
-                    continue;
-                }
-
-                keyValue[0] = keyValue[0].Trim();
-                keyValue[1] = keyValue[1].Split('#')[0].Trim();
-
-                if (keyValue[1].StartsWith('"') && keyValue[1].EndsWith('"')
-                    || keyValue[1].StartsWith('\'') && keyValue[1].EndsWith('\'')
-                )
-                {
-                    keyValue[1] = keyValue[1].Substring(1, keyValue[1].Length - 2);
-                }
-
-                setVariable(target, keyValue[0], keyValue[1]);
+                tryAddLine(target, line);
             }
         }
 
         Debug.WriteLine($"Env file loaded: {filePath}");
 
+        return true;
+    }
+
+    private bool tryAddLine(Dictionary<string, string> target, string line)
+    {
+        line = line.Trim();
+        if (line.StartsWith('#'))
+        {
+            return false;
+        }
+
+        string[] keyValue = line.Split('#')[0].Split('=');
+        if (keyValue.Length != 2)
+        {
+            Debug.WriteLine($"Invalid environment variable format: {line}");
+
+            return false;
+        }
+
+        keyValue[0] = keyValue[0].Trim();
+        keyValue[1] = keyValue[1].Split('#')[0].Trim();
+
+        if (keyValue[1].StartsWith('"') && keyValue[1].EndsWith('"')
+            || keyValue[1].StartsWith('\'') && keyValue[1].EndsWith('\'')
+        )
+        {
+            keyValue[1] = keyValue[1].Substring(1, keyValue[1].Length - 2);
+        }
+
+        setVariable(target, keyValue[0], keyValue[1]);
         return true;
     }
 

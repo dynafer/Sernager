@@ -25,14 +25,22 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         mOriginalLines = lines.ToList();
         mLines = lines.ToList();
 
-        mCursor.X = mLines[^1].Length;
-        mCursor.Y = mLines.Count - 1;
+        if (mLines.Count != 0)
+        {
+            mCursor.X = mLines[^1].Length;
+            mCursor.Y = mLines.Count - 1;
+        }
 
         return this;
     }
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
+        if (mLines.Count == 0)
+        {
+            mLines.Add(string.Empty);
+        }
+
         if (tryMoveCursor(keyInfo))
         {
             result = null!;

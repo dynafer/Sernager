@@ -11,6 +11,8 @@ public interface IEnvironmentManager
     void RemoveGroup();
     IEnvironmentManager AddFromPreFile(string filePath);
     IEnvironmentManager AddFromFile(string filePath);
+    IEnvironmentManager AddPreLines(params string[] lines);
+    IEnvironmentManager AddLines(params string[] lines);
     string? GetPreVariableOrNull(string key);
     string? GetVariableOrNull(string key);
     ReadOnlyDictionary<string, string> GetPreVariables();

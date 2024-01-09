@@ -28,12 +28,12 @@ internal sealed class ManageFlow : IFlow
                 .UseAutoComplete()
                 .AddOptions(
                     ("Change addition mode", "ChangeAdditionMode"),
-                    ("Add a pre-env file", "AddPreFile"),
-                    ("Add an env file", "AddFile"),
+                    ("Add from a pre-env file", "AddFromPreFile"),
+                    ("Add from an env file", "AddFromFile"),
                     ("Set a pre-environment variable", "SetPreVariable"),
                     ("Set an environment variable", "SetVariable"),
-                    ("Edit pre-environment variables", "EditPreEnvironmentVaraibles"),
-                    ("Edit environment variables", "EditEnvironmentVaraibles"),
+                    ("Edit pre-environment variables", "EditPreEnvironmentVaraible"),
+                    ("Edit environment variables", "EditEnvironmentVaraible"),
                     ("Edit name", "EditName"),
                     ("Remove this group", "RemoveGroup")
                 )
@@ -50,17 +50,23 @@ internal sealed class ManageFlow : IFlow
             case "ChangeAdditionMode":
                 FlowManager.RunFlow("Environment.Manage.ChangeAdditionMode", mManager);
                 break;
-            case "AddPreFile":
+            case "AddFromPreFile":
+                FlowManager.RunFlow("Environment.Manage.AddFromFile", mManager, true);
                 break;
-            case "AddFile":
+            case "AddFromFile":
+                FlowManager.RunFlow("Environment.Manage.AddFromFile", mManager, false);
                 break;
             case "SetPreVariable":
+                FlowManager.RunFlow("Environment.Manage.SetVariable", mManager, true);
                 break;
             case "SetVariable":
+                FlowManager.RunFlow("Environment.Manage.SetVariable", mManager, false);
                 break;
-            case "EditPreEnvironmentVaraibles":
+            case "EditPreEnvironmentVaraible":
+                FlowManager.RunFlow("Environment.Manage.EditEnvironmentVaraible", mManager, true);
                 break;
-            case "EditEnvironmentVaraibles":
+            case "EditEnvironmentVaraible":
+                FlowManager.RunFlow("Environment.Manage.EditEnvironmentVaraible", mManager, false);
                 break;
             case "EditName":
                 FlowManager.RunFlow("Environment.Manage.EditName", mManager);

@@ -107,7 +107,6 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                 components.Add(new TextComponent()
                     .SetTextColor(EColorFlags.Red)
                     .SetText(mAutoComplete.GetNoResult())
-                    .UseLineBreak()
                 );
             }
 
