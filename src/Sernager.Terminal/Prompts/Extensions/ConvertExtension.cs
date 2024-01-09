@@ -1,5 +1,4 @@
 using Sernager.Terminal.Prompts.Components;
-using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins;
 using System.Reflection;
@@ -8,19 +7,6 @@ namespace Sernager.Terminal.Prompts.Extensions;
 
 internal static class ConvertExtension
 {
-    internal static PromptCursor ToPromptCursor(this object cursor)
-    {
-        ECursorDirection? direction = (ECursorDirection?)cursor.GetType().GetProperty("Direction")?.GetValue(cursor, null);
-        int? count = (int?)cursor.GetType().GetProperty("Count")?.GetValue(cursor, null);
-
-        if (direction == null || count == null)
-        {
-            throw new ArgumentException($"Object must have Direction and Count properties to be converted to {nameof(PromptCursor)}.");
-        }
-
-        return new PromptCursor(direction.Value, count.Value);
-    }
-
     internal static string ToSuggestItem<T>(this T item)
     {
         if (typeof(T) == typeof(string))

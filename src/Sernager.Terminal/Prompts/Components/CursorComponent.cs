@@ -1,5 +1,4 @@
 using Sernager.Terminal.Prompts.Components.Cursors;
-using Sernager.Terminal.Prompts.Extensions;
 using System.Text;
 
 namespace Sernager.Terminal.Prompts.Components;
@@ -25,9 +24,15 @@ internal sealed class CursorComponent : IPromptComponent
     {
         foreach (object cursor in cursors)
         {
-            PromptCursor promptCursor = cursor.ToPromptCursor();
-            Cursors.Add(promptCursor);
-            updateFinalPosition(promptCursor);
+            ECursorDirection? direction = (ECursorDirection?)cursor.GetType().GetProperty("Direction")?.GetValue(cursor, null);
+            int? count = (int?)cursor.GetType().GetProperty("Count")?.GetValue(cursor, null);
+
+            if (direction == null || count == null)
+            {
+                throw new ArgumentException($"Object must have Direction and Count properties to be converted to {nameof(PromptCursor)}.");
+            }
+
+            AddCursor(direction.Value, count.Value);
         }
 
         return this;
