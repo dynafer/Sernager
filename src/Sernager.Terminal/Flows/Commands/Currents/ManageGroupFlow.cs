@@ -27,11 +27,11 @@ internal sealed class ManageGroupFlow : IFlow
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(
+                    ("Add a command", "AddCommand"),
+                    ("Add a subgroup", "AddSubgroup"),
                     ("Edit name", "EditName"),
                     ("Edit short name", "EditShortName"),
                     ("Edit description", "EditDescription"),
-                    ("Add a command", "AddCommand"),
-                    ("Add a subgroup", "AddSubgroup"),
                     ("Remove a item(s)", "RemoveItem"),
                     ("Remove this group", "RemoveGroup")
                 )
@@ -45,6 +45,12 @@ internal sealed class ManageGroupFlow : IFlow
 
         switch (result)
         {
+            case "AddCommand":
+                FlowManager.RunFlow("Command.CurrentGroup.Manage.AddCommand", mManager);
+                break;
+            case "AddSubgroup":
+                FlowManager.RunFlow("Command.CurrentGroup.Manage.AddSubgroup", mManager);
+                break;
             case "EditName":
                 FlowManager.RunFlow("Command.CurrentGroup.Manage.EditName", mManager);
                 break;
@@ -53,12 +59,6 @@ internal sealed class ManageGroupFlow : IFlow
                 break;
             case "EditDescription":
                 FlowManager.RunFlow("Command.CurrentGroup.Manage.EditDescription", mManager);
-                break;
-            case "AddCommand":
-                FlowManager.RunFlow("Command.CurrentGroup.Manage.AddCommand", mManager);
-                break;
-            case "AddSubgroup":
-                FlowManager.RunFlow("Command.CurrentGroup.Manage.AddSubgroup", mManager);
                 break;
             case "RemoveItem":
                 FlowManager.RunFlow("Command.CurrentGroup.Manage.RemoveItem", mManager);

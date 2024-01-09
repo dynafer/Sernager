@@ -64,13 +64,13 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         }
         else if (tryCommand(keyInfo))
         {
-            if (mCommandResult == "Q")
+            if (mCommandResult == "Exit")
             {
                 result = mOriginalLines;
 
                 return true;
             }
-            else if (mCommandResult == "S")
+            else if (mCommandResult == "Save")
             {
                 result = mLines;
 
@@ -192,22 +192,13 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetText(Prompt),
             new CursorComponent()
+                .AddCursor(ECursorDirection.Right, 1),
+            new TextComponent()
+                .SetDecoration(EDecorationFlags.Bold)
+                .SetTextColor(EColorFlags.Green)
+                .SetText(mCommandResult)
+                .UseLineBreak(),
         ];
-
-        if (Description.Count > 0)
-        {
-            components.Add(new LineBreakComponent());
-            components.AddRange(
-                Description
-                    .Select((string description) =>
-                    {
-                        return new TextComponent()
-                            .SetTextColor(EColorFlags.BrightBlack)
-                            .SetText(description)
-                            .UseLineBreak();
-                    })
-            );
-        }
 
         return components;
     }
@@ -415,11 +406,11 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
 
         if (keyInfo.Key == ConsoleKey.Q)
         {
-            mCommandResult = "Q";
+            mCommandResult = "Exit";
         }
         else if (keyInfo.Key == ConsoleKey.S)
         {
-            mCommandResult = "S";
+            mCommandResult = "Save";
         }
         else
         {

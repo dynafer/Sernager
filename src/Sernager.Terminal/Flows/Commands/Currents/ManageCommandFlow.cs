@@ -32,10 +32,10 @@ internal sealed class ManageCommandFlow : IFlow
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(
+                    ("Edit command", "EditCommand"),
                     ("Edit name", "EditName"),
                     ("Edit short name", "EditShortName"),
                     ("Edit description", "EditDescription"),
-                    ("Edit command", "EditCommand"),
                     ("Remove command", "RemoveCommand")
                 )
                 .AddFlowCommonSelectionOptions()
@@ -48,6 +48,9 @@ internal sealed class ManageCommandFlow : IFlow
 
         switch (result)
         {
+            case "EditCommand":
+                FlowManager.RunFlow("Command.CurrentCommand.Manage.EditCommand", mCommandModel);
+                break;
             case "EditName":
                 FlowManager.RunFlow("Command.CurrentCommand.Manage.EditName", mManager, mCommandModel);
                 break;
@@ -56,9 +59,6 @@ internal sealed class ManageCommandFlow : IFlow
                 break;
             case "EditDescription":
                 FlowManager.RunFlow("Command.CurrentCommand.Manage.EditDescription", mCommandModel);
-                break;
-            case "EditCommand":
-                FlowManager.RunFlow("Command.CurrentCommand.Manage.EditCommand", mCommandModel);
                 break;
             case "RemoveCommand":
                 mManager.RemoveItem(mCommandId);

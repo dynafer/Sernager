@@ -1,5 +1,7 @@
+using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
+using Sernager.Core.Options;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
 
@@ -35,12 +37,9 @@ internal static class FlowPromptPluginExxtension
     internal static TPlugin AddFlowDescriptions<TPlugin>(this TPlugin plugin, ICommandManager manager)
         where TPlugin : IBasePlugin
     {
-        List<string> description = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(manager.CurrentGroup.Name))
-        {
-            description.Add($"Name: {manager.CurrentGroup.Name}");
-        }
+        List<string> description = [
+            $"Name: {manager.CurrentGroup.Name}"
+        ];
 
         if (!string.IsNullOrWhiteSpace(manager.CurrentGroup.ShortName))
         {
@@ -54,7 +53,7 @@ internal static class FlowPromptPluginExxtension
 
         description.Add($"Path: {manager.CreateCommandGroupPath(" > ")}");
 
-        plugin.AddDescription(description.ToArray());
+        plugin.AddDescriptions(description.ToArray());
 
         return plugin;
     }
@@ -62,12 +61,9 @@ internal static class FlowPromptPluginExxtension
     internal static TPlugin AddFlowDescriptions<TPlugin>(this TPlugin plugin, ICommandManager manager, CommandModel commandModel)
         where TPlugin : IBasePlugin
     {
-        List<string> description = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(commandModel.Name))
-        {
-            description.Add($"Name: {commandModel.Name}");
-        }
+        List<string> description = [
+            $"Name: {commandModel.Name}"
+        ];
 
         if (!string.IsNullOrWhiteSpace(commandModel.ShortName))
         {
@@ -81,7 +77,18 @@ internal static class FlowPromptPluginExxtension
 
         description.Add($"Path: {manager.CreateCommandPath(" > ", commandModel.Name)}");
 
-        plugin.AddDescription(description.ToArray());
+        plugin.AddDescriptions(description.ToArray());
+
+        return plugin;
+    }
+
+    internal static TPlugin AddFlowDescriptions<TPlugin>(this TPlugin plugin, IEnvironmentManager manager)
+        where TPlugin : IBasePlugin
+    {
+        plugin.AddDescriptions(
+            $"Name: {manager.EnvironmentGroup.Name}",
+            $"Addition mode: {manager.AdditionMode.GetDescription()}"
+        );
 
         return plugin;
     }

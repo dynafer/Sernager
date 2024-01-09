@@ -8,7 +8,8 @@ namespace Sernager.Core.Managers;
 
 internal sealed class EnvironmentManager : IEnvironmentManager
 {
-    internal EnvironmentModel EnvironmentGroup { get; private set; }
+    public EnvironmentModel EnvironmentGroup { get; private set; }
+    public EAddDataOption AdditionMode { get; set; } = EAddDataOption.SkipIfExists;
 
     internal EnvironmentManager(string name)
     {
@@ -31,16 +32,26 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         EnvironmentGroup = null!;
     }
 
-    public IEnvironmentManager AddPreFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public IEnvironmentManager AddFromPreFile(string filePath)
     {
-        tryAddFile(EnvironmentGroup.PreVariables, filePath, option);
+        if (AdditionMode == EAddDataOption.OverwriteAll)
+        {
+            EnvironmentGroup.PreVariables.Clear();
+        }
+
+        tryAddFromFile(EnvironmentGroup.PreVariables, filePath);
 
         return this;
     }
 
-    public IEnvironmentManager AddFile(string filePath, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public IEnvironmentManager AddFromFile(string filePath)
     {
-        tryAddFile(EnvironmentGroup.Variables, filePath, option);
+        if (AdditionMode == EAddDataOption.OverwriteAll)
+        {
+            EnvironmentGroup.Variables.Clear();
+        }
+
+        tryAddFromFile(EnvironmentGroup.Variables, filePath);
 
         return this;
     }
@@ -65,35 +76,35 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return getVariables(EnvironmentGroup.Variables);
     }
 
-    public IEnvironmentManager SetPreVariable(string key, string value, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public IEnvironmentManager SetPreVariable(string key, string value)
     {
-        setVariable(EnvironmentGroup.PreVariables, key, value, option);
+        setVariable(EnvironmentGroup.PreVariables, key, value);
 
         return this;
     }
 
-    public IEnvironmentManager SetVariable(string key, string value, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public IEnvironmentManager SetVariable(string key, string value)
     {
-        setVariable(EnvironmentGroup.Variables, key, value, option);
+        setVariable(EnvironmentGroup.Variables, key, value);
 
         return this;
     }
 
-    public IEnvironmentManager SetPreVariables(Dictionary<string, string> variables, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public IEnvironmentManager SetPreVariables(Dictionary<string, string> variables)
     {
         foreach (KeyValuePair<string, string> variable in variables)
         {
-            setVariable(EnvironmentGroup.PreVariables, variable.Key, variable.Value, option);
+            setVariable(EnvironmentGroup.PreVariables, variable.Key, variable.Value);
         }
 
         return this;
     }
 
-    public IEnvironmentManager SetVariables(Dictionary<string, string> variables, EAddDataOption option = EAddDataOption.SkipIfExists)
+    public IEnvironmentManager SetVariables(Dictionary<string, string> variables)
     {
         foreach (KeyValuePair<string, string> variable in variables)
         {
-            setVariable(EnvironmentGroup.Variables, variable.Key, variable.Value, option);
+            setVariable(EnvironmentGroup.Variables, variable.Key, variable.Value);
         }
 
         return this;
@@ -133,7 +144,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
-    private bool tryAddFile(Dictionary<string, string> target, string filePath, EAddDataOption option = EAddDataOption.SkipIfExists)
+    private bool tryAddFromFile(Dictionary<string, string> target, string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -156,7 +167,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
                 string[] keyValue = line.Split('#')[0].Split('=');
                 if (keyValue.Length != 2)
                 {
-                    Debug.WriteLine($"Invalid env variable format: {line}");
+                    Debug.WriteLine($"Invalid environment variable format: {line}");
 
                     continue;
                 }
@@ -171,7 +182,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
                     keyValue[1] = keyValue[1].Substring(1, keyValue[1].Length - 2);
                 }
 
-                setVariable(target, keyValue[0], keyValue[1], option);
+                setVariable(target, keyValue[0], keyValue[1]);
             }
         }
 
@@ -195,9 +206,9 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return new ReadOnlyDictionary<string, string>(target);
     }
 
-    private void setVariable(Dictionary<string, string> target, string key, string value, EAddDataOption option)
+    private void setVariable(Dictionary<string, string> target, string key, string value)
     {
-        switch (option)
+        switch (AdditionMode)
         {
             case EAddDataOption.SkipIfExists:
                 if (target.ContainsKey(key))
@@ -206,7 +217,8 @@ internal sealed class EnvironmentManager : IEnvironmentManager
                 }
 
                 break;
-            case EAddDataOption.Overwrite:
+            case EAddDataOption.OverwriteIfExists:
+            case EAddDataOption.OverwriteAll:
                 if (target.ContainsKey(key))
                 {
                     target.Remove(key);

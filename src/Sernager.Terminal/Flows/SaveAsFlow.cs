@@ -1,3 +1,4 @@
+using Sernager.Core.Extensions;
 using Sernager.Core.Options;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows.Extensions;
@@ -13,8 +14,8 @@ internal sealed class SaveAsFlow : IFlow
 {
     void IFlow.Prompt()
     {
-        (string, string)[] options = Enum.GetNames<EConfigurationType>()
-            .Select(x => (x, x))
+        (string, string)[] options = Enum.GetValues<EConfigurationType>()
+            .Select(x => (x.GetDescription(), x.ToString()))
             .ToArray();
 
         string typeString = Prompter.Prompt(
