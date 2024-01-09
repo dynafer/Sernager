@@ -53,7 +53,7 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
             mInitialSelections = null!;
         }
 
-        List<IPromptComponent> components = Render();
+        List<IPromptComponent> components = base.Render();
 
         return components;
     }

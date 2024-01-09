@@ -1,7 +1,6 @@
 using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
-using Sernager.Core.Options;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
 

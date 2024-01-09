@@ -70,21 +70,22 @@ internal sealed class CurrentGroupFlow : IFlow
                 .AddFlowCommonSelectionOptions(mFixedOptions["Back"], mFixedOptions["Home"], mFixedOptions["Exit"])
         );
 
+        bool bCommonSelection = FlowManager.TryHandleCommonSelectionResult(
+            result,
+            (mFixedOptions["Back"], () => mManager.PrevGroup()),
+            (mFixedOptions["Home"], () => mManager.GoMainGroup()),
+            (mFixedOptions["Exit"], null)
+        );
+
+        if (bCommonSelection)
+        {
+            return;
+        }
+
         switch (result)
         {
             case Guid id when id == mFixedOptions["ManageCurrentGroup"]:
                 FlowManager.RunFlow("Command.CurrentGroup.Manage", mManager);
-                break;
-            case Guid id when id == mFixedOptions["Back"]:
-                mManager.PrevGroup();
-                FlowManager.RunPreviousFlow();
-                break;
-            case Guid id when id == mFixedOptions["Home"]:
-                mManager.GoMainGroup();
-                FlowManager.RunPreviousFlow();
-                break;
-            case Guid id when id == mFixedOptions["Exit"]:
-                Environment.Exit(0);
                 break;
             default:
                 if (mManager.IsCommand(result))

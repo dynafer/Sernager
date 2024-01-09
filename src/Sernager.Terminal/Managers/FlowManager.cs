@@ -121,39 +121,84 @@ internal static class FlowManager
 
     internal static bool TryHandleCommonSelectionResult(string result)
     {
+        return tryHandleCommonSelectionResult(result);
+    }
+
+    internal static bool TryHandleCommonSelectionResult(string result, Action beforeBackAction, Action beforeHomeAction, Action beforeExitAction)
+    {
         switch (result)
         {
             case "Back":
-                RunPreviousFlow();
-                return true;
+                beforeBackAction();
+                break;
             case "Home":
-                GoHome();
-                return true;
+                beforeHomeAction();
+                break;
             case "Exit":
-                Environment.Exit(0);
-                return true;
+                beforeExitAction();
+                break;
             default:
                 return false;
         }
+
+        return tryHandleCommonSelectionResult(result);
     }
 
     internal static bool TryHandleCommonSelectionResult<TOptionValue>(TOptionValue result, TOptionValue backOption, TOptionValue homeOption, TOptionValue exitOption)
         where TOptionValue : notnull
     {
-        if (EqualityComparer<TOptionValue>.Default.Equals(result, exitOption))
+        if (EqualityComparer<TOptionValue>.Default.Equals(result, backOption))
         {
-            Environment.Exit(0);
-            return true;
+            return tryHandleCommonSelectionResult("Back");
         }
         else if (EqualityComparer<TOptionValue>.Default.Equals(result, homeOption))
         {
-            GoHome();
-            return true;
+            return tryHandleCommonSelectionResult("Home");
         }
-        else if (EqualityComparer<TOptionValue>.Default.Equals(result, backOption))
+        else if (EqualityComparer<TOptionValue>.Default.Equals(result, exitOption))
         {
-            RunPreviousFlow();
-            return true;
+            return tryHandleCommonSelectionResult("Exit");
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    internal static bool TryHandleCommonSelectionResult<TOptionValue>(
+        TOptionValue result,
+        (TOptionValue, Action?) backOption,
+        (TOptionValue, Action?) homeOption,
+        (TOptionValue, Action?) exitOption
+    )
+        where TOptionValue : notnull
+    {
+        if (EqualityComparer<TOptionValue>.Default.Equals(result, backOption.Item1))
+        {
+            if (backOption.Item2 != null)
+            {
+                backOption.Item2();
+            }
+
+            return tryHandleCommonSelectionResult("Back");
+        }
+        else if (EqualityComparer<TOptionValue>.Default.Equals(result, homeOption.Item1))
+        {
+            if (homeOption.Item2 != null)
+            {
+                homeOption.Item2();
+            }
+
+            return tryHandleCommonSelectionResult("Home");
+        }
+        else if (EqualityComparer<TOptionValue>.Default.Equals(result, exitOption.Item1))
+        {
+            if (exitOption.Item2 != null)
+            {
+                exitOption.Item2();
+            }
+
+            return tryHandleCommonSelectionResult("Exit");
         }
         else
         {
@@ -208,5 +253,23 @@ internal static class FlowManager
         mFlowStack
             .Peek()
             .Prompt();
+    }
+
+    private static bool tryHandleCommonSelectionResult(string result)
+    {
+        switch (result)
+        {
+            case "Back":
+                RunPreviousFlow();
+                return true;
+            case "Home":
+                GoHome();
+                return true;
+            case "Exit":
+                Environment.Exit(0);
+                return true;
+            default:
+                return false;
+        }
     }
 }
