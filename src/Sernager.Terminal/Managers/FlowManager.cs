@@ -71,6 +71,10 @@ internal static class FlowManager
             mHomeFlow.Prompt();
             return;
         }
+
+        mCommandQueue = new Queue<string>(commands);
+
+        mHomeFlow.TryJump(string.Empty, true);
     }
 
     internal static void RunFlow(string flowName)
@@ -85,6 +89,20 @@ internal static class FlowManager
         tryCreateFlow(flowName, parameters);
 
         runLastFlow();
+    }
+
+    internal static void JumpFlow(string flowName)
+    {
+        tryCreateFlow(flowName);
+
+        jumpLastFlow();
+    }
+
+    internal static void JumpFlow(string flowName, params object[] parameters)
+    {
+        tryCreateFlow(flowName, parameters);
+
+        jumpLastFlow();
     }
 
     internal static void RunPreviousFlow()
@@ -261,6 +279,24 @@ internal static class FlowManager
         mFlowStack
             .Peek()
             .Prompt();
+    }
+
+    private static void jumpLastFlow()
+    {
+        if (mCommandQueue == null || mCommandQueue.Count == 0)
+        {
+            mCommandQueue = null!;
+            runLastFlow();
+            return;
+        }
+
+        string command = mCommandQueue.Dequeue();
+
+        if (!mFlowStack.Peek().TryJump(command, mCommandQueue.Count != 0))
+        {
+            mCommandQueue = null!;
+            runLastFlow();
+        }
     }
 
     private static bool tryHandleCommonSelectionResult(string result)

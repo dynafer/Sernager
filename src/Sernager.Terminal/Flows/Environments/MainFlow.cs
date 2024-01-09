@@ -51,4 +51,9 @@ internal sealed class MainFlow : IFlow
 
         FlowManager.RunFlow("Environment.Manage", Program.Service.ManageEnvironmentGroup(result));
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

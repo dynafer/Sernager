@@ -51,4 +51,9 @@ internal sealed class EditShortNameFlow : IFlow
 
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

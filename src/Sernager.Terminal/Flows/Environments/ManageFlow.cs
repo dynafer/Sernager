@@ -80,4 +80,9 @@ internal sealed class ManageFlow : IFlow
                 break;
         }
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

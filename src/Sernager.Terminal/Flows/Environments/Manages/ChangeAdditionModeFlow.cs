@@ -35,4 +35,9 @@ internal sealed class ChangeAdditionModeFlow : IFlow
 
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

@@ -60,4 +60,9 @@ internal sealed class EditCommandFlow : IFlow
 
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

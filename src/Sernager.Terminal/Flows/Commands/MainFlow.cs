@@ -1,3 +1,4 @@
+using Sernager.Core.Helpers;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
@@ -56,5 +57,17 @@ public class MainFlow : IFlow
         }
 
         FlowManager.RunFlow("Command.CurrentGroup", Program.Service.ManageCommandGroup(result));
+    }
+
+    bool IFlow.TryJump(string command, bool _)
+    {
+        string? groupName = ManagerHelper.GetCommadGroupNameOrNull(command);
+        if (groupName == null)
+        {
+            return false;
+        }
+
+        FlowManager.JumpFlow("Command.CurrentGroup", Program.Service.ManageCommandGroup(groupName));
+        return true;
     }
 }

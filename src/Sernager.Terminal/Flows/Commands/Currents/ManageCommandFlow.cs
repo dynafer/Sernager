@@ -69,4 +69,9 @@ internal sealed class ManageCommandFlow : IFlow
                 break;
         }
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

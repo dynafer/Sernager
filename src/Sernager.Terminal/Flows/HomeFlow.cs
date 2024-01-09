@@ -47,4 +47,12 @@ internal sealed class HomeFlow : IFlow
                 break;
         }
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        FlowManager.IsManagementMode = false;
+        FlowManager.JumpFlow("Command.Main");
+
+        return true;
+    }
 }

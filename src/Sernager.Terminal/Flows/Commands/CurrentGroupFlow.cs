@@ -108,4 +108,35 @@ internal sealed class CurrentGroupFlow : IFlow
                 break;
         }
     }
+
+    bool IFlow.TryJump(string command, bool bHasNext)
+    {
+        List<GroupItemModel> items = mManager.GetItems();
+
+        foreach (GroupItemModel item in items)
+        {
+            if (item.Item is CommandModel commandModel && (commandModel.Name == command || commandModel.ShortName == command))
+            {
+                if (!bHasNext)
+                {
+                    // FIX ME: Run command
+                }
+
+                return !bHasNext;
+            }
+            else if (item.Item is GroupModel groupModel && (groupModel.Name == command || groupModel.ShortName == command))
+            {
+                mManager.UseItem(item.Id);
+                FlowManager.JumpFlow("Command.CurrentGroup", mManager);
+
+                return bHasNext;
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        return false;
+    }
 }

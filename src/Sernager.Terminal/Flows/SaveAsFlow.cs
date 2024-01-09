@@ -36,4 +36,9 @@ internal sealed class SaveAsFlow : IFlow
         Program.Service.SaveAs(type);
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

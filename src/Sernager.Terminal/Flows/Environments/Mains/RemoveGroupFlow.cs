@@ -30,4 +30,9 @@ internal sealed class RemoveGroupFlow : IFlow
 
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

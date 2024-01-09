@@ -50,4 +50,9 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
 
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }

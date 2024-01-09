@@ -14,4 +14,12 @@ public static class ManagerHelper
     {
         return !Configurator.Config.EnvironmentGroups.ContainsKey(name);
     }
+
+    public static string? GetCommadGroupNameOrNull(string nameOrShortName)
+    {
+        return Configurator.Config.CommandMainGroups.Values
+            .Where(x => x.Name == nameOrShortName || x.ShortName == nameOrShortName)
+            .Select(x => x.Name)
+            .FirstOrDefault();
+    }
 }

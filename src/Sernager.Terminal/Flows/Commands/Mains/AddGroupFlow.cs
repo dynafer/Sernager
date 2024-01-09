@@ -65,4 +65,9 @@ internal sealed class AddGroupFlow : IFlow
         Program.Service.ManageCommandGroup(groupName, shortName, description);
         FlowManager.RunPreviousFlow();
     }
+
+    bool IFlow.TryJump(string _, bool __)
+    {
+        return false;
+    }
 }
