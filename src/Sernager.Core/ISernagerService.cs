@@ -7,6 +7,7 @@ public interface ISernagerService
 {
     ICommandManager ManageCommandGroup(string groupName, string shortName = "", string description = "");
     IEnvironmentManager ManageEnvironmentGroup(string groupName);
+    IExecutor GetExecutor(Guid commandId);
     string[] GetCommandGroupNames();
     string[] GetCommandGroupShortNames();
     string[] GetEnvironmentGroupNames();

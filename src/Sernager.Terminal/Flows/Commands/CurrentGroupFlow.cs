@@ -4,8 +4,12 @@ using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts;
+using Sernager.Terminal.Prompts.Components;
+using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions;
+using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Plugins;
+using System.Diagnostics;
 
 namespace Sernager.Terminal.Flows.Commands;
 
@@ -96,7 +100,8 @@ internal sealed class CurrentGroupFlow : IFlow
                     }
                     else
                     {
-                        // FIX ME: Run command
+                        runCommand(result);
+                        FlowManager.RunLastFlow();
                     }
                 }
                 else
@@ -119,7 +124,8 @@ internal sealed class CurrentGroupFlow : IFlow
             {
                 if (!bHasNext)
                 {
-                    // FIX ME: Run command
+                    runCommand(item.Id);
+                    FlowManager.RunLastFlow();
                 }
 
                 return !bHasNext;
@@ -138,5 +144,74 @@ internal sealed class CurrentGroupFlow : IFlow
         }
 
         return false;
+    }
+
+    private void runCommand(Guid commandId)
+    {
+        IExecutor executor = Program.Service.GetExecutor(commandId);
+        CommandModel model = mManager.GetCommand(commandId);
+
+        if (executor == null)
+        {
+            return;
+        }
+
+        string command = model.Command switch
+        {
+            string[] commandArray => string.Join(" ", commandArray),
+            string commandString => commandString,
+            _ => throw new ArgumentException("Command must be a string or string[]")
+        };
+
+        using (Renderer renderer = new Renderer(Prompter.Writer))
+        {
+            List<IPromptComponent> components = new List<IPromptComponent>(Console.WindowHeight - 1)
+            {
+                new TextComponent()
+                .SetText($"Running command: {command}")
+                .SetTextColor(EColorFlags.BrightBlack)
+                .UseLineBreak()
+            };
+
+            renderer.Render(components.ToList());
+
+            DataReceivedEventHandler outputHandler = (sender, e) =>
+            {
+                if (e.Data == null)
+                {
+                    return;
+                }
+
+                if (components.Count >= Console.WindowHeight - 1)
+                {
+                    components.RemoveAt(1);
+                }
+
+                components.Add(new TextComponent()
+                    .SetText(e.Data)
+                    .UseLineBreak()
+                );
+
+                renderer.Render(components.ToList());
+            };
+
+            DataReceivedEventHandler errorHandler = (sender, e) =>
+            {
+                if (e.Data == null)
+                {
+                    return;
+                }
+
+                components.Add(new TextComponent()
+                    .SetText(e.Data)
+                    .SetTextColor(EColorFlags.Red)
+                    .UseLineBreak()
+                );
+
+                renderer.Render(components.ToList());
+            };
+
+            executor.Execute(outputHandler, errorHandler);
+        }
     }
 }

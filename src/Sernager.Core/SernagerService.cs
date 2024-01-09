@@ -15,7 +15,11 @@ internal sealed class SernagerService : ISernagerService
             return manager;
         }
 
-        return new CommandManager(groupName, shortName, description);
+        manager = new CommandManager(groupName, shortName, description);
+
+        CacheManager.Set($"Command-Group-{groupName}", manager);
+
+        return manager;
     }
 
     IEnvironmentManager ISernagerService.ManageEnvironmentGroup(string groupName)
@@ -27,7 +31,27 @@ internal sealed class SernagerService : ISernagerService
             return manager;
         }
 
-        return new EnvironmentManager(groupName);
+        manager = new EnvironmentManager(groupName);
+
+        CacheManager.Set($"Environment-Group-{groupName}", manager);
+
+        return manager;
+    }
+
+    IExecutor ISernagerService.GetExecutor(Guid commandId)
+    {
+        IExecutor executor;
+
+        if (CacheManager.TryGet($"Executor-{commandId}", out executor))
+        {
+            return executor;
+        }
+
+        executor = new Executor(Configurator.Config.Commands[commandId]);
+
+        CacheManager.Set($"Executor-{commandId}", executor);
+
+        return executor;
     }
 
     string[] ISernagerService.GetCommandGroupNames()

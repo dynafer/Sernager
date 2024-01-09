@@ -8,6 +8,6 @@ public enum EAddDataOption
     SkipIfExists,
     [Description("Overwrite if exists")]
     OverwriteIfExists,
-    [Description("Overwrite all (File-related commands only)")]
+    [Description("Overwrite all (File-related methods only)")]
     OverwriteAll,
 }
