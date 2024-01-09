@@ -39,10 +39,12 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
 
         if (mbPre)
         {
+            mManager.RemovePreVariables(variables.Keys.ToArray());
             mManager.AddPreLines(editedVariables.ToArray());
         }
         else
         {
+            mManager.RemoveVariables(variables.Keys.ToArray());
             mManager.AddLines(editedVariables.ToArray());
         }
 
