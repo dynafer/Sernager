@@ -1,3 +1,5 @@
+using Sernager.Core;
+using Sernager.Core.Managers;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows;
 using System.Reflection;
@@ -33,21 +35,28 @@ internal static class FlowManager
 
         foreach (Type type in assembly.GetTypes())
         {
-            if (type.GetCustomAttribute<FlowAttribute>() is FlowAttribute attribute)
+            if (type.GetCustomAttribute<FlowAttribute>() is not FlowAttribute attribute)
             {
-                if (string.IsNullOrEmpty(attribute.Name))
-                {
-                    attribute.Name = type.Name.Replace("Flow", string.Empty);
-                }
-
-                string attachedName = attribute.Name;
-                if (!string.IsNullOrEmpty(attribute.Alias))
-                {
-                    attachedName = $"{attribute.Alias}.{attribute.Name}";
-                }
-
-                mFlowTypes.Add(attachedName, type);
+                continue;
             }
+
+            if (string.IsNullOrEmpty(attribute.Name))
+            {
+                attribute.Name = type.Name.Replace("Flow", string.Empty);
+            }
+
+            string attachedName = attribute.Name;
+            if (!string.IsNullOrEmpty(attribute.Alias))
+            {
+                attachedName = $"{attribute.Alias}.{attribute.Name}";
+            }
+
+            if (mFlowTypes.ContainsKey(attachedName))
+            {
+                throw new SernagerException($"Flow name '{attachedName}' is already registered.");
+            }
+
+            mFlowTypes.Add(attachedName, type);
         }
     }
 
@@ -158,6 +167,10 @@ internal static class FlowManager
 
         if (!mFlowTypes.TryGetValue(flowName, out flowType))
         {
+            string[] possibleFlows = PossibilityManager.Find(flowName, mFlowTypes.Keys.ToArray());
+
+            ExceptionManager.Throw<SernagerException>($"Unknown flow name: {flowName}. Did you mean one of [{string.Join(", ", possibleFlows)}]?");
+
             return false;
         }
 
@@ -174,6 +187,8 @@ internal static class FlowManager
 
         if (flow == null)
         {
+            ExceptionManager.Throw<SernagerException>($"Flow {flowName} could not be created. Check if it implements {nameof(IFlow)} interface.");
+
             return false;
         }
 

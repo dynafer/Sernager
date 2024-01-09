@@ -11,7 +11,7 @@ using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Flows.Commands.Currents.Groups;
 
-[Flow(Alias = "Command.CurrentGroup.Manage", Name = "AddCommand")]
+[Flow(Alias = "Command.CurrentGroup.Manage")]
 internal sealed class AddCommandFlow : IFlow
 {
     private ICommandManager mManager;

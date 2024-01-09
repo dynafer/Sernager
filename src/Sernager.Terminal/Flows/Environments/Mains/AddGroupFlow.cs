@@ -8,7 +8,7 @@ using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Flows.Environments.Mains;
 
-[Flow(Alias = "Environment.Main", Name = "AddGroup")]
+[Flow(Alias = "Environment.Main")]
 internal sealed class AddGroupFlow : IFlow
 {
     void IFlow.Prompt()

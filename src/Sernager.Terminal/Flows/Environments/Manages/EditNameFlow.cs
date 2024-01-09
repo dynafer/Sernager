@@ -10,7 +10,7 @@ using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Flows.Environments.Manages;
 
-[Flow(Alias = "Environment.Manage", Name = "EditName")]
+[Flow(Alias = "Environment.Manage")]
 internal sealed class EditNameFlow : IFlow
 {
     private IEnvironmentManager mManager;

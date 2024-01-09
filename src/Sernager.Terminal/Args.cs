@@ -1,4 +1,5 @@
 using Sernager.Terminal.Attributes;
+using Sernager.Terminal.Managers;
 using Sernager.Terminal.Models;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Components;
@@ -111,11 +112,12 @@ internal static class Args
 
         if (!mArgInfos.ContainsKey(arg) && !mShortNames.ContainsKey(arg))
         {
-            string[] possibleArgs = findPossibleArgs(
+            string[] possibleArgs = PossibilityManager.Find(
+                arg,
                 bShort
                     ? mShortNames.Keys.ToArray()
-                    : mArgInfos.Keys.ToArray(),
-                arg);
+                    : mArgInfos.Keys.ToArray()
+                );
 
             IPromptComponent component = new InlineStyledTextComponent()
                 .SetText($"Unknown argument: {arg}. Did you mean one of [Bold]({string.Join(", ", possibleArgs)})[/Bold]?");
@@ -171,59 +173,6 @@ internal static class Args
             default:
                 break;
         }
-    }
-
-    private static string[] findPossibleArgs(string[] argNames, string arg)
-    {
-        List<string> possibleArgs = new List<string>();
-        List<string> alternativeArgs = new List<string>();
-        List<byte> possibilities = new List<byte>();
-
-        const byte BEST_POSSIBILITY = 90;
-        const byte ALTERNATIVE_POSSIBILITY = 50;
-
-        foreach (string argName in argNames)
-        {
-            byte possibility = 0;
-
-            for (int i = 0; i < arg.Length; ++i)
-            {
-                if (argName.Length <= i)
-                {
-                    break;
-                }
-
-                if (argName[i] == arg[i])
-                {
-                    ++possibility;
-                }
-            }
-
-            possibility = (byte)(possibility / arg.Length * 100);
-            possibilities.Add(possibility);
-
-            if (possibility >= BEST_POSSIBILITY)
-            {
-                possibleArgs.Add(argName);
-            }
-
-            if (possibility >= ALTERNATIVE_POSSIBILITY)
-            {
-                alternativeArgs.Add(argName);
-            }
-        }
-
-        if (possibleArgs.Count == 0)
-        {
-            if (alternativeArgs.Count > 0)
-            {
-                return alternativeArgs.ToArray();
-            }
-
-            return argNames;
-        }
-
-        return possibleArgs.ToArray();
     }
 
     private static void help()

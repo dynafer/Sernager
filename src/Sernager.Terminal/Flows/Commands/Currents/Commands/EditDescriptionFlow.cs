@@ -7,7 +7,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Commands.Currents.Commands;
 
-[Flow(Alias = "Command.CurrentCommand.Manage", Name = "EditDescription")]
+[Flow(Alias = "Command.CurrentCommand.Manage")]
 internal sealed class EditDescriptionFlow : IFlow
 {
     private CommandModel mCommandModel;

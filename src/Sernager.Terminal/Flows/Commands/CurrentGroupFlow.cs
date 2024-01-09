@@ -9,7 +9,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Commands;
 
-[Flow(Alias = "Command", Name = "CurrentGroup")]
+[Flow(Alias = "Command")]
 internal sealed class CurrentGroupFlow : IFlow
 {
     private ICommandManager mManager;

@@ -7,7 +7,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Commands;
 
-[Flow(Alias = "Command", Name = "Main")]
+[Flow(Alias = "Command")]
 public class MainFlow : IFlow
 {
     void IFlow.Prompt()

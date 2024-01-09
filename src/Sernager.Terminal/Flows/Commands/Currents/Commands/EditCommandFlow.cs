@@ -8,7 +8,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Commands.Currents.Commands;
 
-[Flow(Alias = "Command.CurrentCommand.Manage", Name = "EditCommand")]
+[Flow(Alias = "Command.CurrentCommand.Manage")]
 internal sealed class EditCommandFlow : IFlow
 {
     private CommandModel mCommandModel;

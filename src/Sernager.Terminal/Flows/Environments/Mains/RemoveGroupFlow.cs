@@ -6,7 +6,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Environments.Mains;
 
-[Flow(Alias = "Environment.Main", Name = "RemoveGroup")]
+[Flow(Alias = "Environment.Main")]
 internal sealed class RemoveGroupFlow : IFlow
 {
     void IFlow.Prompt()

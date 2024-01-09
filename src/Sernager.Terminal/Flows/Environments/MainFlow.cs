@@ -7,7 +7,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Environments;
 
-[Flow(Alias = "Environment", Name = "Main")]
+[Flow(Alias = "Environment")]
 internal sealed class MainFlow : IFlow
 {
     void IFlow.Prompt()

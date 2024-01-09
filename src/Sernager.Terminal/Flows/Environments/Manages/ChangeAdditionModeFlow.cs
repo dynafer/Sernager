@@ -9,7 +9,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Environments.Manages;
 
-[Flow(Alias = "Environment.Manage", Name = "ChangeAdditionMode")]
+[Flow(Alias = "Environment.Manage")]
 internal sealed class ChangeAdditionModeFlow : IFlow
 {
     private IEnvironmentManager mManager;

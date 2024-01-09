@@ -10,7 +10,7 @@ using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Flows.Commands.Currents.Commands;
 
-[Flow(Alias = "Command.CurrentCommand.Manage", Name = "EditShortName")]
+[Flow(Alias = "Command.CurrentCommand.Manage")]
 internal sealed class EditShortNameFlow : IFlow
 {
     private ICommandManager mManager;

@@ -9,7 +9,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows.Commands.Currents.Groups;
 
-[Flow(Alias = "Command.CurrentGroup.Manage", Name = "RemoveItem")]
+[Flow(Alias = "Command.CurrentGroup.Manage")]
 internal sealed class RemoveItemFlow : IFlow
 {
     private ICommandManager mManager;
