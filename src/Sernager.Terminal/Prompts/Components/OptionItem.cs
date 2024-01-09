@@ -25,10 +25,13 @@ internal sealed class OptionItem<T>
 
     internal TextComponent ToTextComponent(bool bCurrentOrEnds = false)
     {
+        IPromptComponent name = new InlineStyledTextComponent()
+            .SetText(Name);
+
         TextComponent component = new TextComponent()
             .SetDecoration(getDecoration(bCurrentOrEnds))
             .SetTextColor(getColor(bCurrentOrEnds))
-            .SetText(getPrefix(bCurrentOrEnds) + Name)
+            .SetText(getPrefix(bCurrentOrEnds) + name.Render())
             .UseLineBreak();
 
         return component;

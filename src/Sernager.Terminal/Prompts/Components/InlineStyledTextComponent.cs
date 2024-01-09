@@ -14,9 +14,9 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
         string pattern = @"\[(\/?\w+)\]";
         MatchCollection matches = Regex.Matches(Text, pattern);
 
-        int decoration = 0;
-        int color = 0;
-        int[]? textRgbColor = null;
+        int lastDecoration = 0;
+        int lastColor = 0;
+        int[]? lastTextRgbColor = null;
 
         string replacedText = Regex.Replace(Text, pattern, match =>
         {
@@ -24,6 +24,9 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
             bool bClosed = value.StartsWith("/");
 
             int code;
+            int decoration = 0;
+            int color = 0;
+            int[]? textRgbColor = null;
             if (tryParseDecoration(value.Replace("/", ""), out code))
             {
                 decoration = bClosed
@@ -49,21 +52,41 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
                 textRgbColor = null;
             }
 
-            List<int> codes = new List<int>() { 0 };
+            List<int> codes = [];
 
-            if (decoration != 0)
+            if (lastDecoration != decoration)
             {
                 codes.Add(decoration);
+
+                lastDecoration = decoration;
             }
 
-            if (color != 0)
+            if (lastColor != color)
             {
-                codes.Add(color);
+                if (color == 0)
+                {
+                    codes.Insert(0, color);
+                }
+                else
+                {
+                    codes.Add(color);
+                }
+
+                lastColor = color;
             }
 
-            if (textRgbColor != null)
+            if (lastTextRgbColor != textRgbColor)
             {
-                codes.AddRange(textRgbColor);
+                if (textRgbColor == null)
+                {
+                    codes.Insert(0, 0);
+                }
+                else
+                {
+                    codes.AddRange(textRgbColor);
+                }
+
+                lastTextRgbColor = textRgbColor;
             }
 
             return AnsiCode.GraphicsMode(codes.ToArray());

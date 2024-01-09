@@ -15,6 +15,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; init; } = new List<string>();
     public bool ShouldShowHints { get; set; } = false;
+    public bool ShouldShowCursor => true;
 
     internal InputPlugin SetInitialInput(string input)
     {

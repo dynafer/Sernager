@@ -10,6 +10,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
     private string mResult = string.Empty;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; private init; } = new List<string>();
+    public bool ShouldShowCursor => false;
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {

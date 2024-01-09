@@ -18,6 +18,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; private init; } = new List<string>();
     private int mMaxEditorHeight => Console.WindowHeight - Description.Count - 2;
+    public bool ShouldShowCursor => true;
 
     internal EditorPlugin SetInitialLines(params string[] lines)
     {

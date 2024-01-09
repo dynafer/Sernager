@@ -14,6 +14,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     private protected AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; init; } = new List<string>();
+    public bool ShouldShowCursor => mAutoComplete != null;
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
     {
@@ -22,7 +23,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
         return false;
     }
 
-    List<IPromptComponent> IBasePlugin.Render()
+    public virtual List<IPromptComponent> Render()
     {
         (List<OptionItem<TOptionValue>> options, int total) = getOptions();
         Pagination.Total = total;

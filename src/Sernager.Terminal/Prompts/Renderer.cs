@@ -18,6 +18,16 @@ internal sealed class Renderer : IDisposable
         mWriter = null!;
     }
 
+    internal void ShowCursor()
+    {
+        mWriter.Write(AnsiCode.ShowCursor());
+    }
+
+    internal void HideCursor()
+    {
+        mWriter.Write(AnsiCode.HideCursor());
+    }
+
     internal void Render(List<IPromptComponent> components)
     {
         if (mCurrentX != 0)

@@ -10,6 +10,8 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
     where TOptionValue : notnull
 {
     private List<string> mResult = new List<string>();
+    private List<string> mInitialSelections = new List<string>();
+    private bool mbRendered = false;
 
     internal MultiSelectionPlugin<TOptionValue> UseAutoComplete()
     {
@@ -22,15 +24,38 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
     {
         foreach (string selection in selections)
         {
-            OptionItem<TOptionValue>? option = Options.FirstOrDefault(x => x.Name == selection);
-
-            if (option != null)
+            if (mInitialSelections.Contains(selection))
             {
-                option.ToggleSelection();
+                continue;
             }
+
+            mInitialSelections.Add(selection);
         }
 
         return this;
+    }
+
+    public override List<IPromptComponent> Render()
+    {
+        if (!mbRendered)
+        {
+            mbRendered = true;
+
+            Options.ForEach(option =>
+            {
+                if (mInitialSelections.Contains(option.Name))
+                {
+                    option.ToggleSelection();
+                }
+            });
+
+            mInitialSelections.Clear();
+            mInitialSelections = null!;
+        }
+
+        List<IPromptComponent> components = Render();
+
+        return components;
     }
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)

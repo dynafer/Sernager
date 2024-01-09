@@ -41,6 +41,11 @@ internal static class Prompter
 
         using (Renderer renderer = new Renderer(Writer))
         {
+            if (!plugin.ShouldShowCursor)
+            {
+                renderer.HideCursor();
+            }
+
             while (true)
             {
                 renderer.Render(plugin.Render());
@@ -56,6 +61,8 @@ internal static class Prompter
             }
 
             renderer.Render(plugin.RenderLast());
+
+            renderer.ShowCursor();
         }
 
         return result.ToResult<TResult>();

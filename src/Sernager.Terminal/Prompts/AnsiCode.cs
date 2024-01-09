@@ -29,6 +29,16 @@ internal static class AnsiCode
         return $"{ESCAPE_CSI}{count}G";
     }
 
+    internal static string ShowCursor()
+    {
+        return $"{ESCAPE_CSI}?25h";
+    }
+
+    internal static string HideCursor()
+    {
+        return $"{ESCAPE_CSI}?25l";
+    }
+
     internal static string EraseScreen(int type = 0)
     {
         return $"{ESCAPE_CSI}{type}J";
