@@ -43,6 +43,7 @@ internal static class TypeHelper
 
                 break;
             case InputPlugin _:
+            case EditorPlugin _:
                 if (typeof(TResult) == typeof(string))
                 {
                     return;

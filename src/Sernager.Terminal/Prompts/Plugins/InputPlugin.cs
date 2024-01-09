@@ -143,10 +143,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                     .SetTextColor(EColorFlags.Red)
                     .SetText(mValidator.ErrorMessage),
                 new CursorComponent()
-                    .AddCursor(
-                        ECursorDirection.Up,
-                        Description.Count + 1
-                    )
+                    .AddCursor(ECursorDirection.Up, Description.Count + 1)
             ]);
         }
 
@@ -164,9 +161,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetText(Prompt),
             new CursorComponent()
-                .AddCursors(
-                    new { Direction = ECursorDirection.Right, Count = 1 }
-                ),
+                .AddCursor(ECursorDirection.Right, 1),
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetTextColor(EColorFlags.Green)

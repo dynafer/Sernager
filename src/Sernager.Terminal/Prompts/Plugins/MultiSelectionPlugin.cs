@@ -80,9 +80,7 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetText(Prompt),
             new CursorComponent()
-                .AddCursors(
-                    new { Direction = ECursorDirection.Right, Count = 1 }
-                ),
+                .AddCursor(ECursorDirection.Right, 1),
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
                 .SetTextColor(EColorFlags.Green)
