@@ -1,7 +1,6 @@
 using Sernager.Core;
 using Sernager.Core.Managers;
 using Sernager.Terminal.Attributes;
-using Sernager.Terminal.Flows;
 using System.Reflection;
 
 namespace Sernager.Terminal.Managers;
@@ -11,7 +10,8 @@ internal static class FlowManager
     private static readonly BindingFlags BINDING_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
     private static Dictionary<string, Type> mFlowTypes = new Dictionary<string, Type>();
     private static Stack<IFlow> mFlowStack = new Stack<IFlow>();
-    private static IFlow mHomeFlow = new HomeFlow();
+    private static Queue<string> mCommandQueue = null!;
+    private static IFlow mHomeFlow;
     internal static int PageSize
     {
         get
@@ -58,11 +58,19 @@ internal static class FlowManager
 
             mFlowTypes.Add(attachedName, type);
         }
+
+        tryCreateFlow("Home");
+
+        mHomeFlow = mFlowStack.Pop();
     }
 
     internal static void Start(string[] commands)
     {
-        mHomeFlow.Prompt();
+        if (commands.Length == 0)
+        {
+            mHomeFlow.Prompt();
+            return;
+        }
     }
 
     internal static void RunFlow(string flowName)

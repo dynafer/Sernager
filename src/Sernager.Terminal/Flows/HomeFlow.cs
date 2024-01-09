@@ -1,3 +1,4 @@
+using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Extensions;
@@ -5,6 +6,7 @@ using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Flows;
 
+[Flow]
 internal sealed class HomeFlow : IFlow
 {
     void IFlow.Prompt()

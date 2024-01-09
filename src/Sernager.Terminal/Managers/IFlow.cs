@@ -1,4 +1,4 @@
-namespace Sernager.Terminal.Flows;
+namespace Sernager.Terminal.Managers;
 
 internal interface IFlow
 {
