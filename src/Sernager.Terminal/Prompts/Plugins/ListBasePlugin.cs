@@ -9,9 +9,9 @@ namespace Sernager.Terminal.Prompts.Plugins;
 internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     where TOptionValue : notnull
 {
-    public readonly Pagination Pagination = new Pagination();
-    public readonly List<OptionItem<TOptionValue>> Options = new List<OptionItem<TOptionValue>>();
     private protected AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
+    internal Pagination Pagination { get; private init; } = new Pagination();
+    internal List<OptionItem<TOptionValue>> Options { get; private init; } = new List<OptionItem<TOptionValue>>();
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; init; } = new List<string>();
     public bool ShouldShowCursor => mAutoComplete != null;

@@ -6,87 +6,108 @@ namespace Sernager.Terminal.Prompts.Components;
 
 internal sealed class InlineStyledTextComponent : IPromptComponent
 {
+    private bool mbEscapeOnly = false;
     internal string Text { get; set; } = string.Empty;
     public bool IsLineBreak => false;
+
+    internal InlineStyledTextComponent UseEscapeOnly()
+    {
+        mbEscapeOnly = true;
+
+        return this;
+    }
 
     string IPromptComponent.Render()
     {
         string pattern = @"\[(\/?\w+)\]";
         MatchCollection matches = Regex.Matches(Text, pattern);
 
-        int lastDecoration = 0;
-        int lastColor = 0;
-        int[]? lastTextRgbColor = null;
+        List<SInlineStyle> styles = new List<SInlineStyle>();
 
         string replacedText = Regex.Replace(Text, pattern, match =>
         {
-            string value = match.Value.Replace("[", "").Replace("]", "");
+            string value = match.Value.ToUpperInvariant().Replace("[", "").Replace("]", "").Replace(" ", "");
             bool bClosed = value.StartsWith("/");
 
             int code;
-            int decoration = 0;
-            int color = 0;
-            int[]? textRgbColor = null;
+            bool bReset = false;
+
             if (tryParseDecoration(value.Replace("/", ""), out code))
             {
-                decoration = bClosed
-                    ? 0
-                    : code;
+                if (mbEscapeOnly)
+                {
+                    return string.Empty;
+                }
+
+                addOrDeleteDecoration(styles, code, bClosed, ref bReset);
             }
             else if (tryParseColor(value.Replace("/", ""), out code))
             {
-                color = bClosed
-                    ? 0
-                    : code;
+                if (mbEscapeOnly)
+                {
+                    return string.Empty;
+                }
+
+                addOrDeleteColor(styles, code, bClosed, ref bReset);
             }
             else if (isTextRgbColor(value))
             {
-                textRgbColor = bClosed
-                    ? null
-                    : toTextRgbColorOrNull(value.Replace("/", ""));
+                if (mbEscapeOnly)
+                {
+                    return string.Empty;
+                }
+
+                addOrDeleteRgbColor(styles, value, bClosed, ref bReset);
             }
             else if (value == "/")
             {
-                decoration = 0;
-                color = 0;
-                textRgbColor = null;
+                if (mbEscapeOnly)
+                {
+                    return string.Empty;
+                }
+
+                if (styles.Count > 0)
+                {
+                    styles.RemoveAt(styles.Count - 1);
+                    bReset = true;
+                }
+            }
+            else if (value == "/RESET" || value == "RESET")
+            {
+                if (mbEscapeOnly)
+                {
+                    return string.Empty;
+                }
+
+                styles.Clear();
+                bReset = true;
             }
 
-            List<int> codes = [];
-
-            if (lastDecoration != decoration)
+            if (mbEscapeOnly)
             {
-                codes.Add(decoration);
-
-                lastDecoration = decoration;
+                return match.Value;
             }
 
-            if (lastColor != color)
+            List<int> codes = new List<int>();
+            if (bReset)
             {
-                if (color == 0)
-                {
-                    codes.Insert(0, color);
-                }
-                else
-                {
-                    codes.Add(color);
-                }
-
-                lastColor = color;
+                codes.Add(0);
             }
 
-            if (lastTextRgbColor != textRgbColor)
+            foreach (SInlineStyle style in styles)
             {
-                if (textRgbColor == null)
+                if (style.Name == "Decoration")
                 {
-                    codes.Insert(0, 0);
+                    codes.Add((int)style.Value);
                 }
-                else
+                else if (style.Name == "Color")
                 {
-                    codes.AddRange(textRgbColor);
+                    codes.Add((int)style.Value);
                 }
-
-                lastTextRgbColor = textRgbColor;
+                else if (style.Name == "RgbColor")
+                {
+                    codes.AddRange((int[])style.Value);
+                }
             }
 
             return AnsiCode.GraphicsMode(codes.ToArray());
@@ -115,6 +136,23 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
         }
     }
 
+    private void addOrDeleteDecoration(List<SInlineStyle> styles, int code, bool bDelete, ref bool bReset)
+    {
+        if (!bDelete)
+        {
+            styles.Add(new SInlineStyle("Decoration", code));
+        }
+        else
+        {
+            int existedIndex = styles.FindLastIndex(style => style.Name == "Decoration" && style.Value.Equals(code));
+            if (existedIndex != -1)
+            {
+                styles.RemoveAt(existedIndex);
+                bReset = true;
+            }
+        }
+    }
+
     private bool tryParseColor(string value, out int code)
     {
         EColorFlags color;
@@ -133,6 +171,23 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
         }
     }
 
+    private void addOrDeleteColor(List<SInlineStyle> styles, int code, bool bDelete, ref bool bReset)
+    {
+        if (!bDelete)
+        {
+            styles.Add(new SInlineStyle("Color", code));
+        }
+        else
+        {
+            int existedIndex = styles.FindLastIndex(style => style.Name == "Color" && style.Value.Equals(code));
+            if (existedIndex != -1)
+            {
+                styles.RemoveAt(existedIndex);
+                bReset = true;
+            }
+        }
+    }
+
     private bool isTextRgbColor(string value)
     {
         return value.Contains("RGB", StringComparison.OrdinalIgnoreCase);
@@ -140,7 +195,7 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
     private int[]? toTextRgbColorOrNull(string value)
     {
-        string name = value.ToUpperInvariant()
+        string name = value
             .Replace("RGB", "")
             .Replace("(", "")
             .Replace(")", "")
@@ -166,6 +221,39 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
         else
         {
             return null;
+        }
+    }
+
+    private void addOrDeleteRgbColor(List<SInlineStyle> styles, string value, bool bDelete, ref bool bReset)
+    {
+        int[]? textRgbColor = toTextRgbColorOrNull(value.Replace("/", ""));
+
+        if (!bDelete)
+        {
+            if (textRgbColor != null)
+            {
+                styles.Add(new SInlineStyle("RgbColor", textRgbColor));
+            }
+
+            return;
+        }
+
+        int existedIndex = styles.FindLastIndex(style =>
+        {
+            bool bRgbColor = style.Name == "RgbColor";
+
+            if (textRgbColor != null)
+            {
+                bRgbColor &= style.Value.Equals(textRgbColor);
+            }
+
+            return bRgbColor;
+        });
+
+        if (existedIndex != -1)
+        {
+            styles.RemoveAt(existedIndex);
+            bReset = true;
         }
     }
 }

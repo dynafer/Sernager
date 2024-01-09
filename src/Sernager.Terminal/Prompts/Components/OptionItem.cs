@@ -39,10 +39,14 @@ internal sealed class OptionItem<T>
 
     internal TextComponent ToRestTextComponent()
     {
+        IPromptComponent name = new InlineStyledTextComponent()
+            .SetText(Name)
+            .UseEscapeOnly();
+
         TextComponent component = new TextComponent()
             .SetDecoration(EDecorationFlags.None)
             .SetTextColor(EColorFlags.BrightBlack)
-            .SetText(getPrefix(false) + Name)
+            .SetText(getPrefix(false) + name.Render())
             .UseLineBreak();
 
         return component;
