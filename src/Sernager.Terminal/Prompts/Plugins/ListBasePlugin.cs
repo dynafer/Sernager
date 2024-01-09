@@ -62,11 +62,11 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
             );
         }
 
-        (int start, int end, int prevRest, int nextRest) = Pagination.GetRange();
+        (int start, int end, int prev, int next) = Pagination.GetRange();
 
-        if (prevRest != 0)
+        if (prev != 0)
         {
-            for (int i = Pagination.Total - prevRest; i < Pagination.Total; ++i)
+            for (int i = Pagination.Total - prev; i < Pagination.Total; ++i)
             {
                 components.Add(options[i].ToRestTextComponent());
             }
@@ -74,14 +74,26 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
 
         for (int i = start; i < end; ++i)
         {
-            components.Add(options[i].ToTextComponent(i == Pagination.Offset));
+            TextComponent option = options[i].ToTextComponent(i == Pagination.Offset);
+            if (next == 0 && i == end - 1)
+            {
+                option.IsLineBreak = false;
+            }
+
+            components.Add(option);
         }
 
-        if (nextRest != 0)
+        if (next != 0)
         {
-            for (int i = 0; i < nextRest; ++i)
+            for (int i = 0; i < next; ++i)
             {
-                components.Add(options[i].ToRestTextComponent());
+                TextComponent option = options[i].ToRestTextComponent();
+                if (i == next - 1)
+                {
+                    option.IsLineBreak = false;
+                }
+
+                components.Add(option);
             }
         }
 
@@ -102,7 +114,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                 .AddCursors(
                     new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
                     new { Direction = ECursorDirection.Right, Count = mAutoComplete.GetPrompt().Length + mAutoComplete.CursorPosition },
-                    new { Direction = ECursorDirection.Up, Count = prevRest + (end - start) + nextRest + 1 + (bNoResult ? 1 : 0) }
+                    new { Direction = ECursorDirection.Up, Count = prev + (end - start) + next + (bNoResult ? 1 : 0) }
                 )
             );
         }

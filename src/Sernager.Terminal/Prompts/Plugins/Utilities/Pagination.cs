@@ -15,22 +15,21 @@ internal sealed class Pagination
 
         int halfPageSize = (int)Math.Floor((float)(PageSize / 2));
         int start = Math.Max(0, Offset - halfPageSize);
-        int end = Math.Min(Total, start + PageSize);
+        int end = Math.Min(Total, Offset + halfPageSize);
+        int prev = 0;
+        int next = 0;
 
-        int prevRest = 0;
-        if (start == 0)
+        if (Offset - halfPageSize < 0)
         {
-            prevRest = halfPageSize - Offset;
-            end -= prevRest;
+            prev = halfPageSize - Offset;
         }
 
-        int nextRest = 0;
-        if (end > Total - halfPageSize)
+        if (Offset + halfPageSize > Total)
         {
-            nextRest = Math.Max(0, PageSize - (end - start));
+            next = Offset + halfPageSize - Total;
         }
 
-        return (start, end, prevRest, nextRest);
+        return (start, end, prev, next);
     }
 
     internal void Home()
