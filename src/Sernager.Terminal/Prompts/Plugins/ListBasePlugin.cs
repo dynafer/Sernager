@@ -54,7 +54,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
         {
             components.Add(new TextComponent()
                 .SetTextColor(EColorFlags.Magenta)
-                .SetText(mAutoComplete.GetPrompt())
+                .SetText(mAutoComplete.Prompt)
             );
 
             components.Add(new TextComponent()
@@ -106,14 +106,14 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
             {
                 components.Add(new TextComponent()
                     .SetTextColor(EColorFlags.Red)
-                    .SetText(mAutoComplete.GetNoResult())
+                    .SetText(mAutoComplete.NoResultText)
                 );
             }
 
             components.Add(new CursorComponent()
                 .AddCursors(
                     new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
-                    new { Direction = ECursorDirection.Right, Count = mAutoComplete.GetPrompt().Length + mAutoComplete.CursorPosition },
+                    new { Direction = ECursorDirection.Right, Count = mAutoComplete.Prompt.Length + mAutoComplete.CursorPosition },
                     new { Direction = ECursorDirection.Up, Count = prev + (end - start) + next + (bNoResult ? 1 : 0) }
                 )
             );

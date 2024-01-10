@@ -7,34 +7,15 @@ namespace Sernager.Terminal.Prompts.Plugins.Utilities;
 internal sealed class AutoComplete<TSearchable>
     where TSearchable : notnull
 {
-    private string? mPrompt = null;
-    private string? mNoResult = null;
+    private readonly IResourcePack mResourcePack = ResourceRetriever.UsePack("Terminal.Prompt.AutoComplete");
+    internal string Prompt => $"{mResourcePack.GetString("Prompt")}: ";
+    internal string NoResultText => $"{mResourcePack.GetString("NoResult")}";
     internal string Input { get; set; } = string.Empty;
     internal int CursorPosition { get; private set; } = 0;
 
     internal AutoComplete()
     {
         TypeHelper.EnsureIsSearchable<TSearchable>();
-    }
-
-    internal string GetPrompt()
-    {
-        if (mPrompt == null)
-        {
-            mPrompt = $"{ResourceRetriever.GetString("AutoComplete", "Prompt")}: ";
-        }
-
-        return mPrompt;
-    }
-
-    internal string GetNoResult()
-    {
-        if (mNoResult == null)
-        {
-            mNoResult = $"{ResourceRetriever.GetString("AutoComplete", "NoResult")}";
-        }
-
-        return mNoResult;
     }
 
     internal void SetInitialInput(string input)

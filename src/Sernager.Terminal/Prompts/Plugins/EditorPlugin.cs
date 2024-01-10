@@ -1,3 +1,4 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
@@ -9,6 +10,7 @@ namespace Sernager.Terminal.Prompts.Plugins;
 
 internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
 {
+    private readonly IResourcePack mResourcePack = ResourceRetriever.UsePack("Terminal.Prompt.EditorPlugin");
     private List<string> mOriginalLines = new List<string>();
     private List<string> mLines = new List<string>();
     private int mCurrentEditorY = 0;
@@ -167,12 +169,15 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
             );
         }
 
+        string modeResourceName = mbCommandMode ? "CommandMode" : "InsertMode";
+        string oppositeModeResourceName = mbCommandMode ? "InsertMode" : "CommandMode";
+
         components.AddRange([
             new TextComponent()
-                .SetText(mbCommandMode ? "(Command Mode)" : "(Insert Mode)")
+                .SetText(mResourcePack.GetString(modeResourceName))
                 .SetDecoration(EDecorationFlags.Bold),
             new TextComponent()
-                .SetText($" | Esc: {(mbCommandMode ? "Insert" : "Command")} Mode")
+                .SetText($" | Esc: {mResourcePack.GetString(oppositeModeResourceName)}")
                 .SetDecoration(EDecorationFlags.Bold)
         ]);
 
@@ -180,14 +185,14 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         {
             components.AddRange([
                 new TextComponent()
-                    .SetText(" | Q: Exit | S : Save and Exit")
+                    .SetText($" | Q: {mResourcePack.GetString("Exit")} | S : {mResourcePack.GetString("SaveAndExit")}")
                     .SetDecoration(EDecorationFlags.Bold)
             ]);
         }
 
         components.AddRange([
             new TextComponent()
-                .SetText($" | Ln {mCursor.Y + 1}, Col {mCursor.X + 1}")
+                .SetText($" | {mResourcePack.GetString("LineShortForm")} {mCursor.Y + 1}, {mResourcePack.GetString("ColumnShortForm")} {mCursor.X + 1}")
                 .SetDecoration(EDecorationFlags.Bold),
             new CursorComponent()
                 .AddCursors(

@@ -1,3 +1,4 @@
+using Sernager.Resources;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Models;
@@ -177,6 +178,8 @@ internal static class Args
 
     private static void help()
     {
+        IResourcePack resourcePack = ResourceRetriever.UsePack("Terminal.Model.Builder");
+
         Assembly currentAssembly = Assembly.GetExecutingAssembly();
 
         string title = currentAssembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? string.Empty;
@@ -209,7 +212,7 @@ internal static class Args
                 new Row(
                     new TextComponent().SetText(arguments),
                     new TextComponent().SetText(attribute.Value),
-                    new TextComponent().SetText(attribute.Description)
+                    new TextComponent().SetText(resourcePack.GetString(attribute.DescriptionResourceName))
                 )
             );
         }

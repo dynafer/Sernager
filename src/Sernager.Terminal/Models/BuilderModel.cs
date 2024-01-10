@@ -4,8 +4,8 @@ namespace Sernager.Terminal.Models;
 
 internal sealed class BuilderModel
 {
-    [Arg(Name = "config", ShortName = "c", Value = "<config path>", Description = "Path to config file")]
+    [Arg(Name = "config", ShortName = "c", Value = "<config path>", DescriptionResourceName = "ConfigPathDescription")]
     internal string? ConfigPath { get; set; } = null;
-    [Arg(Name = "autosave", ShortName = "aus", Description = "Enable auto save when exit")]
+    [Arg(Name = "autosave", ShortName = "aus", DescriptionResourceName = "IsAutoSaveDescription")]
     internal bool IsAutoSave { get; set; } = false;
 }
