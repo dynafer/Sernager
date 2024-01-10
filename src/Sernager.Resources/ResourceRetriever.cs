@@ -8,6 +8,16 @@ public static class ResourceRetriever
     private static readonly string BASE_NAMESPACE = "Sernager.Resources";
     public static string LangCode { get; set; } = CultureInfo.CurrentCulture.Name;
 
+    public static IResourcePack UsePack(string resourcePath)
+    {
+        return new ResourcePack($"{BASE_NAMESPACE}.{resourcePath}");
+    }
+
+    public static IResourcePack UsePack(CultureInfo culture, string resourcePath)
+    {
+        return new ResourcePack(culture, $"{BASE_NAMESPACE}.{resourcePath}");
+    }
+
     public static string GetString(string resourcePath, string name)
     {
         try
