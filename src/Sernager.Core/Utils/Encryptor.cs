@@ -6,11 +6,38 @@ namespace Sernager.Core.Utils;
 
 internal static class Encryptor
 {
+    internal const int KEY_SIZE = 32;
+    internal const int IV_SIZE = 16;
+
     internal static byte[] Encrypt(string value, string key, string iv)
     {
         if (value == null)
         {
             ExceptionManager.ThrowFail<ArgumentNullException>(nameof(value));
+            return Array.Empty<byte>();
+        }
+
+        if (key == null)
+        {
+            ExceptionManager.ThrowFail<ArgumentNullException>(nameof(key));
+            return Array.Empty<byte>();
+        }
+
+        if (iv == null)
+        {
+            ExceptionManager.ThrowFail<ArgumentNullException>(nameof(iv));
+            return Array.Empty<byte>();
+        }
+
+        if (key.Length != KEY_SIZE)
+        {
+            ExceptionManager.ThrowFail<ArgumentException>("Invalid key size.");
+            return Array.Empty<byte>();
+        }
+
+        if (iv.Length != IV_SIZE)
+        {
+            ExceptionManager.ThrowFail<ArgumentException>("Invalid iv size.");
             return Array.Empty<byte>();
         }
 
@@ -41,6 +68,36 @@ internal static class Encryptor
 
     internal static string Decrypt(byte[] value, string key, string iv)
     {
+        if (value == null)
+        {
+            ExceptionManager.ThrowFail<ArgumentNullException>(nameof(value));
+            return string.Empty;
+        }
+
+        if (key == null)
+        {
+            ExceptionManager.ThrowFail<ArgumentNullException>(nameof(key));
+            return string.Empty;
+        }
+
+        if (iv == null)
+        {
+            ExceptionManager.ThrowFail<ArgumentNullException>(nameof(iv));
+            return string.Empty;
+        }
+
+        if (key.Length != KEY_SIZE)
+        {
+            ExceptionManager.ThrowFail<ArgumentException>("Invalid key size.");
+            return string.Empty;
+        }
+
+        if (iv.Length != IV_SIZE)
+        {
+            ExceptionManager.ThrowFail<ArgumentException>("Invalid iv size.");
+            return string.Empty;
+        }
+
         string text = "";
 
         using (Aes aes = Aes.Create())

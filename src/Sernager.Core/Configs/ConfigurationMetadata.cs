@@ -10,10 +10,8 @@ namespace Sernager.Core.Configs;
 
 internal sealed class ConfigurationMetadata : IDisposable
 {
-    internal static readonly int KEY_SIZE = 32;
-    internal static readonly int IV_SIZE = 16;
-    internal static readonly int MIN_SIZE = 32;
-    internal static readonly int MAX_SIZE = 64;
+    internal const int MIN_SIZE = 32;
+    internal const int MAX_SIZE = 64;
     internal Configuration Config { get; private set; } = null!;
 
     internal ConfigurationMetadata(Configuration config)
@@ -129,8 +127,8 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     private byte[] toSernagerBytes()
     {
-        string key = Randomizer.GenerateRandomString(KEY_SIZE);
-        string iv = Randomizer.GenerateRandomString(IV_SIZE);
+        string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
+        string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
         string[] salts =
         {
             Randomizer.GenerateRandomString(MIN_SIZE, MAX_SIZE),
