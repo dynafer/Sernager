@@ -123,9 +123,6 @@
   <data name="AdditionMode" xml:space="preserve">
     <value>Addition mode</value>
   </data>
-  <data name="Back" xml:space="preserve">
-    <value>Back</value>
-  </data>
   <data name="ChooseOptionPrompt" xml:space="preserve">
     <value>Choose an option</value>
   </data>
@@ -147,17 +144,11 @@
   <data name="EnterNamePromptWithCancelForEdit" xml:space="preserve">
     <value>Enter a name without white spaces (Cancel: Empty or same input)</value>
   </data>
-  <data name="Exit" xml:space="preserve">
-    <value>Exit</value>
-  </data>
   <data name="GoTo" xml:space="preserve">
     <value>Go to {0}</value>
   </data>
   <data name="Group" xml:space="preserve">
     <value>Group</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>

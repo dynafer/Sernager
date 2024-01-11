@@ -132,4 +132,7 @@
   <data name="SaveAs" xml:space="preserve">
     <value>Save as ...</value>
   </data>
+  <data name="SaveAsPrompt" xml:space="preserve">
+    <value>Choose a configuration type</value>
+  </data>
 </root>

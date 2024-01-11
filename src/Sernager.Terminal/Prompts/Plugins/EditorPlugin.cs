@@ -186,7 +186,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         {
             components.AddRange([
                 new TextComponent()
-                    .SetText($" | Q: {mResourcePack.GetString("Exit")} | S : {mResourcePack.GetString("SaveAndExit")}")
+                    .SetText($" | Q: {ResourceRetriever.Shared.GetString("Exit")} | S : {mResourcePack.GetString("SaveAndExit")}")
                     .SetDecoration(EDecorationFlags.Bold)
             ]);
         }

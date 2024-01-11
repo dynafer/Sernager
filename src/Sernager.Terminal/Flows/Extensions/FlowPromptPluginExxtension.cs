@@ -1,6 +1,7 @@
 using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
+using Sernager.Resources;
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
@@ -13,9 +14,9 @@ internal static class FlowPromptPluginExxtension
         where TPlugin : ListBasePlugin<string>
     {
         plugin.AddOptions(
-            (FlowManager.CommonResourcePack.GetString("Back"), "Back"),
-            (FlowManager.CommonResourcePack.GetString("Home"), "Home"),
-            (FlowManager.CommonResourcePack.GetString("Exit"), "Exit")
+            (ResourceRetriever.Shared.GetString("Back"), "Back"),
+            (ResourceRetriever.Shared.GetString("Home"), "Home"),
+            (ResourceRetriever.Shared.GetString("Exit"), "Exit")
         );
 
         return plugin;
@@ -26,9 +27,9 @@ internal static class FlowPromptPluginExxtension
         where TOptionValue : notnull
     {
         plugin.AddOptions(
-            (FlowManager.CommonResourcePack.GetString("Back"), backOption),
-            (FlowManager.CommonResourcePack.GetString("Home"), homeOption),
-            (FlowManager.CommonResourcePack.GetString("Exit"), exitOption)
+            (ResourceRetriever.Shared.GetString("Back"), backOption),
+            (ResourceRetriever.Shared.GetString("Home"), homeOption),
+            (ResourceRetriever.Shared.GetString("Exit"), exitOption)
         );
 
         return plugin;

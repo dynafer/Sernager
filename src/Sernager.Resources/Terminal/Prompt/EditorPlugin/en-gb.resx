@@ -123,9 +123,6 @@
   <data name="CommandMode" xml:space="preserve">
     <value>Command Mode</value>
   </data>
-  <data name="Exit" xml:space="preserve">
-    <value>Exit</value>
-  </data>
   <data name="InsertMode" xml:space="preserve">
     <value>Insert Mode</value>
   </data>

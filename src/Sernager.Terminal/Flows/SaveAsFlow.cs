@@ -20,8 +20,8 @@ internal sealed class SaveAsFlow : IFlow
 
         string typeString = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .UseResourcePack(FlowManager.GetResourceNamespace("SaveAs"))
-                .SetPrompt("Prompt")
+                .UseResourcePack(FlowManager.GetResourceNamespace("Home"))
+                .SetPrompt("SaveAsPrompt")
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options)

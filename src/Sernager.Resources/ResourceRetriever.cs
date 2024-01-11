@@ -6,8 +6,31 @@ namespace Sernager.Resources;
 public static class ResourceRetriever
 {
     private static readonly string BASE_NAMESPACE = "Sernager.Resources";
-    private static readonly Dictionary<string, IResourcePack> mResourcePacks = new Dictionary<string, IResourcePack>();
-    public static string LangCode { get; set; } = CultureInfo.CurrentCulture.Name;
+    private static readonly Dictionary<string, IResourcePack> mResourcePacks;
+    public static IResourcePack Shared { get; }
+    public static string LangCode { get; private set; }
+
+    static ResourceRetriever()
+    {
+        mResourcePacks = new Dictionary<string, IResourcePack>();
+        LangCode = CultureInfo.CurrentCulture.Name;
+        Shared = UsePack("Shared");
+    }
+
+    public static void ChangeLanguage(CultureInfo culture)
+    {
+        if (LangCode == culture.Name)
+        {
+            return;
+        }
+
+        LangCode = culture.Name;
+
+        foreach (IResourcePack pack in mResourcePacks.Values)
+        {
+            pack.ChangeLanguage(culture);
+        }
+    }
 
     public static IResourcePack UsePack(string resourcePath)
     {
@@ -31,9 +54,33 @@ public static class ResourceRetriever
 
     public static string GetString(string resourcePath, string name)
     {
+        return getString(LangCode, resourcePath, name);
+    }
+
+    public static string GetString(CultureInfo culture, string resourcePath, string name)
+    {
+        return getString(culture.Name, resourcePath, name);
+    }
+
+    public static string FormatString(string resourcePath, string name, params object[] args)
+    {
+        string str = getString(LangCode, resourcePath, name);
+
+        return string.Format(str, args);
+    }
+
+    public static string FormatString(CultureInfo culture, string resourcePath, string name, params object[] args)
+    {
+        string str = getString(culture.Name, resourcePath, name);
+
+        return string.Format(str, args);
+    }
+
+    private static string getString(string langCode, string resourcePath, string name)
+    {
         try
         {
-            ResourceManager manager = new ResourceManager($"{BASE_NAMESPACE}.{resourcePath}.{LangCode.ToLowerInvariant()}", typeof(ResourceRetriever).Assembly);
+            ResourceManager manager = createResourceManager(langCode, resourcePath);
 
             return manager.GetString(name) ?? name;
         }
@@ -43,17 +90,8 @@ public static class ResourceRetriever
         }
     }
 
-    public static string GetString(CultureInfo culture, string resourcePath, string name)
+    private static ResourceManager createResourceManager(string langCode, string resourcePath)
     {
-        try
-        {
-            ResourceManager manager = new ResourceManager($"{BASE_NAMESPACE}.{resourcePath}.{culture.Name.ToLowerInvariant()}", typeof(ResourceRetriever).Assembly);
-
-            return manager.GetString(name) ?? name;
-        }
-        catch
-        {
-            return name;
-        }
+        return new ResourceManager($"{BASE_NAMESPACE}.{resourcePath}.{langCode.ToLowerInvariant()}", typeof(ResourceRetriever).Assembly);
     }
 }

@@ -14,7 +14,7 @@ internal static class FlowPromptHelper
             .Where(drive => drive.DriveType == DriveType.Fixed)
             .Select(drive =>
                 (
-                    string.Format(FlowManager.CommonResourcePack.GetString("GoTo"), drive.Name),
+                    FlowManager.CommonResourcePack.FormatString("GoTo", drive.Name),
                     drive.RootDirectory.FullName
                 )
             )

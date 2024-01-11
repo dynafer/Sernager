@@ -47,4 +47,23 @@ internal sealed class ResourcePack : IResourcePack
             return name;
         }
     }
+
+    string IResourcePack.FormatString(string name, params object[] args)
+    {
+        try
+        {
+            string? format = mManager.GetString(name);
+
+            if (format == null)
+            {
+                return name;
+            }
+
+            return string.Format(format, args);
+        }
+        catch
+        {
+            return name;
+        }
+    }
 }
