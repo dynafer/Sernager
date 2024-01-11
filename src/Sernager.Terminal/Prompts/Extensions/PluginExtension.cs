@@ -1,3 +1,4 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Prompts.Extensions;
@@ -16,6 +17,19 @@ internal static class PluginExtension
         where T : IBasePlugin
     {
         plugin.Description.AddRange(description);
+
+        return plugin;
+    }
+
+    internal static T UseResourcePack<T>(this T plugin, string resourcePath)
+        where T : IBasePlugin
+    {
+        if (plugin.ResourcePack != null)
+        {
+            throw new InvalidOperationException("Resource pack already set.");
+        }
+
+        plugin.ResourcePack = ResourceRetriever.UsePack(resourcePath);
 
         return plugin;
     }

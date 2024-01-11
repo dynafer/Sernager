@@ -32,7 +32,8 @@ internal sealed class RemoveItemFlow : IFlow
 
         Guid[] selectedItems = Prompter.Prompt(
             new MultiSelectionPlugin<Guid>()
-                .SetPrompt(FlowManager.GetResourceString("Command", "SelectSubgroupOrCommandToRemovePromptWithCancel"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                .SetPrompt("SelectSubgroupOrCommandToRemovePromptWithCancel")
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()

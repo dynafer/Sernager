@@ -1,21 +1,26 @@
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
+using Sernager.Terminal.Prompts.Helpers;
+using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Prompts.Components;
 
 internal sealed class OptionItem<T>
     where T : notnull
 {
-    private readonly EOptionTypeFlags mType = EOptionTypeFlags.None;
-    internal string Name { get; init; } = string.Empty;
+    private readonly EOptionTypeFlags mType;
+    private readonly bool mbUseResourcePack;
+    internal string Name { get; init; }
     internal T Value { get; init; }
-    internal bool IsSelected { get; private set; } = false;
+    internal bool IsSelected { get; private set; }
 
-    internal OptionItem(EOptionTypeFlags type, string name, T value)
+    internal OptionItem(EOptionTypeFlags type, string name, T value, bool bUseResourcePack)
     {
         mType = type;
+        mbUseResourcePack = bUseResourcePack;
         Name = name;
         Value = value;
+        IsSelected = false;
     }
 
     internal void ToggleSelection()
@@ -23,41 +28,49 @@ internal sealed class OptionItem<T>
         IsSelected = !IsSelected;
     }
 
-    internal TextComponent ToTextComponent(bool bCurrentOrEnds = false)
+    internal TextComponent ToTextComponent(IBasePlugin plugin, bool bCurrentOrEnd)
     {
-        IPromptComponent name = new InlineStyledTextComponent()
-            .SetText(Name);
+        string name = mbUseResourcePack
+            ? PluginResourceHelper.GetString(plugin, Name)
+            : Name;
+
+        IPromptComponent nameComponent = new InlineStyledTextComponent()
+            .SetText(name);
 
         TextComponent component = new TextComponent()
-            .SetDecoration(getDecoration(bCurrentOrEnds))
-            .SetTextColor(getColor(bCurrentOrEnds))
-            .SetText(getPrefix(bCurrentOrEnds) + name.Render())
+            .SetDecoration(getDecoration(bCurrentOrEnd))
+            .SetTextColor(getColor(bCurrentOrEnd))
+            .SetText(getPrefix(bCurrentOrEnd) + nameComponent.Render())
             .UseLineBreak();
 
         return component;
     }
 
-    internal TextComponent ToRestTextComponent()
+    internal TextComponent ToRestTextComponent(IBasePlugin plugin)
     {
-        IPromptComponent name = new InlineStyledTextComponent()
-            .SetText(Name)
+        string name = mbUseResourcePack
+            ? PluginResourceHelper.GetString(plugin, Name)
+            : Name;
+
+        IPromptComponent nameComponent = new InlineStyledTextComponent()
+            .SetText(name)
             .UseEscapeOnly();
 
         TextComponent component = new TextComponent()
             .SetDecoration(EDecorationFlags.None)
             .SetTextColor(EColorFlags.BrightBlack)
-            .SetText(getPrefix(false) + name.Render())
+            .SetText(getPrefix(false) + nameComponent.Render())
             .UseLineBreak();
 
         return component;
     }
 
-    private string getPrefix(bool bCurrentOrEnds)
+    private string getPrefix(bool bCurrentOrEnd)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
-                return bCurrentOrEnds ? ">  " : "   ";
+                return bCurrentOrEnd ? ">  " : "   ";
             case EOptionTypeFlags.MultiSelect:
                 return IsSelected ? "[*] " : "[ ] ";
             default:
@@ -65,25 +78,39 @@ internal sealed class OptionItem<T>
         }
     }
 
-    private EDecorationFlags getDecoration(bool bCurrentOrEnds)
+    private EDecorationFlags getDecoration(bool bCurrentOrEnd)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
             case EOptionTypeFlags.MultiSelect:
-                return bCurrentOrEnds ? EDecorationFlags.Bold : EDecorationFlags.None;
+                if (bCurrentOrEnd)
+                {
+                    return EDecorationFlags.Bold;
+                }
+                else
+                {
+                    return EDecorationFlags.None;
+                }
             default:
                 return EDecorationFlags.None;
         }
     }
 
-    private EColorFlags getColor(bool bCurrentOrEnds)
+    private EColorFlags getColor(bool bCurrentOrEnd)
     {
         switch (mType)
         {
             case EOptionTypeFlags.Select:
             case EOptionTypeFlags.MultiSelect:
-                return bCurrentOrEnds ? EColorFlags.Cyan : EColorFlags.Default;
+                if (bCurrentOrEnd)
+                {
+                    return EColorFlags.Cyan;
+                }
+                else
+                {
+                    return EColorFlags.Default;
+                }
             default:
                 return EColorFlags.Default;
         }

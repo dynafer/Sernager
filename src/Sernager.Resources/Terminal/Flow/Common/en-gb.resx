@@ -129,6 +129,9 @@
   <data name="ChooseOptionPrompt" xml:space="preserve">
     <value>Choose an option</value>
   </data>
+  <data name="Command" xml:space="preserve">
+    <value>Command</value>
+  </data>
   <data name="CurrentPath" xml:space="preserve">
     <value>Current path</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="GoTo" xml:space="preserve">
     <value>Go to {0}</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
@@ -173,5 +179,8 @@
   </data>
   <data name="ShortName" xml:space="preserve">
     <value>Short name</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
   </data>
 </root>

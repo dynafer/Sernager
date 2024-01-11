@@ -129,9 +129,6 @@
   <data name="AskSaveCommandAsArray" xml:space="preserve">
     <value>Do you want to save the command as an array?</value>
   </data>
-  <data name="Command" xml:space="preserve">
-    <value>Command</value>
-  </data>
   <data name="CurrentGroupManagePrompt" xml:space="preserve">
     <value>Choose a group, a command, or an option</value>
   </data>
@@ -159,9 +156,6 @@
   <data name="EnterShortNamePromptWithSkip" xml:space="preserve">
     <value>Enter a short name without white spaces (Skip: Empty input)</value>
   </data>
-  <data name="Group" xml:space="preserve">
-    <value>Group</value>
-  </data>
   <data name="MainManagePrompt" xml:space="preserve">
     <value>Choose a group or an option</value>
   </data>
@@ -185,8 +179,5 @@
   </data>
   <data name="ShortNameExisted" xml:space="preserve">
     <value>The short name already exists.</value>
-  </data>
-  <data name="Unknown" xml:space="preserve">
-    <value>Unknown</value>
   </data>
 </root>

@@ -25,6 +25,11 @@ internal sealed class ResourcePack : IResourcePack
 
     IResourcePack IResourcePack.ChangeLanguage(CultureInfo culture)
     {
+        if (LangCode == culture.Name)
+        {
+            return this;
+        }
+
         LangCode = culture.Name;
         mManager = new ResourceManager($"{mResourcePath}.{LangCode.ToLowerInvariant()}", typeof(ResourceRetriever).Assembly);
 
@@ -35,11 +40,11 @@ internal sealed class ResourcePack : IResourcePack
     {
         try
         {
-            return mManager.GetString(name) ?? string.Empty;
+            return mManager.GetString(name) ?? name;
         }
         catch
         {
-            return string.Empty;
+            return name;
         }
     }
 }

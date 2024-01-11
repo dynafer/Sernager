@@ -23,7 +23,8 @@ internal sealed class SetVariableFlow : IFlow
     {
         string key = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt(FlowManager.GetResourceString("Environment", "EnterKeyPromptWithCancel"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Environment"))
+                .SetPrompt("EnterKeyPromptWithCancel")
         );
 
         if (string.IsNullOrWhiteSpace(key))
@@ -34,7 +35,8 @@ internal sealed class SetVariableFlow : IFlow
 
         string value = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt(FlowManager.GetResourceString("Environment", "EnterValuePromptWithCancel"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Environment"))
+                .SetPrompt("EnterValuePromptWithCancel")
         );
 
         if (string.IsNullOrWhiteSpace(value))

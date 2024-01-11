@@ -8,6 +8,7 @@ namespace Sernager.Terminal.Managers;
 
 internal static class FlowManager
 {
+    private static readonly string RESOURCE_NAMESPACE = "Terminal.Flow";
     private static readonly BindingFlags BINDING_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
     private static readonly Dictionary<string, Type> mFlowTypes = new Dictionary<string, Type>();
     private static readonly Stack<IFlow> mFlowStack = new Stack<IFlow>();
@@ -29,6 +30,7 @@ internal static class FlowManager
         }
     }
     internal static bool IsManagementMode { get; set; } = false;
+    internal static IResourcePack CommonResourcePack { get; } = ResourceRetriever.UsePack($"{RESOURCE_NAMESPACE}.Common");
 
     static FlowManager()
     {
@@ -65,20 +67,9 @@ internal static class FlowManager
         mHomeFlow = mFlowStack.Pop();
     }
 
-    internal static string GetResourceString(string type, string key)
+    internal static string GetResourceNamespace(string type)
     {
-        IResourcePack resourcePack;
-        if (CacheManager.TryGet($"FlowManager.Resources.{type}", out resourcePack))
-        {
-            return resourcePack.GetString(key);
-        }
-        else
-        {
-            resourcePack = ResourceRetriever.UsePack($"Terminal.Flow.{type}");
-            CacheManager.Set($"FlowManager.Resources.{type}", resourcePack);
-
-            return resourcePack.GetString(key);
-        }
+        return $"{RESOURCE_NAMESPACE}.{type}";
     }
 
     internal static void Start(string[] commands)

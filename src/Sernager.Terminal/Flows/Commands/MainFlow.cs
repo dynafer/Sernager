@@ -13,7 +13,6 @@ public class MainFlow : IFlow
 {
     void IFlow.Prompt()
     {
-        string prompt = FlowManager.GetResourceString("Command", "MainRunPrompt");
         List<(string, string)> options = Program.Service.GetCommandGroupNames()
             .Select(x => (x, x))
             .ToList();
@@ -23,16 +22,16 @@ public class MainFlow : IFlow
 
         if (FlowManager.IsManagementMode)
         {
-            prompt = FlowManager.GetResourceString("Command", "MainManagePrompt");
             options.AddRange([
-                (FlowManager.GetResourceString("Common", "AddGroup"), addCommandGroupId),
-                (FlowManager.GetResourceString("Common", "RemoveGroup"), removeCommandGroupId)
+                (FlowManager.CommonResourcePack.GetString("AddGroup"), addCommandGroupId),
+                (FlowManager.CommonResourcePack.GetString("RemoveGroup"), removeCommandGroupId)
             ]);
         }
 
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt(prompt)
+                .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                .SetPrompt(FlowManager.IsManagementMode ? "MainManagePrompt" : "MainRunPrompt")
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options.ToArray())

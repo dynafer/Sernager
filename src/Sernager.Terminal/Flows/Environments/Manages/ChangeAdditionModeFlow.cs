@@ -23,7 +23,7 @@ internal sealed class ChangeAdditionModeFlow : IFlow
     {
         EAddDataOption result = Prompter.Prompt(
             new SelectionPlugin<EAddDataOption>()
-                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
+                .SetPrompt(FlowManager.CommonResourcePack.GetString("ChooseOptionPrompt"))
                 .AddOptions(
                     (EAddDataOption.SkipIfExists.GetDescription(), EAddDataOption.SkipIfExists),
                     (EAddDataOption.OverwriteIfExists.GetDescription(), EAddDataOption.OverwriteIfExists),

@@ -1,6 +1,5 @@
 using Sernager.Core.Extensions;
 using Sernager.Core.Options;
-using Sernager.Resources;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
@@ -21,7 +20,8 @@ internal sealed class SaveAsFlow : IFlow
 
         string typeString = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt(ResourceRetriever.GetString("Terminal.Flow.SaveAs", "Prompt"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("SaveAs"))
+                .SetPrompt("Prompt")
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options)

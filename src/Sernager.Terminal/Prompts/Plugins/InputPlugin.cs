@@ -1,7 +1,9 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
+using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Prompts.Plugins;
@@ -12,6 +14,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
     private bool mbUseAutoComplete = false;
     private InputValidator? mValidator = null;
     public List<string>? Hints { get; private set; } = null;
+    public IResourcePack? ResourcePack { get; set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; init; } = new List<string>();
     public bool ShouldShowHints { get; set; } = false;
@@ -79,13 +82,14 @@ internal sealed class InputPlugin : ITypePlugin<string>
 
     List<IPromptComponent> IBasePlugin.Render()
     {
+        string prompt = PluginResourceHelper.GetString(this, Prompt);
         List<IPromptComponent> components = [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt),
+                .SetText(prompt),
         ];
 
-        int startPosition = Prompt.Length + 1;
+        int startPosition = prompt.Length + 1;
 
         if (ShouldShowHints && Hints != null && Hints.Count > 0)
         {
@@ -127,7 +131,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                     {
                         return new TextComponent()
                             .SetTextColor(EColorFlags.BrightBlack)
-                            .SetText(description)
+                            .SetText(PluginResourceHelper.GetString(this, description))
                             .UseLineBreak();
                     })
             );
@@ -142,7 +146,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                 new LineBreakComponent(),
                 new TextComponent()
                     .SetTextColor(EColorFlags.Red)
-                    .SetText(mValidator.ErrorMessage),
+                    .SetText(PluginResourceHelper.GetString(this, mValidator.ErrorMessage)),
                 new CursorComponent()
                     .AddCursor(ECursorDirection.Up, Description.Count + 1)
             ]);
@@ -160,7 +164,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
         List<IPromptComponent> components = [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt),
+                .SetText(PluginResourceHelper.GetString(this, Prompt)),
             new CursorComponent()
                 .AddCursor(ECursorDirection.Right, 1),
             new TextComponent()

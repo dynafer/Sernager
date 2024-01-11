@@ -18,6 +18,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
     private bool mbCommandMode = true;
     private string mCommandResult = string.Empty;
     private bool mbRendered = false;
+    public IResourcePack? ResourcePack { get; set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; private init; } = new List<string>();
     private int mMaxEditorHeight => Console.WindowHeight - Description.Count - 2;
@@ -122,7 +123,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt)
+                .SetText(PluginResourceHelper.GetString(this, Prompt))
                 .UseLineBreak(),
         ];
 
@@ -134,7 +135,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
                     {
                         return new TextComponent()
                             .SetTextColor(EColorFlags.BrightBlack)
-                            .SetText(description)
+                            .SetText(PluginResourceHelper.GetString(this, description))
                             .UseLineBreak();
                     })
             );

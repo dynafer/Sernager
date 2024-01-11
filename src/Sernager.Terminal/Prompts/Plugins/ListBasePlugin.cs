@@ -1,7 +1,9 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
+using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
 
 namespace Sernager.Terminal.Prompts.Plugins;
@@ -12,6 +14,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     private protected AutoComplete<OptionItem<TOptionValue>>? mAutoComplete = null;
     internal Pagination Pagination { get; private init; } = new Pagination();
     internal List<OptionItem<TOptionValue>> Options { get; private init; } = new List<OptionItem<TOptionValue>>();
+    public IResourcePack? ResourcePack { get; set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; init; } = new List<string>();
     public bool ShouldShowCursor => mAutoComplete != null;
@@ -32,7 +35,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt)
+                .SetText(PluginResourceHelper.GetString(this, Prompt))
                 .UseLineBreak(),
         ];
 
@@ -44,7 +47,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                     {
                         return new TextComponent()
                             .SetTextColor(EColorFlags.BrightBlack)
-                            .SetText(description)
+                            .SetText(PluginResourceHelper.GetString(this, description))
                             .UseLineBreak();
                     })
             );
@@ -69,13 +72,13 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
         {
             for (int i = Pagination.Total - prev; i < Pagination.Total; ++i)
             {
-                components.Add(options[i].ToRestTextComponent());
+                components.Add(options[i].ToRestTextComponent(this));
             }
         }
 
         for (int i = start; i < end; ++i)
         {
-            TextComponent option = options[i].ToTextComponent(i == Pagination.Offset);
+            TextComponent option = options[i].ToTextComponent(this, i == Pagination.Offset);
             if (next == 0 && i == end - 1)
             {
                 option.IsLineBreak = false;
@@ -88,7 +91,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
         {
             for (int i = 0; i < next; ++i)
             {
-                TextComponent option = options[i].ToRestTextComponent();
+                TextComponent option = options[i].ToRestTextComponent(this);
                 if (i == next - 1)
                 {
                     option.IsLineBreak = false;

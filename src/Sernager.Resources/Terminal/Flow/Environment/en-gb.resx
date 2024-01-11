@@ -129,8 +129,20 @@
   <data name="EditEnvironmentVaraible" xml:space="preserve">
     <value>Edit environment variables</value>
   </data>
+  <data name="EditEnvironmentVariablePrompt" xml:space="preserve">
+    <value>Edit environment variables</value>
+  </data>
   <data name="EditPreEnvironmentVaraible" xml:space="preserve">
     <value>Edit pre-environment variables</value>
+  </data>
+  <data name="EditPreEnvironmentVariablePrompt" xml:space="preserve">
+    <value>Edit pre-environment variables</value>
+  </data>
+  <data name="EnterKeyPromptWithCancel" xml:space="preserve">
+    <value>Enter a key (Cancel: Empty input)</value>
+  </data>
+  <data name="EnterValuePromptWithCancel" xml:space="preserve">
+    <value>Enter a value (Cancel: Empty input)</value>
   </data>
   <data name="SelectEnvFilePrompt" xml:space="preserve">
     <value>Select an env file (.env extension only)</value>

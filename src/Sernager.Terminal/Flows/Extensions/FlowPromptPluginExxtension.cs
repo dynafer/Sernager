@@ -13,9 +13,9 @@ internal static class FlowPromptPluginExxtension
         where TPlugin : ListBasePlugin<string>
     {
         plugin.AddOptions(
-            (FlowManager.GetResourceString("Common", "Back"), "Back"),
-            (FlowManager.GetResourceString("Common", "Home"), "Home"),
-            (FlowManager.GetResourceString("Common", "Exit"), "Exit")
+            (FlowManager.CommonResourcePack.GetString("Back"), "Back"),
+            (FlowManager.CommonResourcePack.GetString("Home"), "Home"),
+            (FlowManager.CommonResourcePack.GetString("Exit"), "Exit")
         );
 
         return plugin;
@@ -26,9 +26,9 @@ internal static class FlowPromptPluginExxtension
         where TOptionValue : notnull
     {
         plugin.AddOptions(
-            (FlowManager.GetResourceString("Common", "Back"), backOption),
-            (FlowManager.GetResourceString("Common", "Home"), homeOption),
-            (FlowManager.GetResourceString("Common", "Exit"), exitOption)
+            (FlowManager.CommonResourcePack.GetString("Back"), backOption),
+            (FlowManager.CommonResourcePack.GetString("Home"), homeOption),
+            (FlowManager.CommonResourcePack.GetString("Exit"), exitOption)
         );
 
         return plugin;
@@ -38,20 +38,20 @@ internal static class FlowPromptPluginExxtension
         where TPlugin : IBasePlugin
     {
         List<string> description = [
-            $"{FlowManager.GetResourceString("Common", "Name")}: {manager.CurrentGroup.Name}"
+            $"{FlowManager.CommonResourcePack.GetString("Name")}: {manager.CurrentGroup.Name}"
         ];
 
         if (!string.IsNullOrWhiteSpace(manager.CurrentGroup.ShortName))
         {
-            description.Add($"{FlowManager.GetResourceString("Common", "ShortName")}: {manager.CurrentGroup.ShortName}");
+            description.Add($"{FlowManager.CommonResourcePack.GetString("ShortName")}: {manager.CurrentGroup.ShortName}");
         }
 
         if (!string.IsNullOrWhiteSpace(manager.CurrentGroup.Description))
         {
-            description.Add($"{FlowManager.GetResourceString("Common", "Description")}: {manager.CurrentGroup.Description}");
+            description.Add($"{FlowManager.CommonResourcePack.GetString("Description")}: {manager.CurrentGroup.Description}");
         }
 
-        description.Add($"{FlowManager.GetResourceString("Common", "Path")}: {manager.CreateCommandGroupPath(" > ")}");
+        description.Add($"{FlowManager.CommonResourcePack.GetString("Path")}: {manager.CreateCommandGroupPath(" > ")}");
 
         plugin.AddDescriptions(description.ToArray());
 
@@ -62,20 +62,20 @@ internal static class FlowPromptPluginExxtension
         where TPlugin : IBasePlugin
     {
         List<string> description = [
-            $"{FlowManager.GetResourceString("Common", "Name")}: {commandModel.Name}"
+            $"{FlowManager.CommonResourcePack.GetString("Name")}: {commandModel.Name}"
         ];
 
         if (!string.IsNullOrWhiteSpace(commandModel.ShortName))
         {
-            description.Add($"{FlowManager.GetResourceString("Common", "ShortName")}: {commandModel.ShortName}");
+            description.Add($"{FlowManager.CommonResourcePack.GetString("ShortName")}: {commandModel.ShortName}");
         }
 
         if (!string.IsNullOrWhiteSpace(commandModel.Description))
         {
-            description.Add($"{FlowManager.GetResourceString("Common", "Description")}: {commandModel.Description}");
+            description.Add($"{FlowManager.CommonResourcePack.GetString("Description")}: {commandModel.Description}");
         }
 
-        description.Add($"{FlowManager.GetResourceString("Common", "Path")}: {manager.CreateCommandPath(" > ", commandModel.Name)}");
+        description.Add($"{FlowManager.CommonResourcePack.GetString("Path")}: {manager.CreateCommandPath(" > ", commandModel.Name)}");
 
         plugin.AddDescriptions(description.ToArray());
 
@@ -86,8 +86,8 @@ internal static class FlowPromptPluginExxtension
         where TPlugin : IBasePlugin
     {
         plugin.AddDescriptions(
-            $"{FlowManager.GetResourceString("Common", "Name")}: {manager.EnvironmentGroup.Name}",
-            $"{FlowManager.GetResourceString("Common", "AdditionMode")}: {manager.AdditionMode.GetDescription()}"
+            $"{FlowManager.CommonResourcePack.GetString("Name")}: {manager.EnvironmentGroup.Name}",
+            $"{FlowManager.CommonResourcePack.GetString("AdditionMode")}: {manager.AdditionMode.GetDescription()}"
         );
 
         return plugin;

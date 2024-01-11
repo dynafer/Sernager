@@ -9,9 +9,9 @@ internal static class GroupItemExtension
     {
         return item.Item switch
         {
-            CommandModel => FlowManager.GetResourceString("Command", "Command"),
-            GroupModel => FlowManager.GetResourceString("Command", "Group"),
-            _ => FlowManager.GetResourceString("Command", "Unknown")
+            CommandModel => FlowManager.CommonResourcePack.GetString("Command"),
+            GroupModel => FlowManager.CommonResourcePack.GetString("Group"),
+            _ => FlowManager.CommonResourcePack.GetString("Unknown")
         };
     }
 
@@ -21,7 +21,7 @@ internal static class GroupItemExtension
         {
             CommandModel command => command.Name,
             GroupModel group => group.Name,
-            _ => FlowManager.GetResourceString("Command", "Unknown")
+            _ => FlowManager.CommonResourcePack.GetString("Unknown")
         };
     }
 }

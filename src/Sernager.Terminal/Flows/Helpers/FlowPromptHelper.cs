@@ -8,13 +8,13 @@ namespace Sernager.Terminal.Flows.Helpers;
 
 internal static class FlowPromptHelper
 {
-    internal static bool TrySelectFile(string prompt, string extension, int pageSize, out string result)
+    internal static bool TrySelectFile(string resourceType, string prompt, string extension, int pageSize, out string result)
     {
         (string, string)[] drives = DriveInfo.GetDrives()
             .Where(drive => drive.DriveType == DriveType.Fixed)
             .Select(drive =>
                 (
-                    string.Format(FlowManager.GetResourceString("Common", "GoTo"), drive.Name),
+                    string.Format(FlowManager.CommonResourcePack.GetString("GoTo"), drive.Name),
                     drive.RootDirectory.FullName
                 )
             )
@@ -57,8 +57,9 @@ internal static class FlowPromptHelper
 
             string path = Prompter.Prompt(
                 new SelectionPlugin<string>()
+                    .UseResourcePack(FlowManager.GetResourceNamespace(resourceType))
                     .SetPrompt(prompt)
-                    .AddDescriptions($"{FlowManager.GetResourceString("Common", "CurrentPath")}: {currentPath}")
+                    .AddDescriptions($"{FlowManager.CommonResourcePack.GetString("CurrentPath")}: {currentPath}")
                     .SetPageSize(pageSize)
                     .UseAutoComplete()
                     .AddOptions(options.ToArray())

@@ -1,9 +1,11 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Components;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
 internal interface IBasePlugin
 {
+    IResourcePack? ResourcePack { get; set; }
     string Prompt { get; set; }
     List<string> Description { get; }
     bool ShouldShowCursor { get; }

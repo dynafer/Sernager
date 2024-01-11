@@ -21,7 +21,8 @@ internal sealed class EditDescriptionFlow : IFlow
     {
         string description = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt(FlowManager.GetResourceString("Command", "EnterDescriptionPrompt"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                .SetPrompt("EnterDescriptionPrompt")
                 .SetInitialInput(mCommandModel.Description)
         );
 

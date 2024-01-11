@@ -23,7 +23,7 @@ internal sealed class EditNameFlow : IFlow
     {
         string name = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForEdit"))
+                .SetPrompt(FlowManager.CommonResourcePack.GetString("EnterNamePromptWithCancelForEdit"))
                 .SetInitialInput(mManager.CurrentGroup.Name)
                 .UseValidator(new InputValidator()
                     .AddRules(
@@ -34,7 +34,7 @@ internal sealed class EditNameFlow : IFlow
                         ),
                         (
                             (string name) => mManager.CanUseName(name, true),
-                            FlowManager.GetResourceString("Common", "NameExisted"),
+                            FlowManager.CommonResourcePack.GetString("NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )

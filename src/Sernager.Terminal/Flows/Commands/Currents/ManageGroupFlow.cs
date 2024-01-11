@@ -22,19 +22,22 @@ internal sealed class ManageGroupFlow : IFlow
     {
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                .SetPrompt(FlowManager.CommonResourcePack.GetString("ChooseOptionPrompt"))
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
-                .AddOptions(
-                    (FlowManager.GetResourceString("Command", "AddCommand"), "AddCommand"),
-                    (FlowManager.GetResourceString("Command", "AddSubgroup"), "AddSubgroup"),
-                    (FlowManager.GetResourceString("Common", "EditName"), "EditName"),
-                    (FlowManager.GetResourceString("Command", "EditShortName"), "EditShortName"),
-                    (FlowManager.GetResourceString("Command", "EditDescription"), "EditDescription"),
-                    (FlowManager.GetResourceString("Command", "RemoveItem"), "RemoveItem"),
-                    (FlowManager.GetResourceString("Common", "RemoveThisGroup"), "RemoveGroup")
+                .AddOptionsUsingResourcePack(
+                    ("AddCommand", "AddCommand"),
+                    ("AddSubgroup", "AddSubgroup")
                 )
+                .AddOption(FlowManager.CommonResourcePack.GetString("EditName"), "EditName")
+                .AddOptionsUsingResourcePack(
+                    ("EditShortName", "EditShortName"),
+                    ("EditDescription", "EditDescription"),
+                    ("RemoveItem", "RemoveItem")
+                )
+                .AddOption(FlowManager.CommonResourcePack.GetString("RemoveThisGroup"), "RemoveGroup")
                 .AddFlowCommonSelectionOptions()
         );
 

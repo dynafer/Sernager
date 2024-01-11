@@ -22,20 +22,23 @@ internal sealed class ManageFlow : IFlow
     {
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Environment"))
+                .SetPrompt(FlowManager.CommonResourcePack.GetString("ChooseOptionPrompt"))
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
+                .AddOptionsUsingResourcePack(
+                    ("ChangeAdditionMode", "ChangeAdditionMode"),
+                    ("AddFromPreFile", "AddFromPreFile"),
+                    ("AddFromFile", "AddFromFile"),
+                    ("SetPreVariable", "SetPreVariable"),
+                    ("SetVariable", "SetVariable"),
+                    ("EditPreEnvironmentVaraible", "EditPreEnvironmentVaraible"),
+                    ("EditEnvironmentVaraible", "EditEnvironmentVaraible")
+                )
                 .AddOptions(
-                    (FlowManager.GetResourceString("Environment", "ChangeAdditionMode"), "ChangeAdditionMode"),
-                    (FlowManager.GetResourceString("Environment", "AddFromPreFile"), "AddFromPreFile"),
-                    (FlowManager.GetResourceString("Environment", "AddFromFile"), "AddFromFile"),
-                    (FlowManager.GetResourceString("Environment", "SetPreVariable"), "SetPreVariable"),
-                    (FlowManager.GetResourceString("Environment", "SetVariable"), "SetVariable"),
-                    (FlowManager.GetResourceString("Environment", "EditPreEnvironmentVaraible"), "EditPreEnvironmentVaraible"),
-                    (FlowManager.GetResourceString("Environment", "EditEnvironmentVaraible"), "EditEnvironmentVaraible"),
-                    (FlowManager.GetResourceString("Common", "EditName"), "EditName"),
-                    (FlowManager.GetResourceString("Common", "RemoveThisGroup"), "RemoveGroup")
+                    (FlowManager.CommonResourcePack.GetString("EditName"), "EditName"),
+                    (FlowManager.CommonResourcePack.GetString("RemoveThisGroup"), "RemoveGroup")
                 )
                 .AddFlowCommonSelectionOptions()
         );

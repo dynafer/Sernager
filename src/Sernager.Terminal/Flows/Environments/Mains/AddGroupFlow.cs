@@ -15,7 +15,7 @@ internal sealed class AddGroupFlow : IFlow
     {
         string groupName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForAdd"))
+                .SetPrompt(FlowManager.CommonResourcePack.GetString("EnterNamePromptWithCancelForAdd"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -25,7 +25,7 @@ internal sealed class AddGroupFlow : IFlow
                         ),
                         (
                             ManagerHelper.CanUseEnvironmentGroupName,
-                            FlowManager.GetResourceString("Common", "NameExisted"),
+                            FlowManager.CommonResourcePack.GetString("NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )

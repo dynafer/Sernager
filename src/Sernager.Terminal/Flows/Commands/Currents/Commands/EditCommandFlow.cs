@@ -43,7 +43,8 @@ internal sealed class EditCommandFlow : IFlow
 
         List<string> command = Prompter.Prompt(
             new EditorPlugin()
-                .SetPrompt(FlowManager.GetResourceString("Command", "EditCommand"))
+                .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                .SetPrompt("EditCommand")
                 .SetInitialLines(initialLines.ToArray())
         )
         .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -59,7 +60,8 @@ internal sealed class EditCommandFlow : IFlow
         {
             bool bCommandArray = Prompter.Prompt(
                 new ConfirmPlugin()
-                    .SetPrompt("Do you want to save the command as an array?")
+                    .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                    .SetPrompt("AskSaveCommandAsArray")
             );
 
             if (bCommandArray)

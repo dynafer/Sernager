@@ -19,11 +19,11 @@ internal sealed class AddFromFileFlow : IFlow
 
     void IFlow.Prompt()
     {
-        string prompt = FlowManager.GetResourceString("Environment", mbPre ? "SelectPreEnvFilePrompt" : "SelectEnvFilePrompt");
+        string prompt = mbPre ? "SelectPreEnvFilePrompt" : "SelectEnvFilePrompt";
         string extension = ".env";
         string path;
 
-        if (FlowPromptHelper.TrySelectFile(prompt, extension, FlowManager.PageSize, out path))
+        if (FlowPromptHelper.TrySelectFile("Environment", prompt, extension, FlowManager.PageSize, out path))
         {
             if (mbPre)
             {

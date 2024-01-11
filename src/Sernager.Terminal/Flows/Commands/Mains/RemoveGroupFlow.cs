@@ -17,7 +17,7 @@ internal sealed class RemoveGroupFlow : IFlow
 
         IEnumerable<string> selectedGroups = Prompter.Prompt(
             new MultiSelectionPlugin<string>()
-                .SetPrompt(FlowManager.GetResourceString("Common", "SelectGroupToRemoveWithCancel"))
+                .SetPrompt(FlowManager.CommonResourcePack.GetString("SelectGroupToRemoveWithCancel"))
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options)

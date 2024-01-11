@@ -33,30 +33,32 @@ internal sealed class CurrentGroupFlow : IFlow
 
     void IFlow.Prompt()
     {
-        string prompt = FlowManager.GetResourceString("Command", "CurrentGroupRunPrompt");
 
-        List<(string, Guid)> options = mManager.GetItems()
+        (string, Guid)[] options = mManager.GetItems()
             .Select(item =>
             {
                 string itemString = $"{item.GetNameString()} ({item.GetTypeString()})";
 
                 return (itemString, item.Id);
             })
-            .ToList();
+            .ToArray();
+
+        List<(string, Guid)> managementOptions = [];
 
         if (FlowManager.IsManagementMode)
         {
-            prompt = FlowManager.GetResourceString("Command", "CurrentGroupManagePrompt");
-            options.Add((FlowManager.GetResourceString("Command", "ManageCurrentGroup"), mFixedOptions["ManageCurrentGroup"]));
+            managementOptions.Add(("ManageCurrentGroup", mFixedOptions["ManageCurrentGroup"]));
         }
 
         Guid result = Prompter.Prompt(
             new SelectionPlugin<Guid>()
-                .SetPrompt(prompt)
+                .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
+                .SetPrompt(FlowManager.IsManagementMode ? "CurrentGroupManagePrompt" : "CurrentGroupRunPrompt")
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options.ToArray())
+                .AddOptionsUsingResourcePack(managementOptions.ToArray())
                 .AddFlowCommonSelectionOptions(mFixedOptions["Back"], mFixedOptions["Home"], mFixedOptions["Exit"])
         );
 

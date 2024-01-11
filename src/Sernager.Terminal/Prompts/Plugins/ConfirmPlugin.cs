@@ -1,13 +1,16 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
+using Sernager.Terminal.Prompts.Helpers;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
 internal sealed class ConfirmPlugin : ITypePlugin<bool>
 {
     private string mResult = string.Empty;
+    public IResourcePack? ResourcePack { get; set; } = null;
     public string Prompt { get; set; } = string.Empty;
     public List<string> Description { get; private init; } = new List<string>();
     public bool ShouldShowCursor => false;
@@ -34,7 +37,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText($"{Prompt} [Y/n] ")
+                .SetText($"{PluginResourceHelper.GetString(this, Prompt)} [Y/n] ")
         ];
 
         if (Description.Count > 0)
@@ -46,7 +49,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
                     {
                         return new TextComponent()
                             .SetTextColor(EColorFlags.BrightBlack)
-                            .SetText(description)
+                            .SetText(PluginResourceHelper.GetString(this, description))
                             .UseLineBreak();
                     })
             );
@@ -61,7 +64,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt),
+                .SetText(PluginResourceHelper.GetString(this, Prompt)),
             new CursorComponent()
                 .AddCursor(ECursorDirection.Right, 1),
             new TextComponent()

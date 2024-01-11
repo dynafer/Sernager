@@ -11,7 +11,7 @@ internal static class ListPluginExtension
     {
         EOptionTypeFlags optionType = plugin.ToOptionType();
 
-        plugin.Options.Add(new OptionItem<TOptionValue>(optionType, name, value));
+        plugin.Options.Add(new OptionItem<TOptionValue>(optionType, name, value, false));
 
         return plugin;
     }
@@ -24,7 +24,32 @@ internal static class ListPluginExtension
 
         foreach ((string name, TOptionValue value) in options)
         {
-            plugin.Options.Add(new OptionItem<TOptionValue>(optionType, name, value));
+            plugin.Options.Add(new OptionItem<TOptionValue>(optionType, name, value, false));
+        }
+
+        return plugin;
+    }
+
+    internal static TPlugin AddOptionUsingResourcePack<TPlugin, TOptionValue>(this TPlugin plugin, string name, TOptionValue value)
+        where TPlugin : ListBasePlugin<TOptionValue>
+        where TOptionValue : notnull
+    {
+        EOptionTypeFlags optionType = plugin.ToOptionType();
+
+        plugin.Options.Add(new OptionItem<TOptionValue>(optionType, name, value, true));
+
+        return plugin;
+    }
+
+    internal static TPlugin AddOptionsUsingResourcePack<TPlugin, TOptionValue>(this TPlugin plugin, params (string, TOptionValue)[] options)
+        where TPlugin : ListBasePlugin<TOptionValue>
+        where TOptionValue : notnull
+    {
+        EOptionTypeFlags optionType = plugin.ToOptionType();
+
+        foreach ((string name, TOptionValue value) in options)
+        {
+            plugin.Options.Add(new OptionItem<TOptionValue>(optionType, name, value, true));
         }
 
         return plugin;
