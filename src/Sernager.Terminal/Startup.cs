@@ -50,6 +50,11 @@ internal static class Startup
 
     private static void unloadCallback()
     {
+        if (Prompter.CountRemovableConsoleLines > 0)
+        {
+            Prompter.Writer.Write(AnsiCode.CursorUp(Prompter.CountRemovableConsoleLines));
+        }
+
         Prompter.Writer.Write(AnsiCode.EraseScreen());
         Prompter.Writer.Flush();
     }

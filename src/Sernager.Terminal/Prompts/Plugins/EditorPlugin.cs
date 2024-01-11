@@ -173,28 +173,18 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         string modeResourceName = mbCommandMode ? "CommandMode" : "InsertMode";
         string oppositeModeResourceName = mbCommandMode ? "InsertMode" : "CommandMode";
 
-        components.AddRange([
-            new TextComponent()
-                .SetText(mResourcePack.GetString(modeResourceName))
-                .SetDecoration(EDecorationFlags.Bold),
-            new TextComponent()
-                .SetText($" | Esc: {mResourcePack.GetString(oppositeModeResourceName)}")
-                .SetDecoration(EDecorationFlags.Bold)
-        ]);
+        string guidance = $"{mResourcePack.GetString(modeResourceName)} | Esc: {mResourcePack.GetString(oppositeModeResourceName)}";
 
         if (mbCommandMode)
         {
-            components.AddRange([
-                new TextComponent()
-                    .SetText($" | Q: {ResourceRetriever.Shared.GetString("Exit")} | S : {mResourcePack.GetString("SaveAndExit")}")
-                    .SetDecoration(EDecorationFlags.Bold)
-            ]);
+            guidance += $" | Q: {ResourceRetriever.Shared.GetString("Exit")} | S: {mResourcePack.GetString("SaveAndExit")}";
         }
 
+        guidance += $" | {mResourcePack.GetString("LineShortForm")} {mCursor.Y + 1}, {mResourcePack.GetString("ColumnShortForm")} {mCursor.X + 1}";
+
         components.AddRange([
-            new TextComponent()
-                .SetText($" | {mResourcePack.GetString("LineShortForm")} {mCursor.Y + 1}, {mResourcePack.GetString("ColumnShortForm")} {mCursor.X + 1}")
-                .SetDecoration(EDecorationFlags.Bold),
+            new InlineStyledTextComponent()
+                .SetText($"[Bold]{guidance}[/Bold]"),
             new CursorComponent()
                 .AddCursors(
                     new { Direction = ECursorDirection.HorizontalAbsolute, Count = mCursor.X + 1 },

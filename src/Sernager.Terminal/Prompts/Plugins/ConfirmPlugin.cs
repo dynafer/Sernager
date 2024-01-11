@@ -36,8 +36,8 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
         List<IPromptComponent> components =
         [
             new TextComponent()
-                .SetDecoration(EDecorationFlags.Bold)
                 .SetText($"{PluginResourceHelper.GetString(this, Prompt)} [Y/n] ")
+                .SetDecoration(EDecorationFlags.Bold)
         ];
 
         if (Description.Count > 0)

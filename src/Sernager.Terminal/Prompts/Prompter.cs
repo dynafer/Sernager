@@ -7,6 +7,7 @@ namespace Sernager.Terminal.Prompts;
 internal static class Prompter
 {
     internal readonly static TextWriter Writer = Console.Out;
+    internal static int CountRemovableConsoleLines { get; private set; } = 0;
 
     internal static object Prompt(IBasePlugin plugin)
     {
@@ -50,17 +51,19 @@ internal static class Prompter
             {
                 renderer.Render(plugin.Render());
 
+                CountRemovableConsoleLines = renderer.CurrentY - 1;
+
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-                bool bBreak = plugin.Input(keyInfo, out result);
-
-                if (bBreak)
+                if (plugin.Input(keyInfo, out result))
                 {
                     break;
                 }
             }
 
             renderer.Render(plugin.RenderLast());
+
+            CountRemovableConsoleLines = 0;
 
             renderer.ShowCursor();
         }

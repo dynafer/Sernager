@@ -9,7 +9,7 @@ internal sealed class AutoComplete<TSearchable>
 {
     private readonly IResourcePack mResourcePack = ResourceRetriever.UsePack("Terminal.Prompt.AutoComplete");
     internal string Prompt => $"{mResourcePack.GetString("Prompt")}: ";
-    internal string NoResultText => $"{mResourcePack.GetString("NoResult")}";
+    internal string NoResultText => mResourcePack.GetString("NoResult");
     internal string Input { get; set; } = string.Empty;
     internal int CursorPosition { get; private set; } = 0;
 

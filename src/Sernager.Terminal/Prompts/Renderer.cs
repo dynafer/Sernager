@@ -5,8 +5,8 @@ namespace Sernager.Terminal.Prompts;
 internal sealed class Renderer : IDisposable
 {
     private TextWriter mWriter;
-    private int mCurrentX = 0;
-    private int mCurrentY = 0;
+    internal int CurrentX { get; private set; } = 0;
+    internal int CurrentY { get; private set; } = 0;
 
     internal Renderer(TextWriter writer)
     {
@@ -30,16 +30,16 @@ internal sealed class Renderer : IDisposable
 
     internal void Render(List<IPromptComponent> components)
     {
-        if (mCurrentX != 0)
+        if (CurrentX != 0)
         {
-            mWriter.Write(AnsiCode.CursorLeft(mCurrentX));
-            mCurrentX = 0;
+            mWriter.Write(AnsiCode.CursorLeft(CurrentX));
+            CurrentX = 0;
         }
 
-        if (mCurrentY != 0)
+        if (CurrentY != 0)
         {
-            mWriter.Write(AnsiCode.CursorUp(mCurrentY));
-            mCurrentY = 0;
+            mWriter.Write(AnsiCode.CursorUp(CurrentY));
+            CurrentY = 0;
         }
 
         mWriter.Write(AnsiCode.EraseScreen());
@@ -52,28 +52,28 @@ internal sealed class Renderer : IDisposable
             {
                 if (cursorComponent.IsLastXAbsolute)
                 {
-                    mCurrentX = cursorComponent.FianlX;
+                    CurrentX = cursorComponent.FianlX;
                 }
                 else
                 {
-                    mCurrentX += cursorComponent.FianlX;
+                    CurrentX += cursorComponent.FianlX;
                 }
 
-                mCurrentY += cursorComponent.FianlY;
+                CurrentY += cursorComponent.FianlY;
             }
 
             if (component.IsLineBreak)
             {
                 mWriter.WriteLine(text);
 
-                mCurrentX = 0;
-                ++mCurrentY;
+                CurrentX = 0;
+                ++CurrentY;
             }
             else
             {
                 mWriter.Write(text);
 
-                mCurrentX += text.Length;
+                CurrentX += text.Length;
             }
         }
 

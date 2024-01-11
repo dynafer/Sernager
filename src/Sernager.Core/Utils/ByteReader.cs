@@ -30,7 +30,7 @@ internal sealed class ByteReader : IDisposable
 
         if (Position + length > mBytes.Length)
         {
-            ExceptionManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
+            ExceptionManager.ThrowFail<IndexOutOfRangeException>($"Position: {Position}, Length: {length}");
             return Array.Empty<byte>();
         }
 
@@ -79,7 +79,7 @@ internal sealed class ByteReader : IDisposable
 
         if (Position + length > mBytes.Length)
         {
-            ExceptionManager.ThrowFail<IndexOutOfRangeException>(string.Format("Position: {0}, Length: {1}", Position, length));
+            ExceptionManager.ThrowFail<IndexOutOfRangeException>($"Position: {Position}, Length: {length}");
             return;
         }
 
