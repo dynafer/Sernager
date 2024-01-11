@@ -1,3 +1,4 @@
+using Sernager.Core;
 using Sernager.Resources;
 using Sernager.Terminal.Prompts.Plugins;
 
@@ -26,7 +27,7 @@ internal static class PluginExtension
     {
         if (plugin.ResourcePack != null)
         {
-            throw new InvalidOperationException("Resource pack already set.");
+            throw new SernagerException("Resource pack already set.");
         }
 
         plugin.ResourcePack = ResourceRetriever.UsePack(resourcePath);

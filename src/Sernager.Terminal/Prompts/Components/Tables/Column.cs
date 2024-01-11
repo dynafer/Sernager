@@ -10,7 +10,7 @@ internal sealed class Column
     {
         if (colspan < 1)
         {
-            throw new ArgumentException("Colspan must be greater than 0.", nameof(colspan));
+            throw new ArgumentException("Colspan must be greater than 0.");
         }
 
         Component = component;

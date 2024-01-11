@@ -1,6 +1,7 @@
 using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Sernager.Core.Configs;
@@ -93,7 +94,7 @@ internal static class Configurator
             EConfigurationType.Yaml => ".yaml",
             EConfigurationType.Json => ".json",
             EConfigurationType.Sernager => ".srn",
-            _ => throw new InvalidOperationException("Invalid configuration type."),
+            _ => throw new InvalidEnumArgumentException("Invalid configuration type."),
         };
     }
 }

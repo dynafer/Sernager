@@ -130,7 +130,7 @@ internal static class FlowManager
     {
         if (count < 1)
         {
-            throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater than 0.");
+            throw new ArgumentException("Count must be greater than 0.");
         }
 
         for (int i = 0; i < count; ++i)

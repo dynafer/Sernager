@@ -1,3 +1,4 @@
+using Sernager.Core;
 using Sernager.Terminal.Prompts.Plugins;
 
 namespace Sernager.Terminal.Prompts.Extensions;
@@ -8,7 +9,7 @@ internal static class InputPluginExtension
     {
         if (plugin.Hints == null)
         {
-            throw new InvalidOperationException("You must call UseAutoComplete() before adding hints.");
+            throw new SernagerException("You must call UseAutoComplete() before adding hints.");
         }
 
         plugin.Hints.Add(hint);
@@ -20,7 +21,7 @@ internal static class InputPluginExtension
     {
         if (plugin.Hints == null)
         {
-            throw new InvalidOperationException("You must call UseAutoComplete() before adding hints.");
+            throw new SernagerException("You must call UseAutoComplete() before adding hints.");
         }
 
         plugin.Hints.AddRange(hints);

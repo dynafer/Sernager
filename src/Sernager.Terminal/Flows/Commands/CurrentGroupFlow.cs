@@ -1,5 +1,6 @@
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
+using Sernager.Resources;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
@@ -138,27 +139,23 @@ internal sealed class CurrentGroupFlow : IFlow
     {
         IExecutor executor = Program.Service.GetExecutor(commandId);
         CommandModel model = mManager.GetCommand(commandId);
+        IResourcePack resourcePack = ResourceRetriever.UsePack(FlowManager.GetResourceNamespace("Command"));
 
         if (executor == null)
         {
             return;
         }
 
-        string command = model.Command switch
-        {
-            string[] commandArray => string.Join(" ", commandArray),
-            string commandString => commandString,
-            _ => throw new ArgumentException("Command must be a string or string[]")
-        };
+        string command = model.ToCommandString();
 
         using (Renderer renderer = new Renderer(Prompter.Writer))
         {
             List<IPromptComponent> components = new List<IPromptComponent>(Console.WindowHeight - 1)
             {
                 new TextComponent()
-                .SetText($"Running command: {command}")
-                .SetTextColor(EColorFlags.BrightBlack)
-                .UseLineBreak()
+                    .SetText($"{resourcePack.GetString("RunningCommand")}: {command}")
+                    .SetTextColor(EColorFlags.BrightBlack)
+                    .UseLineBreak()
             };
 
             renderer.Render(components.ToList());

@@ -120,10 +120,8 @@ internal static class Args
                     : mArgInfos.Keys.ToArray()
                 );
 
-            IPromptComponent component = new InlineStyledTextComponent()
-                .SetText($"Unknown argument: {arg}. Did you mean one of [Bold]({string.Join(", ", possibleArgs)})[/Bold]?");
-
-            throw new ArgumentException(component.Render());
+            Logger.ErrorWithExit($"Unknown argument: {arg}. Did you mean one of [Bold]({string.Join(", ", possibleArgs)})[/Bold]?");
+            return;
         }
 
         if (mShortNames.ContainsKey(arg))
@@ -144,7 +142,8 @@ internal static class Args
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException($"Argument {arg} requires {attribute.Value}");
+                    Logger.ErrorWithExit($"Argument {arg} requires {attribute.Value}");
+                    return;
                 }
 
                 property.SetValue(Model, value);

@@ -171,6 +171,9 @@
   <data name="RemoveItem" xml:space="preserve">
     <value>Remove an item(s)</value>
   </data>
+  <data name="RunningCommand" xml:space="preserve">
+    <value>Running command</value>
+  </data>
   <data name="SelectEnvironmentGroupPromptWithSkip" xml:space="preserve">
     <value>Select an environment group(s) (Skip: No selection)</value>
   </data>

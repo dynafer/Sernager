@@ -41,7 +41,7 @@ public sealed class CommandModel
                 }
                 else
                 {
-                    throw new ArgumentException("Command must be a string or string[]");
+                    throw new InvalidCastException("Command must be a string or string[]");
                 }
             }
             else if (value is IEnumerable<object> objectEnumerable)
@@ -54,8 +54,18 @@ public sealed class CommandModel
             }
             else
             {
-                throw new ArgumentException("Command must be a string or string[]");
+                throw new InvalidCastException("Command must be a string or string[]");
             }
         }
+    }
+
+    public string ToCommandString()
+    {
+        return Command switch
+        {
+            string[] commandArray => string.Join(" ", commandArray),
+            string commandString => commandString,
+            _ => throw new InvalidCastException("Command must be a string or string[]")
+        };
     }
 }
