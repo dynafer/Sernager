@@ -22,6 +22,11 @@ internal sealed class ByteReader : IDisposable
 
     internal byte[] ReadBytes(int length)
     {
+        if (length == 0)
+        {
+            return Array.Empty<byte>();
+        }
+
         if (mBytes == null)
         {
             ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
@@ -53,6 +58,11 @@ internal sealed class ByteReader : IDisposable
 
         byte[] bytes = ReadBytes(sizeof(int));
 
+        if (bytes.Length != sizeof(int))
+        {
+            return 0;
+        }
+
         return BitConverter.ToInt32(bytes, 0);
     }
 
@@ -65,6 +75,11 @@ internal sealed class ByteReader : IDisposable
         }
 
         byte[] bytes = ReadBytes(length);
+
+        if (bytes.Length == 0)
+        {
+            return string.Empty;
+        }
 
         return Encoding.UTF8.GetString(bytes);
     }
