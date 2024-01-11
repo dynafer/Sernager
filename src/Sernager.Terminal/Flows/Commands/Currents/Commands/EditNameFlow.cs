@@ -26,7 +26,7 @@ internal sealed class EditNameFlow : IFlow
     {
         string name = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command name without white spaces (Cancel: Empty or same input)")
+                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForEdit"))
                 .SetInitialInput(mCommandModel.Name)
                 .UseValidator(new InputValidator()
                     .AddRules(
@@ -37,7 +37,7 @@ internal sealed class EditNameFlow : IFlow
                         ),
                         (
                             (string nameInput) => mManager.CanUseName(nameInput, true),
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )

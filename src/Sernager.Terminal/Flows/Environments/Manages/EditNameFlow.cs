@@ -24,7 +24,7 @@ internal sealed class EditNameFlow : IFlow
     {
         string name = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter an environment group name without white spaces (Cancel: Empty or same input)")
+                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForEdit"))
                 .SetInitialInput(mManager.EnvironmentGroup.Name)
                 .UseValidator(new InputValidator()
                     .AddRules(
@@ -35,7 +35,7 @@ internal sealed class EditNameFlow : IFlow
                         ),
                         (
                             ManagerHelper.CanUseEnvironmentGroupName,
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )

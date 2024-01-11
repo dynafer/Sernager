@@ -21,13 +21,13 @@ internal sealed class MainFlow : IFlow
 
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt("Choose a group or an option:")
+                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(options)
                 .AddOptions(
-                    ("Add a group", addEnvironmentGroupId),
-                    ("Remove a group(s)", removeEnvironmentGroupId)
+                    (FlowManager.GetResourceString("Common", "AddGroup"), addEnvironmentGroupId),
+                    (FlowManager.GetResourceString("Common", "RemoveGroup"), removeEnvironmentGroupId)
                 )
                 .AddFlowCommonSelectionOptions()
         );

@@ -27,16 +27,16 @@ internal sealed class ManageCommandFlow : IFlow
     {
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt("Choose an option:")
+                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
                 .AddFlowDescriptions(mManager, mCommandModel)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(
-                    ("Edit command", "EditCommand"),
-                    ("Edit name", "EditName"),
-                    ("Edit short name", "EditShortName"),
-                    ("Edit description", "EditDescription"),
-                    ("Remove command", "RemoveCommand")
+                    (FlowManager.GetResourceString("Command", "EditCommand"), "EditCommand"),
+                    (FlowManager.GetResourceString("Common", "EditName"), "EditName"),
+                    (FlowManager.GetResourceString("Command", "EditShortName"), "EditShortName"),
+                    (FlowManager.GetResourceString("Command", "EditDescription"), "EditDescription"),
+                    (FlowManager.GetResourceString("Command", "RemoveCommand"), "RemoveCommand")
                 )
                 .AddFlowCommonSelectionOptions()
         );

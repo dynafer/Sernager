@@ -22,18 +22,18 @@ internal sealed class ManageGroupFlow : IFlow
     {
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt("Choose an option:")
+                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(
-                    ("Add a command", "AddCommand"),
-                    ("Add a subgroup", "AddSubgroup"),
-                    ("Edit name", "EditName"),
-                    ("Edit short name", "EditShortName"),
-                    ("Edit description", "EditDescription"),
-                    ("Remove a item(s)", "RemoveItem"),
-                    ("Remove this group", "RemoveGroup")
+                    (FlowManager.GetResourceString("Command", "AddCommand"), "AddCommand"),
+                    (FlowManager.GetResourceString("Command", "AddSubgroup"), "AddSubgroup"),
+                    (FlowManager.GetResourceString("Common", "EditName"), "EditName"),
+                    (FlowManager.GetResourceString("Command", "EditShortName"), "EditShortName"),
+                    (FlowManager.GetResourceString("Command", "EditDescription"), "EditDescription"),
+                    (FlowManager.GetResourceString("Command", "RemoveItem"), "RemoveItem"),
+                    (FlowManager.GetResourceString("Common", "RemoveThisGroup"), "RemoveGroup")
                 )
                 .AddFlowCommonSelectionOptions()
         );

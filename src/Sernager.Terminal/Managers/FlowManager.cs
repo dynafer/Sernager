@@ -1,5 +1,6 @@
 using Sernager.Core;
 using Sernager.Core.Managers;
+using Sernager.Resources;
 using Sernager.Terminal.Attributes;
 using System.Reflection;
 
@@ -62,6 +63,22 @@ internal static class FlowManager
         tryCreateFlow("Home");
 
         mHomeFlow = mFlowStack.Pop();
+    }
+
+    internal static string GetResourceString(string type, string key)
+    {
+        IResourcePack resourcePack;
+        if (CacheManager.TryGet($"FlowManager.Resources.{type}", out resourcePack))
+        {
+            return resourcePack.GetString(key);
+        }
+        else
+        {
+            resourcePack = ResourceRetriever.UsePack($"Terminal.Flow.{type}");
+            CacheManager.Set($"FlowManager.Resources.{type}", resourcePack);
+
+            return resourcePack.GetString(key);
+        }
     }
 
     internal static void Start(string[] commands)

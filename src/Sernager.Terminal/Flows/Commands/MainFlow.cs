@@ -13,7 +13,7 @@ public class MainFlow : IFlow
 {
     void IFlow.Prompt()
     {
-        string prompt = "Choose a group:";
+        string prompt = FlowManager.GetResourceString("Command", "MainRunPrompt");
         List<(string, string)> options = Program.Service.GetCommandGroupNames()
             .Select(x => (x, x))
             .ToList();
@@ -23,10 +23,10 @@ public class MainFlow : IFlow
 
         if (FlowManager.IsManagementMode)
         {
-            prompt = "Choose a group or an option:";
+            prompt = FlowManager.GetResourceString("Command", "MainManagePrompt");
             options.AddRange([
-                ("Add a group", addCommandGroupId),
-                ("Remove a group(s)", removeCommandGroupId)
+                (FlowManager.GetResourceString("Common", "AddGroup"), addCommandGroupId),
+                (FlowManager.GetResourceString("Common", "RemoveGroup"), removeCommandGroupId)
             ]);
         }
 

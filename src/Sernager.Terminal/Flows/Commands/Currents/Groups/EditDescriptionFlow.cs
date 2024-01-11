@@ -21,7 +21,7 @@ internal sealed class EditDescriptionFlow : IFlow
     {
         string description = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group description")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterDescriptionPrompt"))
                 .SetInitialInput(mManager.CurrentGroup.Description)
         );
 

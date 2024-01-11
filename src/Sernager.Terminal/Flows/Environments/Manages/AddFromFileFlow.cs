@@ -19,7 +19,7 @@ internal sealed class AddFromFileFlow : IFlow
 
     void IFlow.Prompt()
     {
-        string prompt = $"Select {(mbPre ? "a pre-env" : "an env")} file (.env extension only):";
+        string prompt = FlowManager.GetResourceString("Environment", mbPre ? "SelectPreEnvFilePrompt" : "SelectEnvFilePrompt");
         string extension = ".env";
         string path;
 

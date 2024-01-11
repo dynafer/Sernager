@@ -22,31 +22,17 @@ internal sealed class RemoveItemFlow : IFlow
     void IFlow.Prompt()
     {
         (string, Guid)[] options = mManager.GetItems()
-            .Select(x =>
+            .Select(item =>
             {
-                string type = x.Item switch
-                {
-                    CommandModel => "Command",
-                    GroupModel => "Group",
-                    _ => "Unknown"
-                };
+                string itemString = $"{item.GetNameString()} ({item.GetTypeString()})";
 
-                string name = x.Item switch
-                {
-                    CommandModel command => command.Name,
-                    GroupModel group => group.Name,
-                    _ => "Unknown"
-                };
-
-                name += $" ({type})";
-
-                return (name, x.Id);
+                return (itemString, item.Id);
             })
             .ToArray();
 
         Guid[] selectedItems = Prompter.Prompt(
             new MultiSelectionPlugin<Guid>()
-                .SetPrompt("Select a group or a command to remove (Cancel: No selection):")
+                .SetPrompt(FlowManager.GetResourceString("Command", "SelectSubgroupOrCommandToRemovePromptWithCancel"))
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()

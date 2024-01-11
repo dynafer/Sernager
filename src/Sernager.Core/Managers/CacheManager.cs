@@ -1,10 +1,10 @@
 namespace Sernager.Core.Managers;
 
-internal static class CacheManager
+public static class CacheManager
 {
     private readonly static Dictionary<string, object> mCache = new Dictionary<string, object>();
 
-    internal static bool TryGet<T>(string key, out T value)
+    public static bool TryGet<T>(string key, out T value)
         where T : class
     {
         value = null!;
@@ -26,18 +26,18 @@ internal static class CacheManager
         return true;
     }
 
-    internal static void Set<T>(string key, T value)
+    public static void Set<T>(string key, T value)
         where T : class
     {
         mCache[key] = value;
     }
 
-    internal static void Remove(string key)
+    public static void Remove(string key)
     {
         mCache.Remove(key);
     }
 
-    internal static void Clear()
+    public static void Clear()
     {
         mCache.Clear();
     }

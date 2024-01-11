@@ -22,20 +22,20 @@ internal sealed class ManageFlow : IFlow
     {
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt("Choose an option:")
+                .SetPrompt(FlowManager.GetResourceString("Common", "ChooseOptionPrompt"))
                 .AddFlowDescriptions(mManager)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(
-                    ("Change addition mode", "ChangeAdditionMode"),
-                    ("Add from a pre-env file", "AddFromPreFile"),
-                    ("Add from an env file", "AddFromFile"),
-                    ("Set a pre-environment variable", "SetPreVariable"),
-                    ("Set an environment variable", "SetVariable"),
-                    ("Edit pre-environment variables", "EditPreEnvironmentVaraible"),
-                    ("Edit environment variables", "EditEnvironmentVaraible"),
-                    ("Edit name", "EditName"),
-                    ("Remove this group", "RemoveGroup")
+                    (FlowManager.GetResourceString("Environment", "ChangeAdditionMode"), "ChangeAdditionMode"),
+                    (FlowManager.GetResourceString("Environment", "AddFromPreFile"), "AddFromPreFile"),
+                    (FlowManager.GetResourceString("Environment", "AddFromFile"), "AddFromFile"),
+                    (FlowManager.GetResourceString("Environment", "SetPreVariable"), "SetPreVariable"),
+                    (FlowManager.GetResourceString("Environment", "SetVariable"), "SetVariable"),
+                    (FlowManager.GetResourceString("Environment", "EditPreEnvironmentVaraible"), "EditPreEnvironmentVaraible"),
+                    (FlowManager.GetResourceString("Environment", "EditEnvironmentVaraible"), "EditEnvironmentVaraible"),
+                    (FlowManager.GetResourceString("Common", "EditName"), "EditName"),
+                    (FlowManager.GetResourceString("Common", "RemoveThisGroup"), "RemoveGroup")
                 )
                 .AddFlowCommonSelectionOptions()
         );

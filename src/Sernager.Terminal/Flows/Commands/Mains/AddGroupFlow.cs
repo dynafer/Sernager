@@ -15,7 +15,7 @@ internal sealed class AddGroupFlow : IFlow
     {
         string groupName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group name without white spaces (Cancel: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForAdd"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -25,7 +25,7 @@ internal sealed class AddGroupFlow : IFlow
                         ),
                         (
                             ManagerHelper.CanUseCommandGroupName,
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
@@ -40,7 +40,7 @@ internal sealed class AddGroupFlow : IFlow
 
         string shortName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group short name without white spaces (Skip: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterShortNamePromptWithSkip"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -50,7 +50,7 @@ internal sealed class AddGroupFlow : IFlow
                         ),
                         (
                             ManagerHelper.CanUseCommandGroupName,
-                            "The short name already exists.",
+                            FlowManager.GetResourceString("Command", "ShortNameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
@@ -59,7 +59,7 @@ internal sealed class AddGroupFlow : IFlow
 
         string description = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group description (Skip: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterDescriptionPromptWithSkip"))
         );
 
         Program.Service.ManageCommandGroup(groupName, shortName, description);

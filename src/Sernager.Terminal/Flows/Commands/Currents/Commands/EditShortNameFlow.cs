@@ -26,7 +26,7 @@ internal sealed class EditShortNameFlow : IFlow
     {
         string shortName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command short name (Cancel: Same input)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterShortNamePromptWithCancel"))
                 .SetInitialInput(mCommandModel.ShortName)
                 .UseValidator(new InputValidator()
                     .AddRules(
@@ -37,7 +37,7 @@ internal sealed class EditShortNameFlow : IFlow
                         ),
                         (
                             (string shortNameInput) => mManager.CanUseName(shortNameInput, true),
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )

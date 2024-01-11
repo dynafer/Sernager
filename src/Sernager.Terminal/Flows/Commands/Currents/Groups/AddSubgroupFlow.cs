@@ -23,7 +23,7 @@ internal sealed class AddSubgroupFlow : IFlow
     {
         string name = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group name without white spaces (Cancel: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForAdd"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -33,7 +33,7 @@ internal sealed class AddSubgroupFlow : IFlow
                         ),
                         (
                             (string nameInput) => mManager.CanUseName(nameInput, false),
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
@@ -48,7 +48,7 @@ internal sealed class AddSubgroupFlow : IFlow
 
         string shortName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group short name without white spaces (Skip: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterShortNamePromptWithSkip"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -58,7 +58,7 @@ internal sealed class AddSubgroupFlow : IFlow
                         ),
                         (
                             (string nameInput) => mManager.CanUseName(nameInput, false),
-                            "The short name already exists.",
+                            FlowManager.GetResourceString("Command", "ShortNameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
@@ -67,7 +67,7 @@ internal sealed class AddSubgroupFlow : IFlow
 
         string description = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command group description")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterDescriptionPromptWithSkip"))
         );
 
         mManager.AddSubgroup(name, shortName, description);

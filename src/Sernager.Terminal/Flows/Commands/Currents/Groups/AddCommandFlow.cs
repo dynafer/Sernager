@@ -24,7 +24,7 @@ internal sealed class AddCommandFlow : IFlow
     {
         string name = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command name without white spaces (Cancel: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForAdd"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -34,7 +34,7 @@ internal sealed class AddCommandFlow : IFlow
                         ),
                         (
                             (string name) => mManager.CanUseName(name, false),
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
@@ -43,7 +43,7 @@ internal sealed class AddCommandFlow : IFlow
 
         string shortName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command short name without white spaces (Cancel: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterShortNamePromptWithSkip"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -53,7 +53,7 @@ internal sealed class AddCommandFlow : IFlow
                         ),
                         (
                             (string shortNameInput) => mManager.CanUseName(shortNameInput, false),
-                            "The short name already exists.",
+                            FlowManager.GetResourceString("Command", "ShortNameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
@@ -62,7 +62,7 @@ internal sealed class AddCommandFlow : IFlow
 
         string description = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter a command description")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EnterDescriptionPromptWithSkip"))
         );
 
         (string, string)[] environmentGroupOptions = Program.Service.GetEnvironmentGroupNames()
@@ -71,7 +71,7 @@ internal sealed class AddCommandFlow : IFlow
 
         string[] environmentGroups = Prompter.Prompt(
             new MultiSelectionPlugin<string>()
-                .SetPrompt("Select an environment group(s) (Skip: No selection)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "SelectEnvironmentGroupPromptWithSkip"))
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(environmentGroupOptions)
@@ -79,7 +79,7 @@ internal sealed class AddCommandFlow : IFlow
 
         List<string> command = Prompter.Prompt(
             new EditorPlugin()
-                .SetPrompt("Add a command (Skip: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Command", "AddCommandPromptWithSkip"))
         ).ToList();
 
         bool bCommandArray = false;
@@ -87,7 +87,7 @@ internal sealed class AddCommandFlow : IFlow
         {
             bCommandArray = Prompter.Prompt(
                 new ConfirmPlugin()
-                    .SetPrompt("Do you want to save the command as an array?")
+                    .SetPrompt(FlowManager.GetResourceString("Command", "AskSaveCommandAsArray"))
             );
         }
 

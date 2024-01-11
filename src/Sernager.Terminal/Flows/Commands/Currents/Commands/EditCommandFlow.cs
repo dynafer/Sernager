@@ -43,7 +43,7 @@ internal sealed class EditCommandFlow : IFlow
 
         List<string> command = Prompter.Prompt(
             new EditorPlugin()
-                .SetPrompt("Edit a command")
+                .SetPrompt(FlowManager.GetResourceString("Command", "EditCommand"))
                 .SetInitialLines(initialLines.ToArray())
         )
         .Where(x => !string.IsNullOrWhiteSpace(x))

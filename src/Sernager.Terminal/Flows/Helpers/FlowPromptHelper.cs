@@ -12,7 +12,12 @@ internal static class FlowPromptHelper
     {
         (string, string)[] drives = DriveInfo.GetDrives()
             .Where(drive => drive.DriveType == DriveType.Fixed)
-            .Select(drive => ($"Go to {drive.Name} ", drive.RootDirectory.FullName))
+            .Select(drive =>
+                (
+                    string.Format(FlowManager.GetResourceString("Common", "GoTo"), drive.Name),
+                    drive.RootDirectory.FullName
+                )
+            )
             .ToArray();
         string currentPath = Environment.CurrentDirectory;
 
@@ -53,7 +58,7 @@ internal static class FlowPromptHelper
             string path = Prompter.Prompt(
                 new SelectionPlugin<string>()
                     .SetPrompt(prompt)
-                    .AddDescriptions($"Current path: {currentPath}")
+                    .AddDescriptions($"{FlowManager.GetResourceString("Common", "CurrentPath")}: {currentPath}")
                     .SetPageSize(pageSize)
                     .UseAutoComplete()
                     .AddOptions(options.ToArray())

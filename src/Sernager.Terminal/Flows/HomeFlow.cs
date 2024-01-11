@@ -13,15 +13,15 @@ internal sealed class HomeFlow : IFlow
     {
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
-                .SetPrompt("Choose an option:")
+                .SetPrompt(FlowManager.GetResourceString("Home", "Prompt"))
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
                 .AddOptions(
-                    ("Run command", "RunCommand"),
-                    ("Manage commands", "ManageCommands"),
-                    ("Manage environments", "ManageEnvironments"),
-                    ("Save as ...", "SaveAs"),
-                    ("Exit", "Exit")
+                    (FlowManager.GetResourceString("Home", "RunCommand"), "RunCommand"),
+                    (FlowManager.GetResourceString("Home", "ManageCommands"), "ManageCommands"),
+                    (FlowManager.GetResourceString("Home", "ManageEnvironments"), "ManageEnvironments"),
+                    (FlowManager.GetResourceString("Home", "SaveAs"), "SaveAs"),
+                    (FlowManager.GetResourceString("Common", "Exit"), "Exit")
                 )
         );
 

@@ -24,10 +24,11 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
     {
         ReadOnlyDictionary<string, string> variables = mbPre ? mManager.GetPreVariables() : mManager.GetVariables();
         string[] initialLines = variables.Select(x => $"{x.Key}={x.Value}").ToArray();
+        string prompt = FlowManager.GetResourceString("Environment", mbPre ? "EditPreEnvironmentVariablePrompt" : "EditEnvironmentVariablePrompt");
 
         IEnumerable<string> editedVariables = Prompter.Prompt(
             new EditorPlugin()
-                .SetPrompt($"Edit {(mbPre ? "pre-" : "")}environment variables")
+                .SetPrompt(prompt)
                 .SetInitialLines(initialLines)
         );
 

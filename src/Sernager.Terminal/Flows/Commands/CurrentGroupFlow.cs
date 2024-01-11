@@ -33,35 +33,21 @@ internal sealed class CurrentGroupFlow : IFlow
 
     void IFlow.Prompt()
     {
-        string prompt = "Choose a group or a command:";
+        string prompt = FlowManager.GetResourceString("Command", "CurrentGroupRunPrompt");
 
         List<(string, Guid)> options = mManager.GetItems()
-            .Select(x =>
+            .Select(item =>
             {
-                string type = x.Item switch
-                {
-                    CommandModel => "Command",
-                    GroupModel => "Group",
-                    _ => "Unknown"
-                };
+                string itemString = $"{item.GetNameString()} ({item.GetTypeString()})";
 
-                string name = x.Item switch
-                {
-                    CommandModel command => command.Name,
-                    GroupModel group => group.Name,
-                    _ => "Unknown"
-                };
-
-                name += $" ({type})";
-
-                return (name, x.Id);
+                return (itemString, item.Id);
             })
             .ToList();
 
         if (FlowManager.IsManagementMode)
         {
-            prompt = "Choose a group, a command, or an option:";
-            options.Add(("Manage current group", mFixedOptions["ManageCurrentGroup"]));
+            prompt = FlowManager.GetResourceString("Command", "CurrentGroupManagePrompt");
+            options.Add((FlowManager.GetResourceString("Command", "ManageCurrentGroup"), mFixedOptions["ManageCurrentGroup"]));
         }
 
         Guid result = Prompter.Prompt(

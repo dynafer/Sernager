@@ -15,7 +15,7 @@ internal sealed class AddGroupFlow : IFlow
     {
         string groupName = Prompter.Prompt(
             new InputPlugin()
-                .SetPrompt("Enter an environment group name without white spaces (Cancel: Empty input)")
+                .SetPrompt(FlowManager.GetResourceString("Common", "EnterNamePromptWithCancelForAdd"))
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
@@ -25,7 +25,7 @@ internal sealed class AddGroupFlow : IFlow
                         ),
                         (
                             ManagerHelper.CanUseEnvironmentGroupName,
-                            "The name already exists.",
+                            FlowManager.GetResourceString("Common", "NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
                     )
