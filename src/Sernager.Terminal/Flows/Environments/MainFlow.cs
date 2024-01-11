@@ -16,8 +16,8 @@ internal sealed class MainFlow : IFlow
             .Select(x => (x, x))
             .ToArray();
 
-        string addEnvironmentGroupId = Guid.NewGuid().ToString();
-        string removeEnvironmentGroupId = Guid.NewGuid().ToString();
+        string addGroupId = Guid.NewGuid().ToString();
+        string removeGroupId = Guid.NewGuid().ToString();
 
         string result = Prompter.Prompt(
             new SelectionPlugin<string>()
@@ -26,8 +26,8 @@ internal sealed class MainFlow : IFlow
                 .UseAutoComplete()
                 .AddOptions(options)
                 .AddOptions(
-                    (FlowManager.CommonResourcePack.GetString("AddGroup"), addEnvironmentGroupId),
-                    (FlowManager.CommonResourcePack.GetString("RemoveGroup"), removeEnvironmentGroupId)
+                    (FlowManager.CommonResourcePack.GetString("AddGroup"), addGroupId),
+                    (FlowManager.CommonResourcePack.GetString("RemoveGroup"), removeGroupId)
                 )
                 .AddFlowCommonSelectionOptions()
         );
@@ -37,13 +37,13 @@ internal sealed class MainFlow : IFlow
             return;
         }
 
-        if (result == addEnvironmentGroupId)
+        if (result == addGroupId)
         {
             FlowManager.RunFlow("Environment.Main.AddGroup");
             return;
         }
 
-        if (result == removeEnvironmentGroupId)
+        if (result == removeGroupId)
         {
             FlowManager.RunFlow("Environment.Main.RemoveGroup");
             return;

@@ -15,7 +15,7 @@ internal sealed class SaveAsFlow : IFlow
     void IFlow.Prompt()
     {
         (string, string)[] options = Enum.GetValues<EConfigurationType>()
-            .Select(x => (x.GetDescription(), x.ToString()))
+            .Select(x => (x.GetDescription(), nameof(x)))
             .ToArray();
 
         string typeString = Prompter.Prompt(
