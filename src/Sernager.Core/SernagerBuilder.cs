@@ -29,7 +29,7 @@ public sealed class SernagerBuilder
         }
         else
         {
-            Configurator.Parse(configPath);
+            mConfigFilePath = configPath;
         }
 
         return this;

@@ -1,6 +1,6 @@
 namespace Sernager.Core.Models;
 
-public class GroupItemModel
+public sealed class GroupItemModel
 {
     public required Guid Id { get; init; }
     private object mItem = null!;

@@ -1,4 +1,5 @@
 using Sernager.Core;
+using Sernager.Core.Managers;
 using Sernager.Core.Utils;
 using Sernager.Terminal.Prompts;
 
@@ -42,6 +43,8 @@ internal static class Startup
         {
             builder.EnableAutoSave();
         }
+
+        ExceptionManager.ErrorLevel = Args.Model.ErrorLevel;
 
         Args.Complete();
 

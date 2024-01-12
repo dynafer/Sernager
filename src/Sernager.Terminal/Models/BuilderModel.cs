@@ -9,6 +9,6 @@ internal sealed class BuilderModel
     internal string? ConfigPath { get; set; } = null;
     [Arg(Name = "autosave", ShortName = "aus", DescriptionResourceName = "IsAutoSaveDescription")]
     internal bool IsAutoSave { get; set; } = false;
-    [Arg(Name = "errorLevel", ShortName = "el", DescriptionResourceName = "ExceptionLevelDescription")]
-    internal EErrorLevel ExceptionLevel { get; set; } = EErrorLevel.None;
+    [Arg(Name = "errorLevel", ShortName = "el", DescriptionResourceName = "ErrorLevelDescription")]
+    internal EErrorLevel ErrorLevel { get; set; } = EErrorLevel.None;
 }

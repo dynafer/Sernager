@@ -120,7 +120,7 @@
   <data name="ConfigPathDescription" xml:space="preserve">
     <value>Path to config file</value>
   </data>
-  <data name="ExceptionLevelDescription" xml:space="preserve">
+  <data name="ErrorLevelDescription" xml:space="preserve">
     <value>Exception level (Default: None)</value>
   </data>
   <data name="IsAutoSaveDescription" xml:space="preserve">
