@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Sernager.Core.Utils;
 
@@ -18,6 +19,7 @@ internal static class JsonWrapper
             WriteIndented = bIndented,
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         });
 
         return json;

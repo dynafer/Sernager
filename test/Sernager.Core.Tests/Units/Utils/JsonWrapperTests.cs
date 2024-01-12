@@ -60,37 +60,48 @@ public class JsonWrapperTests
     }
 
     [Test]
+    public void Serialize_ShouldReturnEmptyJsonString_WhenPassedNullProperty()
+    {
+        string json = JsonWrapper.Serialize(new { Name = (string?)null });
+
+        Assert.That(json, Is.Not.Null);
+        Assert.That(json, Is.EqualTo("{}"));
+    }
+
+    [Test]
     public void Serialize_ShouldReturnJsonString_WhenPassedClass()
     {
-        FakeModel model = new()
+        FakeModel model = new FakeModel()
         {
             Name = "Sernager",
             Number = 1,
             IsEnabled = true,
-            CamelName = "Sernager",
+            CaseName = "Sernager",
+            NullName = null,
         };
 
         string json = JsonWrapper.Serialize(model);
 
         Assert.That(json, Is.Not.Null);
-        Assert.That(json, Is.EqualTo("{\"name\":\"Sernager\",\"number\":1,\"isEnabled\":true,\"camelName\":\"Sernager\"}"));
+        Assert.That(json, Is.EqualTo("{\"name\":\"Sernager\",\"number\":1,\"isEnabled\":true,\"caseName\":\"Sernager\"}"));
     }
 
     [Test]
     public void Serialize_ShouldReturnIndentedJsonString_WhenPassedClass()
     {
-        FakeModel model = new()
+        FakeModel model = new FakeModel()
         {
             Name = "Sernager",
             Number = 1,
             IsEnabled = true,
-            CamelName = "Sernager",
+            CaseName = "Sernager",
+            NullName = null,
         };
 
         string json = JsonWrapper.Serialize(model, true).Replace("\r\n", "\n");
 
         Assert.That(json, Is.Not.Null);
-        Assert.That(json, Is.EqualTo("{\n  \"name\": \"Sernager\",\n  \"number\": 1,\n  \"isEnabled\": true,\n  \"camelName\": \"Sernager\"\n}"));
+        Assert.That(json, Is.EqualTo("{\n  \"name\": \"Sernager\",\n  \"number\": 1,\n  \"isEnabled\": true,\n  \"caseName\": \"Sernager\"\n}"));
     }
 
     [Test]
@@ -157,14 +168,14 @@ public class JsonWrapperTests
     {
         string[] testCases =
         [
-            "{\"name\":\"Sernager\",\"number\":1,\"isEnabled\":true,\"camelName\":\"Sernager\"}",
-            "{\"Name\":\"Sernager\",\"Number\":1,\"IsEnabled\":true,\"CamelName\":\"Sernager\"}",
-            "{\"NAME\":\"Sernager\",\"NUMBER\":1,\"ISENABLED\":true,\"CAMELNAME\":\"Sernager\"}",
-            "{\"nAmE\":\"Sernager\",\"nUmBeR\":1,\"iSeNaBlEd\":true,\"cAmElNaMe\":\"Sernager\"}",
-            "{\n  \"name\": \"Sernager\",\n  \"number\": 1,\n  \"isEnabled\": true,\n  \"camelName\": \"Sernager\"\n}",
-            "{\n  \"Name\": \"Sernager\",\n  \"Number\": 1,\n  \"IsEnabled\": true,\n  \"CamelName\": \"Sernager\"\n}",
-            "{\n  \"NAME\": \"Sernager\",\n  \"NUMBER\": 1,\n  \"ISENABLED\": true,\n  \"CAMELNAME\": \"Sernager\"\n}",
-            "{\n  \"nAmE\": \"Sernager\",\n  \"nUmBeR\": 1,\n  \"iSeNaBlEd\": true,\n  \"cAmElNaMe\": \"Sernager\"\n}",
+            "{\"name\":\"Sernager\",\"number\":1,\"isEnabled\":true,\"caseName\":\"Sernager\"}",
+            "{\"Name\":\"Sernager\",\"Number\":1,\"IsEnabled\":true,\"CaseName\":\"Sernager\"}",
+            "{\"NAME\":\"Sernager\",\"NUMBER\":1,\"ISENABLED\":true,\"CASENAME\":\"Sernager\"}",
+            "{\"nAmE\":\"Sernager\",\"nUmBeR\":1,\"iSeNaBlEd\":true,\"cAsEnAmE\":\"Sernager\"}",
+            "{\n  \"name\": \"Sernager\",\n  \"number\": 1,\n  \"isEnabled\": true,\n  \"caseName\": \"Sernager\"\n}",
+            "{\n  \"Name\": \"Sernager\",\n  \"Number\": 1,\n  \"IsEnabled\": true,\n  \"CaseName\": \"Sernager\"\n}",
+            "{\n  \"NAME\": \"Sernager\",\n  \"NUMBER\": 1,\n  \"ISENABLED\": true,\n  \"CASENAME\": \"Sernager\"\n}",
+            "{\n  \"nAmE\": \"Sernager\",\n  \"nUmBeR\": 1,\n  \"iSeNaBlEd\": true,\n  \"cAsEnAmE\": \"Sernager\"\n}",
         ];
 
         foreach (string testCase in testCases)
@@ -175,7 +186,7 @@ public class JsonWrapperTests
             Assert.That(model.Name, Is.EqualTo("Sernager"));
             Assert.That(model.Number, Is.EqualTo(1));
             Assert.That(model.IsEnabled, Is.True);
-            Assert.That(model.CamelName, Is.EqualTo("Sernager"));
+            Assert.That(model.CaseName, Is.EqualTo("Sernager"));
         }
 
         string[] someEmptyPropertiesCases =
@@ -206,7 +217,7 @@ public class JsonWrapperTests
             Assert.That(model.Name, Is.EqualTo("Sernager"));
             Assert.That(model.Number, Is.EqualTo(1));
             Assert.That(model.IsEnabled, Is.Default);
-            Assert.That(model.CamelName, Is.Empty);
+            Assert.That(model.CaseName, Is.Empty);
         }
     }
 
