@@ -159,6 +159,13 @@ internal sealed class CommandManager : ICommandManager
 
         mParents.Pop();
 
+        if (mParents.Count == 0)
+        {
+            CurrentGroup = MainGroup;
+
+            return this;
+        }
+
         Guid id = mParents.Peek();
         CurrentGroup = Configurator.Config.CommandSubgroups[id];
 
