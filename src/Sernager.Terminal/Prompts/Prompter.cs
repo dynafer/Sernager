@@ -6,7 +6,7 @@ namespace Sernager.Terminal.Prompts;
 
 internal static class Prompter
 {
-    internal readonly static TextWriter Writer = Console.Out;
+    internal static readonly TextWriter Writer = Console.Out;
     internal static int CountRemovableConsoleLines { get; private set; } = 0;
 
     internal static object Prompt(IBasePlugin plugin)

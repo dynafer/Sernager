@@ -4,7 +4,7 @@ namespace Sernager.Core.Utils;
 
 internal static class Randomizer
 {
-    private readonly static string ALL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static readonly string ALL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     internal static string GenerateRandomString(int length)
     {

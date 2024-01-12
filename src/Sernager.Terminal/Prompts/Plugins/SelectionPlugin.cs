@@ -2,6 +2,7 @@ using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
+using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
 using System.Diagnostics.CodeAnalysis;
 
@@ -56,7 +57,7 @@ internal sealed class SelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValu
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt),
+                .SetText(PluginResourceHelper.GetString(this, Prompt)),
             new CursorComponent()
                 .AddCursor(ECursorDirection.Right, 1),
             new TextComponent()

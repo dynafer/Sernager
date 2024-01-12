@@ -85,14 +85,14 @@ internal sealed class AutoComplete<TSearchable>
     {
         TSearchable[] items = searchableItems.ToArray();
 
-        if (Input.Length == 0)
-        {
-            return items.Select((_, i) => i).ToArray();
-        }
-
         if (items.Length == 0)
         {
             return Array.Empty<int>();
+        }
+
+        if (Input.Length == 0)
+        {
+            return items.Select((_, i) => i).ToArray();
         }
 
         IEnumerable<int> indexes = items

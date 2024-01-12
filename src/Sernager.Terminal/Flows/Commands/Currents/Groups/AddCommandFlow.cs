@@ -80,14 +80,14 @@ internal sealed class AddCommandFlow : IFlow
                 .AddOptions(environmentGroupOptions)
         ).ToArray();
 
-        List<string> command = Prompter.Prompt(
+        string[] command = Prompter.Prompt(
             new EditorPlugin()
                 .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
                 .SetPrompt("AddCommandPromptWithSkip")
-        ).ToList();
+        ).ToArray();
 
         bool bCommandArray = false;
-        if (command.Count > 0)
+        if (command.Length > 1 || (command.Length == 1 && !string.IsNullOrWhiteSpace(command[0])))
         {
             bCommandArray = Prompter.Prompt(
                 new ConfirmPlugin()
@@ -106,7 +106,7 @@ internal sealed class AddCommandFlow : IFlow
 
         if (bCommandArray)
         {
-            commandModel.Command = command.ToArray();
+            commandModel.Command = command;
         }
         else
         {

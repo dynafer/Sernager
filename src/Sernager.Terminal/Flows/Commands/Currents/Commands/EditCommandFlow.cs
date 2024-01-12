@@ -41,14 +41,14 @@ internal sealed class EditCommandFlow : IFlow
                 break;
         }
 
-        List<string> command = Prompter.Prompt(
+        string[] command = Prompter.Prompt(
             new EditorPlugin()
                 .UseResourcePack(FlowManager.GetResourceNamespace("Command"))
                 .SetPrompt("EditCommand")
                 .SetInitialLines(initialLines.ToArray())
         )
-        .Where(x => !string.IsNullOrWhiteSpace(x))
-        .ToList();
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToArray();
 
         if (Enumerable.SequenceEqual(initialLines, command))
         {
@@ -56,7 +56,7 @@ internal sealed class EditCommandFlow : IFlow
             return;
         }
 
-        if (command.Count > 0)
+        if (command.Length > 1 || (command.Length == 1 && !string.IsNullOrWhiteSpace(command[0])))
         {
             bool bCommandArray = Prompter.Prompt(
                 new ConfirmPlugin()
@@ -66,7 +66,7 @@ internal sealed class EditCommandFlow : IFlow
 
             if (bCommandArray)
             {
-                mCommandModel.Command = command.ToArray();
+                mCommandModel.Command = command;
             }
             else
             {

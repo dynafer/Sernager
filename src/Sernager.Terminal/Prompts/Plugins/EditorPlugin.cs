@@ -48,11 +48,6 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
 
     bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out object? result)
     {
-        if (mLines.Count == 0)
-        {
-            mLines.Add(string.Empty);
-        }
-
         if (tryMoveCursor(keyInfo))
         {
             result = null;
@@ -116,8 +111,13 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
     {
         if (!mbRendered)
         {
+            if (mLines.Count == 0)
+            {
+                mLines.Add(string.Empty);
+            }
+
             mbRendered = true;
-            mCurrentEditorY = mLines.Count - mMaxEditorHeight;
+            mCurrentEditorY = Math.Max(0, mLines.Count - mMaxEditorHeight);
         }
 
         List<IPromptComponent> components =
@@ -210,7 +210,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt),
+                .SetText(PluginResourceHelper.GetString(this, Prompt)),
             new CursorComponent()
                 .AddCursor(ECursorDirection.Right, 1),
             new TextComponent()

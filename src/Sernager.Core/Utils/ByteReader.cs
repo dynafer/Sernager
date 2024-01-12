@@ -22,14 +22,14 @@ internal sealed class ByteReader : IDisposable
 
     internal byte[] ReadBytes(int length)
     {
-        if (length == 0)
-        {
-            return Array.Empty<byte>();
-        }
-
         if (mBytes == null)
         {
             ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
+            return Array.Empty<byte>();
+        }
+
+        if (length == 0)
+        {
             return Array.Empty<byte>();
         }
 

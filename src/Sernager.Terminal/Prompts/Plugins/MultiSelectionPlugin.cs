@@ -1,7 +1,9 @@
+using Sernager.Resources;
 using Sernager.Terminal.Prompts.Components;
 using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
+using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
 using System.Diagnostics.CodeAnalysis;
 
@@ -10,7 +12,7 @@ namespace Sernager.Terminal.Prompts.Plugins;
 internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValue>, IEnumerableResultBasePlugin<TOptionValue>
     where TOptionValue : notnull
 {
-    private List<string> mResult = new List<string>();
+    private string[] mResult = Array.Empty<string>();
     private List<string> mInitialSelections = new List<string>();
     private bool mbRendered = false;
 
@@ -67,7 +69,7 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
             {
                 (List<OptionItem<TOptionValue>> options, int _) = getOptions();
                 result = options.Where(x => x.IsSelected).Select(x => x.Value);
-                mResult = options.Where(x => x.IsSelected).Select(x => x.Name).ToList();
+                mResult = options.Where(x => x.IsSelected).Select(x => x.Name).ToArray();
 
                 return true;
             }
@@ -104,15 +106,31 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
         [
             new TextComponent()
                 .SetDecoration(EDecorationFlags.Bold)
-                .SetText(Prompt),
+                .SetText(PluginResourceHelper.GetString(this, Prompt)),
             new CursorComponent()
                 .AddCursor(ECursorDirection.Right, 1),
-            new TextComponent()
-                .SetDecoration(EDecorationFlags.Bold)
-                .SetTextColor(EColorFlags.Green)
-                .SetText(string.Join(", ", mResult))
-                .UseLineBreak(),
         ];
+
+        if (mResult.Length > 0)
+        {
+            components.Add(
+                new TextComponent()
+                    .SetDecoration(EDecorationFlags.Bold)
+                    .SetTextColor(EColorFlags.Green)
+                    .SetText(string.Join(", ", mResult))
+                    .UseLineBreak()
+            );
+        }
+        else
+        {
+            components.Add(
+                new TextComponent()
+                    .SetDecoration(EDecorationFlags.Bold)
+                    .SetTextColor(EColorFlags.Red)
+                    .SetText(ResourceRetriever.Shared.GetString("Cancel"))
+                    .UseLineBreak()
+            );
+        }
 
         return components;
     }

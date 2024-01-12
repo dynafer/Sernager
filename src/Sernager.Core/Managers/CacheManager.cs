@@ -4,7 +4,7 @@ namespace Sernager.Core.Managers;
 
 public static class CacheManager
 {
-    private readonly static Dictionary<string, object> mCache = new Dictionary<string, object>();
+    private static readonly Dictionary<string, object> mCache = new Dictionary<string, object>();
 
     public static bool TryGet<T>(string key, [NotNullWhen(true)] out T? value)
         where T : class
