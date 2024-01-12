@@ -50,7 +50,7 @@ internal sealed class ConfigurationMetadata : IDisposable
             case EConfigurationType.Json:
                 return toJsonBytes(false);
             case EConfigurationType.Sernager:
-                return toSernagerBytes(false);
+                return toSernagerBytes();
             default:
                 ExceptionManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
                 return Array.Empty<byte>();
@@ -169,7 +169,7 @@ internal sealed class ConfigurationMetadata : IDisposable
         return Encoding.UTF8.GetBytes(yaml);
     }
 
-    private byte[] toSernagerBytes(bool bUserFriendly)
+    private byte[] toSernagerBytes()
     {
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
@@ -178,12 +178,6 @@ internal sealed class ConfigurationMetadata : IDisposable
             Randomizer.GenerateRandomString(MIN_SIZE, MAX_SIZE),
             Randomizer.GenerateRandomString(MIN_SIZE, MAX_SIZE)
         };
-
-        string json = JsonWrapper.Serialize(
-            bUserFriendly
-                ? Config.ToUserFriendlyConfiguration()
-                : Config
-        );
 
         string saltedData = $"{salts[0]}{JsonWrapper.Serialize(Config)}{salts[1]}";
         byte[] encrypted = Encryptor.Encrypt(saltedData, key, iv);
