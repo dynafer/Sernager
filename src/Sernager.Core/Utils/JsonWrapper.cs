@@ -11,12 +11,16 @@ internal static class JsonWrapper
             return string.Empty;
         }
 
-        return JsonSerializer.Serialize(obj, new JsonSerializerOptions
+        string json;
+
+        json = JsonSerializer.Serialize(obj, new JsonSerializerOptions
         {
             WriteIndented = bIndented,
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         });
+
+        return json;
     }
 
     internal static T? Deserialize<T>(string json)
@@ -26,11 +30,22 @@ internal static class JsonWrapper
             return default;
         }
 
-        return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
+        T? obj;
+
+        try
         {
-            PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        });
+            obj = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            });
+        }
+        catch
+        {
+            obj = default;
+        }
+
+        return obj;
     }
 
     internal static bool IsValid(string json)
