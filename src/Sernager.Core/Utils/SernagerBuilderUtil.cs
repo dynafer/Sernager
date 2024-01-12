@@ -6,6 +6,11 @@ public static class SernagerBuilderUtil
 {
     public static EConfigurationType? GetConfigurationTypeOrNull(string filePath)
     {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            return null;
+        }
+
         string extension = Path.GetExtension(filePath).ToLowerInvariant();
         EConfigurationType? type = extension switch
         {
