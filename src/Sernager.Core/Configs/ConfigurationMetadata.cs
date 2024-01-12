@@ -152,7 +152,8 @@ internal sealed class ConfigurationMetadata : IDisposable
         string json = JsonWrapper.Serialize(
             bUserFriendly
                 ? Config.ToUserFriendlyConfiguration()
-                : Config
+                : Config,
+            bUserFriendly
         );
 
         return Encoding.UTF8.GetBytes(json);
