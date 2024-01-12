@@ -3,6 +3,7 @@ using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
@@ -18,7 +19,7 @@ internal sealed class SelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValu
         return this;
     }
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out object? result)
     {
         switch (keyInfo.Key)
         {
@@ -44,7 +45,7 @@ internal sealed class SelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValu
                 break;
         }
 
-        result = null!;
+        result = null;
 
         return false;
     }

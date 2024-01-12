@@ -5,6 +5,7 @@ using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
@@ -45,7 +46,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         return this;
     }
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out object? result)
     {
         if (mLines.Count == 0)
         {
@@ -54,31 +55,31 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
 
         if (tryMoveCursor(keyInfo))
         {
-            result = null!;
+            result = null;
 
             return false;
         }
         else if (tryDeleteChar(keyInfo))
         {
-            result = null!;
+            result = null;
 
             return false;
         }
         else if (tryAddLineBreak(keyInfo))
         {
-            result = null!;
+            result = null;
 
             return false;
         }
         else if (tryAddChar(keyInfo))
         {
-            result = null!;
+            result = null;
 
             return false;
         }
         else if (tryToggleCommandMode(keyInfo))
         {
-            result = null!;
+            result = null;
 
             return false;
         }
@@ -98,14 +99,14 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
             }
             else
             {
-                result = null!;
+                result = null;
 
                 return false;
             }
         }
         else
         {
-            result = null!;
+            result = null;
 
             return false;
         }

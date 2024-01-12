@@ -4,6 +4,7 @@ using Sernager.Terminal.Prompts.Components.Cursors;
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Helpers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
@@ -15,7 +16,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
     public List<string> Description { get; private init; } = new List<string>();
     public bool ShouldShowCursor => false;
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out object? result)
     {
         switch (keyInfo.Key)
         {
@@ -27,7 +28,7 @@ internal sealed class ConfirmPlugin : ITypePlugin<bool>
                 return true;
         }
 
-        result = null!;
+        result = null;
         return false;
     }
 

@@ -5,6 +5,7 @@ using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
@@ -19,9 +20,9 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
     public List<string> Description { get; init; } = new List<string>();
     public bool ShouldShowCursor => mAutoComplete != null;
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out object? result)
     {
-        result = null!;
+        result = null;
 
         return false;
     }

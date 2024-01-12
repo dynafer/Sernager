@@ -157,7 +157,8 @@ internal static class Args
                     return;
                 }
 
-                if (bool.TryParse(value, out bool result))
+                bool result;
+                if (bool.TryParse(value, out result))
                 {
                     property.SetValue(Model, result);
                     return;
@@ -168,6 +169,24 @@ internal static class Args
                     property.SetValue(Model, value == "1");
                 }
 
+                return;
+            }
+            case Type enumType when enumType.IsEnum:
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Logger.ErrorWithExit($"Argument {arg} requires {attribute.Value}");
+                    return;
+                }
+
+                object? result;
+                if (Enum.TryParse(enumType, value, true, out result))
+                {
+                    property.SetValue(Model, result);
+                    return;
+                }
+
+                Logger.ErrorWithExit($"Argument {arg} requires {attribute.Value}");
                 return;
             }
             default:
@@ -199,12 +218,32 @@ internal static class Args
 
         foreach (KeyValuePair<string, TArgInfo> argInfo in mArgInfos)
         {
-            (PropertyInfo _, ArgAttribute attribute, object? _) = argInfo.Value;
+            (PropertyInfo property, ArgAttribute attribute, object? _) = argInfo.Value;
 
             string arguments = $"--{argInfo.Key}";
             if (!string.IsNullOrWhiteSpace(attribute.ShortName))
             {
                 arguments += $", -{attribute.ShortName}";
+            }
+
+            // Check property is enu
+            if (property.PropertyType.IsEnum)
+            {
+                string[] enumNames = Enum.GetNames(property.PropertyType);
+                if (enumNames.Length > 1)
+                {
+                    enumNames[enumNames.Length - 1] = $"or {enumNames[enumNames.Length - 1]}";
+                }
+
+                table.AddRows(
+                    new Row(
+                        new TextComponent().SetText(arguments),
+                        new TextComponent().SetText(string.Join(", ", enumNames)),
+                        new TextComponent().SetText(resourcePack.GetString(attribute.DescriptionResourceName))
+                    )
+                );
+
+                continue;
             }
 
             table.AddRows(

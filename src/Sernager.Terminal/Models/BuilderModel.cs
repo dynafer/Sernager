@@ -1,3 +1,4 @@
+using Sernager.Core.Options;
 using Sernager.Terminal.Attributes;
 
 namespace Sernager.Terminal.Models;
@@ -8,4 +9,6 @@ internal sealed class BuilderModel
     internal string? ConfigPath { get; set; } = null;
     [Arg(Name = "autosave", ShortName = "aus", DescriptionResourceName = "IsAutoSaveDescription")]
     internal bool IsAutoSave { get; set; } = false;
+    [Arg(Name = "errorLevel", ShortName = "el", DescriptionResourceName = "ExceptionLevelDescription")]
+    internal EErrorLevel ExceptionLevel { get; set; } = EErrorLevel.None;
 }

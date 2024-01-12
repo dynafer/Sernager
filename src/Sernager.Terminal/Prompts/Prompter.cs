@@ -38,7 +38,7 @@ internal static class Prompter
     {
         TypeHelper.EnsureIsPluginResultType<TOptionValue>(plugin);
 
-        object result;
+        object? result;
 
         using (Renderer renderer = new Renderer(Writer))
         {

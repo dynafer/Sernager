@@ -5,6 +5,7 @@ using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Extensions.Components;
 using Sernager.Terminal.Prompts.Helpers;
 using Sernager.Terminal.Prompts.Plugins.Utilities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Terminal.Prompts.Plugins;
 
@@ -42,7 +43,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
         return this;
     }
 
-    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, out object result)
+    bool IBasePlugin.Input(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out object? result)
     {
         if (mValidator != null)
         {
@@ -54,7 +55,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
             case ConsoleKey.Enter:
                 if (mValidator != null && !mValidator.Validate(mInput.Input))
                 {
-                    result = null!;
+                    result = null;
 
                     return false;
                 }
@@ -75,7 +76,7 @@ internal sealed class InputPlugin : ITypePlugin<string>
                 break;
         }
 
-        result = null!;
+        result = null;
 
         return false;
     }

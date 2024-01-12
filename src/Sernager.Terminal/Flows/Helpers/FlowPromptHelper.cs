@@ -3,12 +3,13 @@ using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Terminal.Flows.Helpers;
 
 internal static class FlowPromptHelper
 {
-    internal static bool TrySelectFile(string resourceType, string prompt, string extension, int pageSize, out string result)
+    internal static bool TrySelectFile(string resourceType, string prompt, string extension, int pageSize, [NotNullWhen(true)] out string? result)
     {
         (string, string)[] drives = DriveInfo.GetDrives()
             .Where(drive => drive.DriveType == DriveType.Fixed)

@@ -8,7 +8,7 @@ internal sealed class SernagerService : ISernagerService
 {
     ICommandManager ISernagerService.ManageCommandGroup(string groupName, string shortName, string description)
     {
-        ICommandManager manager;
+        ICommandManager? manager;
 
         if (CacheManager.TryGet($"Command-Group-{groupName}", out manager))
         {
@@ -24,7 +24,7 @@ internal sealed class SernagerService : ISernagerService
 
     IEnvironmentManager ISernagerService.ManageEnvironmentGroup(string groupName)
     {
-        IEnvironmentManager manager;
+        IEnvironmentManager? manager;
 
         if (CacheManager.TryGet($"Environment-Group-{groupName}", out manager))
         {
@@ -40,7 +40,7 @@ internal sealed class SernagerService : ISernagerService
 
     IExecutor ISernagerService.GetExecutor(Guid commandId)
     {
-        IExecutor executor;
+        IExecutor? executor;
 
         if (CacheManager.TryGet($"Executor-{commandId}", out executor))
         {

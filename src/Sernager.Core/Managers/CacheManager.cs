@@ -1,13 +1,15 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Sernager.Core.Managers;
 
 public static class CacheManager
 {
     private readonly static Dictionary<string, object> mCache = new Dictionary<string, object>();
 
-    public static bool TryGet<T>(string key, out T value)
+    public static bool TryGet<T>(string key, [NotNullWhen(true)] out T? value)
         where T : class
     {
-        value = null!;
+        value = null;
 
         if (!mCache.ContainsKey(key))
         {

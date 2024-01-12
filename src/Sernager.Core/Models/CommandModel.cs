@@ -28,8 +28,8 @@ public sealed class CommandModel
             }
             else if (value is JsonElement jsonElement)
             {
-                string[] commands;
-                string command;
+                string[]? commands;
+                string? command;
 
                 if (jsonElement.TryGetStringArray(out commands))
                 {

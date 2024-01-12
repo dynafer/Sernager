@@ -1,10 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace Sernager.Core.Extensions;
 
 internal static class JsonElementExtension
 {
-    internal static bool TryGetString(this JsonElement jsonElement, out string result)
+    internal static bool TryGetString(this JsonElement jsonElement, [NotNullWhen(true)] out string? result)
     {
         try
         {
@@ -13,12 +14,12 @@ internal static class JsonElementExtension
         }
         catch
         {
-            result = null!;
+            result = null;
             return false;
         }
     }
 
-    internal static bool TryGetStringArray(this JsonElement jsonElement, out string[] result)
+    internal static bool TryGetStringArray(this JsonElement jsonElement, [NotNullWhen(true)] out string[]? result)
     {
         try
         {
@@ -32,7 +33,7 @@ internal static class JsonElementExtension
         }
         catch
         {
-            result = null!;
+            result = null;
             return false;
         }
     }
