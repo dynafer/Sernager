@@ -32,7 +32,10 @@ internal sealed class ManageCommandFlow : IFlow
                 .AddFlowDescriptions(mManager, mCommandModel)
                 .SetPageSize(FlowManager.PageSize)
                 .UseAutoComplete()
-                .AddOptionUsingResourcePack("EditCommand", "EditCommand")
+                .AddOptionsUsingResourcePack(
+                    ("EditCommand", "EditCommand"),
+                    ("EditEnvironmentGroup", "EditEnvironmentGroup")
+                )
                 .AddOption(FlowManager.CommonResourcePack.GetString("EditName"), "EditName")
                 .AddOptionsUsingResourcePack(
                     ("EditShortName", "EditShortName"),
@@ -51,6 +54,9 @@ internal sealed class ManageCommandFlow : IFlow
         {
             case "EditCommand":
                 FlowManager.RunFlow("Command.CurrentCommand.Manage.EditCommand", mCommandModel);
+                break;
+            case "EditEnvironmentGroup":
+                FlowManager.RunFlow("Command.CurrentCommand.Manage.EditEnvironmentGroup", mCommandModel);
                 break;
             case "EditName":
                 FlowManager.RunFlow("Command.CurrentCommand.Manage.EditName", mManager, mCommandModel);

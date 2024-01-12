@@ -29,6 +29,11 @@ internal sealed class EnvironmentManager : IEnvironmentManager
     public void RemoveGroup()
     {
         Configurator.Config.EnvironmentGroups.Remove(EnvironmentGroup.Name);
+        foreach (CommandModel commandModel in Configurator.Config.Commands.Values)
+        {
+            commandModel.UsedEnvironmentGroups.Remove(EnvironmentGroup.Name);
+        }
+
         EnvironmentGroup = null!;
     }
 

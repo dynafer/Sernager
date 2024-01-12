@@ -138,6 +138,9 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Edit command</value>
   </data>
+  <data name="EditEnvironmentGroup" xml:space="preserve">
+    <value>Edit environment group</value>
+  </data>
   <data name="EditDescription" xml:space="preserve">
     <value>Edit description</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="RunningCommand" xml:space="preserve">
     <value>Running command</value>
+  </data>
+  <data name="SelectEnvironmentGroupPrompt" xml:space="preserve">
+    <value>Select an environment group(s)</value>
   </data>
   <data name="SelectEnvironmentGroupPromptWithSkip" xml:space="preserve">
     <value>Select an environment group(s) (Skip: No selection)</value>
