@@ -35,7 +35,14 @@ public sealed class SernagerBuilder
         return this;
     }
 
-    public SernagerBuilder EnableAutoSave(EConfigurationType type = EConfigurationType.Sernager)
+    public SernagerBuilder EnableAutoSave(EConfigurationType type)
+    {
+        Configurator.UseAutoSave(type);
+
+        return this;
+    }
+
+    public SernagerBuilder EnableAutoSave(EUserFriendlyConfigurationType type)
     {
         Configurator.UseAutoSave(type);
 

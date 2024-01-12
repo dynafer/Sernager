@@ -133,6 +133,9 @@
     <value>Save as ...</value>
   </data>
   <data name="SaveAsPrompt" xml:space="preserve">
-    <value>Choose a configuration type</value>
+    <value>Choose an extension to save</value>
+  </data>
+  <data name="SaveAsUserFriendly" xml:space="preserve">
+    <value>(User friendly) Save as ...</value>
   </data>
 </root>

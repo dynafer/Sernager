@@ -41,7 +41,7 @@ public sealed class CommandModel
                 }
                 else
                 {
-                    throw new InvalidCastException("Command must be a string or string[]");
+                    throw new InvalidCastException("Command must be a string or string[].");
                 }
             }
             else if (value is IEnumerable<object> objectEnumerable)
@@ -54,7 +54,7 @@ public sealed class CommandModel
             }
             else
             {
-                throw new InvalidCastException("Command must be a string or string[]");
+                throw new InvalidCastException("Command must be a string or string[].");
             }
         }
     }
@@ -65,7 +65,7 @@ public sealed class CommandModel
         {
             string[] commandArray => string.Join(" ", commandArray),
             string commandString => commandString,
-            _ => throw new InvalidCastException("Command must be a string or string[]")
+            _ => throw new InvalidCastException("Command must be a string or string[].")
         };
     }
 }

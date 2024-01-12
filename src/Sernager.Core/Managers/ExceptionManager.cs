@@ -63,7 +63,7 @@ public static class ExceptionManager
 
         if (exception == null)
         {
-            throw new NullReferenceException("Exception type must be inherited from System.Exception");
+            throw new NullReferenceException("Exception type must be inherited from System.Exception.");
         }
 
         return exception;

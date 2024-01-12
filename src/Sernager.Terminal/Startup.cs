@@ -39,9 +39,14 @@ internal static class Startup
             }
         }
 
-        if (Args.Model.IsAutoSave == true)
+        if (Args.Model.AutoSaveType != null)
         {
-            builder.EnableAutoSave();
+            builder.EnableAutoSave(Args.Model.AutoSaveType.Value);
+        }
+
+        if (Args.Model.AutoSaveUserFriendlyType != null)
+        {
+            builder.EnableAutoSave(Args.Model.AutoSaveUserFriendlyType.Value);
         }
 
         ExceptionManager.ErrorLevel = Args.Model.ErrorLevel;

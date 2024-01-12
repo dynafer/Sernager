@@ -68,7 +68,7 @@ internal sealed class Executor : IExecutor
 
                 break;
             default:
-                throw new InvalidCastException("Command must be a string or string[]");
+                throw new InvalidCastException("Command must be a string or string[].");
         }
 
         return new Process()

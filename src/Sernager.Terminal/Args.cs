@@ -120,7 +120,7 @@ internal static class Args
                     : mArgInfos.Keys.ToArray()
                 );
 
-            Logger.ErrorWithExit($"Unknown argument: {arg}. Did you mean one of [Bold]({string.Join(", ", possibleArgs)})[/Bold]?");
+            Logger.ErrorWithExit($"Unknown argument: [Bold]{arg}[/Bold]. Did you mean one of [Bold]({string.Join(", ", possibleArgs)})[/Bold]?");
             return;
         }
 
@@ -136,13 +136,15 @@ internal static class Args
             return;
         }
 
-        switch (property.PropertyType)
+        Type underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+        switch (underlyingType)
         {
             case Type stringType when stringType == typeof(string):
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    Logger.ErrorWithExit($"Argument {arg} requires {attribute.Value}");
+                    Logger.ErrorWithExit($"Argument [Bold]{arg}[/Bold] requires [Bold]{attribute.Value}[/Bold]");
                     return;
                 }
 
@@ -173,20 +175,23 @@ internal static class Args
             }
             case Type enumType when enumType.IsEnum:
             {
+                string[] names = Enum.GetNames(enumType);
+                object? result;
+
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    Logger.ErrorWithExit($"Argument {arg} requires {attribute.Value}");
+                    Logger.ErrorWithExit($"Argument [Bold]{arg}[/Bold] requires one of [Bold]({string.Join(", ", names)})[/Bold]");
                     return;
                 }
 
-                object? result;
-                if (Enum.TryParse(enumType, value, true, out result))
+                if (!Enum.TryParse(enumType, value, true, out result))
                 {
-                    property.SetValue(Model, result);
+                    string[] possibleArgs = PossibilityManager.Find(value, names);
+                    Logger.ErrorWithExit($"Unknown value: [Bold]{value}[/Bold] of [Bold]{arg}[/Bold]. Did you mean one of [Bold]({string.Join(", ", possibleArgs)})[/Bold]?");
                     return;
                 }
 
-                Logger.ErrorWithExit($"Argument {arg} requires {attribute.Value}");
+                property.SetValue(Model, result);
                 return;
             }
             default:
@@ -226,10 +231,11 @@ internal static class Args
                 arguments += $", -{attribute.ShortName}";
             }
 
-            // Check property is enu
-            if (property.PropertyType.IsEnum)
+            Type underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+            if (underlyingType.IsEnum)
             {
-                string[] enumNames = Enum.GetNames(property.PropertyType);
+                string[] enumNames = Enum.GetNames(underlyingType);
                 if (enumNames.Length > 1)
                 {
                     enumNames[enumNames.Length - 1] = $"or {enumNames[enumNames.Length - 1]}";

@@ -21,7 +21,8 @@ internal sealed class HomeFlow : IFlow
                     ("RunCommand", "RunCommand"),
                     ("ManageCommands", "ManageCommands"),
                     ("ManageEnvironments", "ManageEnvironments"),
-                    ("SaveAs", "SaveAs")
+                    ("SaveAs", "SaveAs"),
+                    ("SaveAsUserFriendly", "SaveAsUserFriendly")
                 )
                 .AddOption(FlowManager.CommonResourcePack.GetString("Exit"), "Exit")
         );
@@ -42,6 +43,9 @@ internal sealed class HomeFlow : IFlow
                 break;
             case "SaveAs":
                 FlowManager.RunFlow("SaveAs");
+                break;
+            case "SaveAsUserFriendly":
+                FlowManager.RunFlow("SaveAsUserFriendly");
                 break;
             default:
                 Environment.Exit(0);

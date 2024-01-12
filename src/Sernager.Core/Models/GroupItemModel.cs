@@ -18,7 +18,7 @@ public sealed class GroupItemModel
             }
             else
             {
-                throw new InvalidCastException("Item must be a GroupModel or CommandModel");
+                throw new InvalidCastException("Item must be a GroupModel or CommandModel.");
             }
         }
     }

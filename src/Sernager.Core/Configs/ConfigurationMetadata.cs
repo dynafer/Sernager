@@ -1,3 +1,4 @@
+using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
@@ -45,13 +46,27 @@ internal sealed class ConfigurationMetadata : IDisposable
         switch (type)
         {
             case EConfigurationType.Yaml:
-                return toYamlBytes();
+                return toYamlBytes(false);
             case EConfigurationType.Json:
-                return toJsonBytes();
+                return toJsonBytes(false);
             case EConfigurationType.Sernager:
-                return toSernagerBytes();
+                return toSernagerBytes(false);
             default:
                 ExceptionManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
+                return Array.Empty<byte>();
+        }
+    }
+
+    internal byte[] ToBytes(EUserFriendlyConfigurationType type)
+    {
+        switch (type)
+        {
+            case EUserFriendlyConfigurationType.Yaml:
+                return toYamlBytes(true);
+            case EUserFriendlyConfigurationType.Json:
+                return toJsonBytes(true);
+            default:
+                ExceptionManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EUserFriendlyConfigurationType));
                 return Array.Empty<byte>();
         }
     }
@@ -61,13 +76,20 @@ internal sealed class ConfigurationMetadata : IDisposable
         string yaml = Encoding.UTF8.GetString(bytes);
         Configuration? config = YamlWrapper.Deserialize<Configuration>(yaml);
 
-        if (config == null)
+        if (config != null)
         {
-            ExceptionManager.ThrowFail<YamlException>("Failed to deserialize configuration.");
-            return new ConfigurationMetadata(new Configuration());
+            return new ConfigurationMetadata(config);
         }
 
-        return new ConfigurationMetadata(config);
+        UserFriendlyConfiguration? userFriendlyConfig = YamlWrapper.Deserialize<UserFriendlyConfiguration>(yaml);
+
+        if (userFriendlyConfig != null)
+        {
+            return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
+        }
+
+        ExceptionManager.ThrowFail<YamlException>("Failed to deserialize configuration.");
+        return new ConfigurationMetadata(new Configuration());
     }
 
     private static ConfigurationMetadata fromJsonBytes(byte[] bytes)
@@ -75,13 +97,20 @@ internal sealed class ConfigurationMetadata : IDisposable
         string json = Encoding.UTF8.GetString(bytes);
         Configuration? config = JsonWrapper.Deserialize<Configuration>(json);
 
-        if (config == null)
+        if (config != null)
         {
-            ExceptionManager.ThrowFail<JsonException>("Failed to deserialize configuration.");
-            return new ConfigurationMetadata(new Configuration());
+            return new ConfigurationMetadata(config);
         }
 
-        return new ConfigurationMetadata(config);
+        UserFriendlyConfiguration? userFriendlyConfig = JsonWrapper.Deserialize<UserFriendlyConfiguration>(json);
+
+        if (userFriendlyConfig != null)
+        {
+            return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
+        }
+
+        ExceptionManager.ThrowFail<JsonException>("Failed to deserialize configuration.");
+        return new ConfigurationMetadata(new Configuration());
     }
 
     private static ConfigurationMetadata fromSernagerBytes(byte[] bytes)
@@ -101,31 +130,46 @@ internal sealed class ConfigurationMetadata : IDisposable
             saltedData = saltedData.Substring(beginSaltLength, saltedData.Length - beginSaltLength - endSaltLength);
             Configuration? config = JsonWrapper.Deserialize<Configuration>(saltedData);
 
-            if (config == null)
+            if (config != null)
             {
-                ExceptionManager.ThrowFail<SernagerException>("Failed to deserialize configuration.");
-                return new ConfigurationMetadata(new Configuration());
+                return new ConfigurationMetadata(config);
             }
 
-            return new ConfigurationMetadata(config);
+            UserFriendlyConfiguration? userFriendlyConfig = JsonWrapper.Deserialize<UserFriendlyConfiguration>(saltedData);
+
+            if (userFriendlyConfig != null)
+            {
+                return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
+            }
+
+            ExceptionManager.ThrowFail<SernagerException>("Failed to deserialize configuration.");
+            return new ConfigurationMetadata(new Configuration());
         }
     }
 
-    private byte[] toJsonBytes()
+    private byte[] toJsonBytes(bool bUserFriendly)
     {
-        string json = JsonWrapper.Serialize(Config, true);
+        string json = JsonWrapper.Serialize(
+            bUserFriendly
+                ? Config.ToUserFriendlyConfiguration()
+                : Config
+        );
 
         return Encoding.UTF8.GetBytes(json);
     }
 
-    private byte[] toYamlBytes()
+    private byte[] toYamlBytes(bool bUserFriendly)
     {
-        string yaml = YamlWrapper.Serialize(Config);
+        string yaml = YamlWrapper.Serialize(
+            bUserFriendly
+                ? Config.ToUserFriendlyConfiguration()
+                : Config
+        );
 
         return Encoding.UTF8.GetBytes(yaml);
     }
 
-    private byte[] toSernagerBytes()
+    private byte[] toSernagerBytes(bool bUserFriendly)
     {
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
@@ -134,6 +178,12 @@ internal sealed class ConfigurationMetadata : IDisposable
             Randomizer.GenerateRandomString(MIN_SIZE, MAX_SIZE),
             Randomizer.GenerateRandomString(MIN_SIZE, MAX_SIZE)
         };
+
+        string json = JsonWrapper.Serialize(
+            bUserFriendly
+                ? Config.ToUserFriendlyConfiguration()
+                : Config
+        );
 
         string saltedData = $"{salts[0]}{JsonWrapper.Serialize(Config)}{salts[1]}";
         byte[] encrypted = Encryptor.Encrypt(saltedData, key, iv);

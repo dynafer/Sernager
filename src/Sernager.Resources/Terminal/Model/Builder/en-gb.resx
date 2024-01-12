@@ -117,13 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AutoSaveDescription" xml:space="preserve">
+    <value>Enable auto save by extension type (Default: null)</value>
+  </data>
+  <data name="AutoSaveUserFriendlyTypeDescription" xml:space="preserve">
+    <value>Enable auto save by user friendly type (Default: null)</value>
+  </data>
   <data name="ConfigPathDescription" xml:space="preserve">
     <value>Path to config file</value>
   </data>
   <data name="ErrorLevelDescription" xml:space="preserve">
     <value>Exception level (Default: None)</value>
-  </data>
-  <data name="IsAutoSaveDescription" xml:space="preserve">
-    <value>Enable auto save when exit</value>
   </data>
 </root>

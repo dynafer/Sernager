@@ -59,7 +59,7 @@ internal static class Configurator
         }
     }
 
-    internal static void UseAutoSave(EConfigurationType type = EConfigurationType.Sernager)
+    internal static void UseAutoSave(EConfigurationType type)
     {
         AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
         {
@@ -67,7 +67,35 @@ internal static class Configurator
         };
     }
 
-    internal static void SaveAsFile(EConfigurationType type = EConfigurationType.Sernager)
+    internal static void UseAutoSave(EUserFriendlyConfigurationType type)
+    {
+        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+        {
+            SaveAsFile(type);
+        };
+    }
+
+    internal static void SaveAsFile(EConfigurationType type)
+    {
+        if (!IsInitialized)
+        {
+            ExceptionManager.ThrowFail<InvalidOperationException>("Configurator hasn't initialized.");
+            return;
+        }
+
+        string filePath = Path.Combine(mConfigDir, $"{mConfigName}{getExtension(type)}");
+
+        using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
+        {
+            byte[] bytes = metadata.ToBytes(type);
+
+            File.WriteAllBytes(filePath, bytes);
+        }
+
+        Debug.WriteLine($"Configuration saved to {filePath}.");
+    }
+
+    internal static void SaveAsFile(EUserFriendlyConfigurationType type)
     {
         if (!IsInitialized)
         {
@@ -94,6 +122,16 @@ internal static class Configurator
             EConfigurationType.Yaml => ".yaml",
             EConfigurationType.Json => ".json",
             EConfigurationType.Sernager => ".srn",
+            _ => throw new InvalidEnumArgumentException("Invalid configuration type."),
+        };
+    }
+
+    private static string getExtension(EUserFriendlyConfigurationType type)
+    {
+        return type switch
+        {
+            EUserFriendlyConfigurationType.Yaml => ".yaml",
+            EUserFriendlyConfigurationType.Json => ".json",
             _ => throw new InvalidEnumArgumentException("Invalid configuration type."),
         };
     }

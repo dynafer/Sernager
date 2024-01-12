@@ -124,7 +124,7 @@ internal sealed class CommandManager : ICommandManager
         }
         else if (Configurator.Config.Commands.ContainsKey(id))
         {
-            // FIX ME: Execute command
+            return this;
         }
         else
         {

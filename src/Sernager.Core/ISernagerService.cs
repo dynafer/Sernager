@@ -11,5 +11,6 @@ public interface ISernagerService
     string[] GetCommandGroupNames();
     string[] GetCommandGroupShortNames();
     string[] GetEnvironmentGroupNames();
-    void SaveAs(EConfigurationType type = EConfigurationType.Sernager);
+    void SaveAs(EConfigurationType type);
+    void SaveAs(EUserFriendlyConfigurationType type);
 }

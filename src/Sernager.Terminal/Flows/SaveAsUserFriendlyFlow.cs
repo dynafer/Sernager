@@ -10,11 +10,11 @@ using Sernager.Terminal.Prompts.Plugins;
 namespace Sernager.Terminal.Flows;
 
 [Flow]
-internal sealed class SaveAsFlow : IFlow
+internal sealed class SaveAsUserFriendlyFlow : IFlow
 {
     void IFlow.Prompt()
     {
-        (string, string)[] options = Enum.GetValues<EConfigurationType>()
+        (string, string)[] options = Enum.GetValues<EUserFriendlyConfigurationType>()
             .Select(value => (value.GetDescription(), value.ToString()))
             .ToArray();
 
@@ -33,7 +33,7 @@ internal sealed class SaveAsFlow : IFlow
             return;
         }
 
-        EConfigurationType type = Enum.Parse<EConfigurationType>(typeString);
+        EUserFriendlyConfigurationType type = Enum.Parse<EUserFriendlyConfigurationType>(typeString);
         Program.Service.SaveAs(type);
         FlowManager.RunPreviousFlow();
     }

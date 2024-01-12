@@ -73,4 +73,9 @@ internal sealed class SernagerService : ISernagerService
     {
         Configurator.SaveAsFile(type);
     }
+
+    void ISernagerService.SaveAs(EUserFriendlyConfigurationType type)
+    {
+        Configurator.SaveAsFile(type);
+    }
 }
