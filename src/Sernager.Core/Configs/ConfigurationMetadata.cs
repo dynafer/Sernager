@@ -43,6 +43,12 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     internal byte[] ToBytes(EConfigurationType type)
     {
+        if (Config == null)
+        {
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ConfigurationMetadata));
+            return Array.Empty<byte>();
+        }
+
         switch (type)
         {
             case EConfigurationType.Yaml:
@@ -59,6 +65,12 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     internal byte[] ToBytes(EUserFriendlyConfigurationType type)
     {
+        if (Config == null)
+        {
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ConfigurationMetadata));
+            return Array.Empty<byte>();
+        }
+
         switch (type)
         {
             case EUserFriendlyConfigurationType.Yaml:
