@@ -54,7 +54,7 @@ internal static class Configurator
             }
 
             mConfigDir = Path.GetFullPath(currentDirectoryName);
-            mConfigName = Path.GetFileNameWithoutExtension(filePath);
+            mConfigName = Path.GetFileNameWithoutExtension(filePath).Replace(".default", "").Replace(".userfriendly", "");
             Config = metadata.Config;
         }
     }
@@ -83,7 +83,7 @@ internal static class Configurator
             return;
         }
 
-        string filePath = Path.Combine(mConfigDir, $"{mConfigName}{getExtension(type)}");
+        string filePath = Path.Combine(mConfigDir, $"{mConfigName}.default{getExtension(type)}");
 
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
@@ -103,7 +103,7 @@ internal static class Configurator
             return;
         }
 
-        string filePath = Path.Combine(mConfigDir, $"{mConfigName}{getExtension(type)}");
+        string filePath = Path.Combine(mConfigDir, $"{mConfigName}.userfriendly{getExtension(type)}");
 
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
