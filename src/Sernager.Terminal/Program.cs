@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Sernager.Terminal.Tests")]
 [assembly: InternalsVisibleTo("Sernager.Unit")]
-
 namespace Sernager.Terminal;
 
 internal class Program

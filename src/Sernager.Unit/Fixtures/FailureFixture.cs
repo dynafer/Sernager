@@ -2,7 +2,7 @@ using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using System.Diagnostics;
 
-namespace Sernager.Unit.Tests.Fixtures;
+namespace Sernager.Unit.Fixtures;
 
 public abstract class FailureFixture
 {

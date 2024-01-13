@@ -1,2 +1,2 @@
 global using NUnit.Framework;
-global using NUnit.Framework.Constraints;
+global using Sernager.Unit.Fixtures;

@@ -1,5 +1,4 @@
 using Sernager.Core.Utils;
-using Sernager.Unit.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
