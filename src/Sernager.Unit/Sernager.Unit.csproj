@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sernager.Core\Sernager.Core.csproj" />
-    <ProjectReference Include="..\Sernager.Resources\Sernager.Core.csproj" />
-    <ProjectReference Include="..\Sernager.Terminal\Sernager.Core.csproj" />
+    <ProjectReference Include="..\Sernager.Resources\Sernager.Resources.csproj" />
+    <ProjectReference Include="..\Sernager.Terminal\Sernager.Terminal.csproj" />
   </ItemGroup>
 
 </Project>
