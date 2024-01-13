@@ -4,6 +4,7 @@ using Sernager.Core.Options;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Sernager.Core.Tests")]
+[assembly: InternalsVisibleTo("Sernager.Unit")]
 namespace Sernager.Core;
 
 public sealed class SernagerBuilder

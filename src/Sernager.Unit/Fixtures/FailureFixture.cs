@@ -2,9 +2,9 @@ using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using System.Diagnostics;
 
-namespace Sernager.Core.Tests.Fixtures;
+namespace Sernager.Unit.Tests.Fixtures;
 
-public class FailureFixture
+public abstract class FailureFixture
 {
     [StackTraceHidden]
     public void TestNoneLevel<TActual>(Func<TActual> actual, IResolveConstraint expression)

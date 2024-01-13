@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Sernager.Terminal\Sernager.Terminal.csproj" />
+    <ProjectReference Include="..\..\src\Sernager.Unit\Sernager.Unit.csproj" />
   </ItemGroup>
 
 </Project>
