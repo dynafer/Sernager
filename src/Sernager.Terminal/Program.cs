@@ -2,6 +2,7 @@
 using Sernager.Terminal.Managers;
 using Sernager.Terminal.Models;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 [assembly: InternalsVisibleTo("Sernager.Terminal.Tests")]
 [assembly: InternalsVisibleTo("Sernager.Unit")]
@@ -13,6 +14,9 @@ internal class Program
 
     internal static void Main(params string[] args)
     {
+        Console.InputEncoding = Encoding.Default;
+        Console.OutputEncoding = Encoding.Default;
+
         Startup.RegisterEvents();
 
         Args.Parse(args);

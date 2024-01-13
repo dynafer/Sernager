@@ -5,20 +5,16 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteReaderSuccessTests
 {
-    [Test]
-    public void ReadBytes_ShouldReturnEmptyBytes()
-    {
-        byte[] bytes = [0x01, 0x02, 0x03, 0x04];
-
-        using (ByteReader reader = new ByteReader(bytes))
-        {
-            byte[] result = reader.ReadBytes(0);
-
-            Assert.That(reader.Length, Is.EqualTo(bytes.Length));
-            Assert.That(reader.Position, Is.Zero);
-            Assert.That(result, Is.Empty);
-        }
-    }
+    [DatapointSource]
+    private static readonly Encoding[] ENCODING_LIST =
+    [
+        Encoding.UTF8,
+        Encoding.Unicode,
+        Encoding.BigEndianUnicode,
+        Encoding.UTF32,
+        Encoding.ASCII,
+        Encoding.Default,
+    ];
 
     [Test]
     public void ReadBytes_ShouldReturnBytes()
@@ -36,13 +32,18 @@ public class ByteReaderSuccessTests
     }
 
     [Test]
-    public void ReadInt32_ShouldReturnInt32()
+    public void TryReadInt32_ShouldReturnInt32()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
 
         using (ByteReader reader = new ByteReader(bytes))
         {
-            int result = reader.ReadInt32();
+            int result;
+
+            if (!reader.TryReadInt32(out result))
+            {
+                Assert.Fail();
+            }
 
             Assert.That(reader.Length, Is.EqualTo(sizeof(int)));
             Assert.That(reader.Position, Is.EqualTo(sizeof(int)));
@@ -54,7 +55,12 @@ public class ByteReaderSuccessTests
 
         using (ByteReader reader = new ByteReader(bytes))
         {
-            int result = reader.ReadInt32();
+            int result;
+
+            if (!reader.TryReadInt32(out result))
+            {
+                Assert.Fail();
+            }
 
             Assert.That(reader.Length, Is.EqualTo(sizeof(int)));
             Assert.That(reader.Position, Is.EqualTo(sizeof(int)));
@@ -63,72 +69,95 @@ public class ByteReaderSuccessTests
     }
 
     [Test]
-    public void ReadString_ShouldReturnEmptyString()
-    {
-        byte[] bytes = [0x01, 0x02, 0x03, 0x04];
-
-        using (ByteReader reader = new ByteReader(bytes))
-        {
-            string result = reader.ReadString(0);
-
-            Assert.That(reader.Length, Is.EqualTo(bytes.Length));
-            Assert.That(reader.Position, Is.Zero);
-            Assert.That(result, Is.Empty);
-        }
-    }
-
-    [Test]
-    public void ReadString_ShouldReturnString()
+    public void TryReadString_ShouldReturnString()
     {
         string value = "Hello, World!";
-        byte[] bytes = Encoding.UTF8.GetBytes(value);
+        byte[] bytes = Encoding.Default.GetBytes(value);
+        string? result;
+        int readSum = 0;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        Action<ByteReader, string> assertString = (ByteReader reader, string str) =>
         {
-            string result = reader.ReadString(5);
+            readSum += str.Length;
+            if (!reader.TryReadString(str.Length, out result))
+            {
+                Assert.Fail();
+            }
 
             Assert.That(reader.Length, Is.EqualTo(bytes.Length));
 
-            Assert.That(reader.Position, Is.EqualTo(5));
-            Assert.That(result, Is.EqualTo("Hello"));
+            Assert.That(reader.Position, Is.EqualTo(readSum));
+            Assert.That(result, Is.EqualTo(str));
+        };
 
-            result = reader.ReadString(8);
-
-            Assert.That(reader.Position, Is.EqualTo(bytes.Length));
-            Assert.That(result, Is.EqualTo(", World!"));
+        using (ByteReader reader = new ByteReader(bytes))
+        {
+            assertString(reader, "Hello");
+            assertString(reader, ", ");
+            assertString(reader, "World!");
         }
 
         value = "{ \"Hello\": \"World!\" }";
-        bytes = Encoding.UTF8.GetBytes(value);
+        bytes = Encoding.Default.GetBytes(value);
+        readSum = 0;
 
         using (ByteReader reader = new ByteReader(bytes))
         {
-            string result = reader.ReadString(2);
+            assertString(reader, "{ ");
+            assertString(reader, "\"Hello\": ");
+            assertString(reader, "\"World!\"");
+            assertString(reader, " }");
+        }
+    }
+
+    [Theory]
+    public void TryReadString_ShouldReturnString(Encoding encoding)
+    {
+        Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
+
+        string value = "Hello, World!";
+        byte[] bytes = encoding.GetBytes(value);
+        string? result;
+        int readLength;
+        int readSum = 0;
+
+        Action<ByteReader, string> assertString = (ByteReader reader, string str) =>
+        {
+            readLength = encoding.GetByteCount(str);
+            readSum += readLength;
+            if (!reader.TryReadString(encoding, readLength, out result))
+            {
+                Assert.Fail();
+            }
 
             Assert.That(reader.Length, Is.EqualTo(bytes.Length));
 
-            Assert.That(reader.Position, Is.EqualTo(2));
-            Assert.That(result, Is.EqualTo("{ "));
+            Assert.That(reader.Position, Is.EqualTo(readSum));
+            Assert.That(result, Is.EqualTo(str));
+        };
 
-            result = reader.ReadString(9);
+        using (ByteReader reader = new ByteReader(bytes))
+        {
+            assertString(reader, "Hello");
+            assertString(reader, ", ");
+            assertString(reader, "World!");
+        }
 
-            Assert.That(reader.Position, Is.EqualTo(11));
-            Assert.That(result, Is.EqualTo("\"Hello\": "));
+        value = "{ \"Hello\": \"World!\" }";
+        bytes = encoding.GetBytes(value);
+        readSum = 0;
 
-            result = reader.ReadString(8);
-
-            Assert.That(reader.Position, Is.EqualTo(19));
-            Assert.That(result, Is.EqualTo("\"World!\""));
-
-            result = reader.ReadString(2);
-
-            Assert.That(reader.Position, Is.EqualTo(bytes.Length));
-            Assert.That(result, Is.EqualTo(" }"));
+        using (ByteReader reader = new ByteReader(bytes))
+        {
+            assertString(reader, "{ ");
+            assertString(reader, "\"Hello\": ");
+            assertString(reader, "\"World!\"");
+            assertString(reader, " }");
         }
     }
 
     [Test]
-    public void Skip_With_ReadBytes_ShouldReturnNextSkippedBytes()
+    public void TrySkip_With_ReadBytes_ShouldReturnNextSkippedBytes()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06];
 
@@ -141,7 +170,10 @@ public class ByteReaderSuccessTests
             Assert.That(reader.Position, Is.EqualTo(2));
             Assert.That(result, Is.EqualTo(new byte[] { 0x01, 0x02 }));
 
-            reader.Skip(2);
+            if (!reader.TrySkip(2))
+            {
+                Assert.Fail();
+            }
 
             Assert.That(reader.Position, Is.EqualTo(4));
 

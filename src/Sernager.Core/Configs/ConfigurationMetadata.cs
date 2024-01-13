@@ -1,11 +1,11 @@
 using Sernager.Core.Extensions;
+using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
-using YamlDotNet.Core;
 
 namespace Sernager.Core.Configs;
 
@@ -85,7 +85,7 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     private static ConfigurationMetadata fromYamlBytes(byte[] bytes)
     {
-        string yaml = Encoding.UTF8.GetString(bytes);
+        string yaml = EncodingHelper.GetString(bytes);
         Configuration? config = YamlWrapper.Deserialize<Configuration>(yaml);
 
         if (config != null)
@@ -100,13 +100,12 @@ internal sealed class ConfigurationMetadata : IDisposable
             return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
         }
 
-        ExceptionManager.ThrowFail<YamlException>("Failed to deserialize configuration.");
-        return new ConfigurationMetadata(new Configuration());
+        return failToDeserialize();
     }
 
     private static ConfigurationMetadata fromJsonBytes(byte[] bytes)
     {
-        string json = Encoding.UTF8.GetString(bytes);
+        string json = EncodingHelper.GetString(bytes);
         Configuration? config = JsonWrapper.Deserialize<Configuration>(json);
 
         if (config != null)
@@ -121,42 +120,61 @@ internal sealed class ConfigurationMetadata : IDisposable
             return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
         }
 
-        ExceptionManager.ThrowFail<JsonException>("Failed to deserialize configuration.");
-        return new ConfigurationMetadata(new Configuration());
+        return failToDeserialize();
     }
 
     private static ConfigurationMetadata fromSernagerBytes(byte[] bytes)
     {
         using (ByteReader reader = new ByteReader(bytes))
         {
-            int keyLength = reader.ReadInt32();
-            int ivLength = reader.ReadInt32();
-            int beginSaltLength = reader.ReadInt32();
-            int endSaltLength = reader.ReadInt32();
+            int keyLength;
+            int ivLength;
+            int beginSaltLength;
+            int endSaltLength;
 
-            string key = reader.ReadString(keyLength);
-            string iv = reader.ReadString(ivLength);
-            byte[] encryptedBytes = reader.ReadBytes(reader.Length - reader.Position);
+            if (!reader.TryReadInt32(out keyLength)
+                || !reader.TryReadInt32(out ivLength)
+                || !reader.TryReadInt32(out beginSaltLength)
+                || !reader.TryReadInt32(out endSaltLength))
+            {
+                return failToDeserialize();
+            }
+
+            string? key;
+            string? iv;
+
+            if (!reader.TryReadString(Encoding.UTF8, keyLength, out key)
+                || !reader.TryReadString(Encoding.UTF8, ivLength, out iv))
+            {
+                return failToDeserialize();
+            }
+
+            byte[]? encryptedBytes;
+
+            if (!reader.TryReadBytes(reader.Length - reader.Position, out encryptedBytes))
+            {
+                return failToDeserialize();
+            }
 
             string saltedData = Encryptor.Decrypt(encryptedBytes, key, iv);
             saltedData = saltedData.Substring(beginSaltLength, saltedData.Length - beginSaltLength - endSaltLength);
+
             Configuration? config = JsonWrapper.Deserialize<Configuration>(saltedData);
 
-            if (config != null)
+            if (config == null)
             {
-                return new ConfigurationMetadata(config);
+                return failToDeserialize();
             }
 
-            UserFriendlyConfiguration? userFriendlyConfig = JsonWrapper.Deserialize<UserFriendlyConfiguration>(saltedData);
-
-            if (userFriendlyConfig != null)
-            {
-                return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
-            }
-
-            ExceptionManager.ThrowFail<SernagerException>("Failed to deserialize configuration.");
-            return new ConfigurationMetadata(new Configuration());
+            return new ConfigurationMetadata(config);
         }
+    }
+
+    [StackTraceHidden]
+    private static ConfigurationMetadata failToDeserialize()
+    {
+        ExceptionManager.ThrowFail<SernagerException>("Failed to deserialize configuration file.");
+        return new ConfigurationMetadata(new Configuration());
     }
 
     private byte[] toJsonBytes(bool bUserFriendly)
@@ -168,7 +186,7 @@ internal sealed class ConfigurationMetadata : IDisposable
             bUserFriendly
         );
 
-        return Encoding.UTF8.GetBytes(json);
+        return Encoding.Default.GetBytes(json);
     }
 
     private byte[] toYamlBytes(bool bUserFriendly)
@@ -179,7 +197,7 @@ internal sealed class ConfigurationMetadata : IDisposable
                 : Config
         );
 
-        return Encoding.UTF8.GetBytes(yaml);
+        return Encoding.Default.GetBytes(yaml);
     }
 
     private byte[] toSernagerBytes()
@@ -201,8 +219,8 @@ internal sealed class ConfigurationMetadata : IDisposable
                 .WriteInt32(iv.Length)
                 .WriteInt32(salts[0].Length)
                 .WriteInt32(salts[1].Length)
-                .WriteString(key)
-                .WriteString(iv)
+                .WriteString(Encoding.UTF8, key)
+                .WriteString(Encoding.UTF8, iv)
                 .WriteBytes(encrypted);
 
             return writer.GetBytes();

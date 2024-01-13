@@ -1,4 +1,6 @@
+using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Sernager.Core.Utils;
@@ -28,8 +30,9 @@ internal sealed class ByteReader : IDisposable
             return Array.Empty<byte>();
         }
 
-        if (length == 0)
+        if (length <= 0)
         {
+            ExceptionManager.ThrowFail<ArgumentException>("Length must be greater than 0.");
             return Array.Empty<byte>();
         }
 
@@ -48,56 +51,90 @@ internal sealed class ByteReader : IDisposable
         return bytes;
     }
 
-    internal int ReadInt32()
+    internal bool TryReadBytes(int length, [NotNullWhen(true)] out byte[]? bytes)
     {
         if (mBytes == null)
         {
-            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
-            return 0;
+            bytes = null;
+            return false;
         }
 
-        byte[] bytes = ReadBytes(sizeof(int));
-
-        if (bytes.Length != sizeof(int))
+        if (length <= 0)
         {
-            return 0;
-        }
-
-        return BitConverter.ToInt32(bytes, 0);
-    }
-
-    internal string ReadString(int length)
-    {
-        if (mBytes == null)
-        {
-            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
-            return string.Empty;
-        }
-
-        byte[] bytes = ReadBytes(length);
-
-        if (bytes.Length == 0)
-        {
-            return string.Empty;
-        }
-
-        return Encoding.UTF8.GetString(bytes);
-    }
-
-    internal void Skip(int length)
-    {
-        if (mBytes == null)
-        {
-            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteReader));
-            return;
+            bytes = null;
+            return false;
         }
 
         if (Position + length > mBytes.Length)
         {
-            ExceptionManager.ThrowFail<IndexOutOfRangeException>($"Position: {Position}, Length: {length}");
-            return;
+            bytes = null;
+            return false;
+        }
+
+        bytes = new byte[length];
+
+        Array.Copy(mBytes, Position, bytes, 0, length);
+
+        Position += length;
+
+        return true;
+    }
+
+    internal bool TryReadInt32([NotNullWhen(true)] out int value)
+    {
+        byte[]? bytes;
+
+        if (!TryReadBytes(sizeof(int), out bytes))
+        {
+            value = -1;
+            return false;
+        }
+
+        value = BitConverter.ToInt32(bytes, 0);
+        return true;
+    }
+
+    internal bool TryReadString(int length, [NotNullWhen(true)] out string? value)
+    {
+        byte[]? bytes;
+
+        if (!TryReadBytes(length, out bytes))
+        {
+            value = null;
+            return false;
+        }
+
+        value = EncodingHelper.GetString(bytes);
+        return true;
+    }
+
+    internal bool TryReadString(Encoding encoding, int length, [NotNullWhen(true)] out string? value)
+    {
+        byte[]? bytes;
+
+        if (!TryReadBytes(length, out bytes))
+        {
+            value = null;
+            return false;
+        }
+
+        value = encoding.GetString(bytes);
+        return true;
+    }
+
+    internal bool TrySkip(int length)
+    {
+        if (mBytes == null)
+        {
+            return false;
+        }
+
+        if (Position + length > mBytes.Length)
+        {
+            return false;
         }
 
         Position += length;
+        return true;
     }
 }

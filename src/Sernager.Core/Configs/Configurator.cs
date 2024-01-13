@@ -83,7 +83,7 @@ internal static class Configurator
             return;
         }
 
-        string filePath = Path.Combine(mConfigDir, $"{mConfigName}.default{getExtension(type)}");
+        string filePath = Path.Combine(mConfigDir, $"{mConfigName}.default{GetExtension(type)}");
 
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
@@ -103,7 +103,7 @@ internal static class Configurator
             return;
         }
 
-        string filePath = Path.Combine(mConfigDir, $"{mConfigName}.userfriendly{getExtension(type)}");
+        string filePath = Path.Combine(mConfigDir, $"{mConfigName}.userfriendly{GetExtension(type)}");
 
         using (ConfigurationMetadata metadata = new ConfigurationMetadata(Config))
         {
@@ -115,7 +115,7 @@ internal static class Configurator
         Debug.WriteLine($"Configuration saved to {filePath}.");
     }
 
-    private static string getExtension(EConfigurationType type)
+    internal static string GetExtension(EConfigurationType type)
     {
         return type switch
         {
@@ -126,7 +126,7 @@ internal static class Configurator
         };
     }
 
-    private static string getExtension(EUserFriendlyConfigurationType type)
+    internal static string GetExtension(EUserFriendlyConfigurationType type)
     {
         return type switch
         {

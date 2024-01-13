@@ -1,9 +1,21 @@
 using Sernager.Core.Utils;
+using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteWriterFailureTests : FailureFixture
 {
+    [DatapointSource]
+    private static readonly Encoding[] ENCODING_LIST =
+    [
+        Encoding.UTF8,
+        Encoding.Unicode,
+        Encoding.BigEndianUnicode,
+        Encoding.UTF32,
+        Encoding.ASCII,
+        Encoding.Default,
+    ];
+
     [Test]
     public void WriteBytes_ShouldThrow_WhenDisposed()
     {
@@ -39,6 +51,20 @@ public class ByteWriterFailureTests : FailureFixture
 
             TestNoneLevel(() => writer.WriteString(string.Empty), Is.Null);
             TestExceptionLevel<ObjectDisposedException>(() => writer.WriteString(string.Empty));
+        }
+    }
+
+    [Theory]
+    public void WriteString_ShouldThrow_WhenDisposed(Encoding encoding)
+    {
+        Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
+
+        using (ByteWriter writer = new ByteWriter())
+        {
+            writer.Dispose();
+
+            TestNoneLevel(() => writer.WriteString(encoding, string.Empty), Is.Null);
+            TestExceptionLevel<ObjectDisposedException>(() => writer.WriteString(encoding, string.Empty));
         }
     }
 

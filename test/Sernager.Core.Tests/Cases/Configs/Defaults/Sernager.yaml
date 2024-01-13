@@ -1,0 +1,193 @@
+environmentGroups:
+  test1:
+    name: test1
+    preVariables:
+      TEST_ENV3: test3
+      TEST_ENV2: test2
+      TEST_ENV1: test1
+    variables:
+      ENV1: Pre-env set as ${TEST_ENV1}
+      ENV2: Pre-env set as ${TEST_ENV2}
+      ENV3: Pre-env set as ${TEST_ENV3}
+  test2:
+    name: test2
+    preVariables:
+      TEST_ENV3: test3
+      TEST_ENV2: test2
+      TEST_ENV1: test1
+    variables:
+      ENV1: Pre-env set as ${TEST_ENV1}
+      ENV2: Pre-env set as ${TEST_ENV2}
+      ENV3: Pre-env set as ${TEST_ENV3}
+  test3:
+    name: test3
+    preVariables:
+      TEST_ENV3: test3
+      TEST_ENV2: test2
+      TEST_ENV1: test1
+    variables:
+      ENV1: Pre-env set as ${TEST_ENV1}
+      ENV2: Pre-env set as ${TEST_ENV2}
+      ENV3: Pre-env set as ${TEST_ENV3}
+commandMainGroups:
+  test1:
+    name: test1
+    shortName: t1
+    description: this is a test case
+    items:
+    - aaffd2b4-7333-4af9-af04-f96fe21f1b59
+    - 53abdd0b-9e4c-4eea-843d-072bf5a815c1
+    - be04ec0c-6878-48e4-8cc7-dc3af4e584fb
+    - ec5cf1bd-e77d-4bad-af36-6ef9b5378667
+commandSubgroups:
+  be04ec0c-6878-48e4-8cc7-dc3af4e584fb:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items:
+    - 81c3ca77-8c5f-4dd9-810c-7ce21f59558b
+    - d127b98f-decd-446d-aef5-d22814770643
+    - 97c66887-8bea-41fa-9fe4-fdd8b6b251a0
+    - 7ad81532-0488-443e-b870-4fa2d62ce8e8
+  97c66887-8bea-41fa-9fe4-fdd8b6b251a0:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items: []
+  7ad81532-0488-443e-b870-4fa2d62ce8e8:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items: []
+  ec5cf1bd-e77d-4bad-af36-6ef9b5378667:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items:
+    - b1d37802-9303-417c-a303-97fa0a45eddf
+    - 07cce856-db31-4b8a-ba7c-8cf8527e72c4
+    - c2147136-0d3c-4791-bfaf-5ebae33bb7ef
+    - 052a194e-b77a-4e12-b73f-6ecb3db1caa0
+  c2147136-0d3c-4791-bfaf-5ebae33bb7ef:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items:
+    - be36ced2-e5ea-4503-bdca-dc17348eac60
+    - 0331cd67-6f91-4d98-bdfa-6c76b754e92a
+    - 4ec42dcb-67f1-4dd7-b744-bc014d8c8d72
+    - 71a219ff-93e3-43b9-b844-5457efb13b10
+  4ec42dcb-67f1-4dd7-b744-bc014d8c8d72:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items: []
+  71a219ff-93e3-43b9-b844-5457efb13b10:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items: []
+  052a194e-b77a-4e12-b73f-6ecb3db1caa0:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items:
+    - 982cca65-2f7b-4cfd-ab88-41394c11a862
+    - aff25db8-b9c4-4a1d-9deb-5101ce7ac801
+    - 16bfa018-efb2-4435-af28-d01807fccdd5
+    - edc18335-c0b1-4b39-8840-b64808f90b06
+  16bfa018-efb2-4435-af28-d01807fccdd5:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items: []
+  edc18335-c0b1-4b39-8840-b64808f90b06:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items: []
+commands:
+  aaffd2b4-7333-4af9-af04-f96fe21f1b59:
+    name: cmd1
+    shortName: c1
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test1
+    - test2
+    command:
+    - echo
+    - -e
+    - '"this is a test case"'
+  53abdd0b-9e4c-4eea-843d-072bf5a815c1:
+    name: cmd2
+    shortName: c2
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test3
+    command: echo -e "this is a test case"
+  81c3ca77-8c5f-4dd9-810c-7ce21f59558b:
+    name: cmd1
+    shortName: c1
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test1
+    command:
+    - echo
+    - -e
+    - '"this is a test case"'
+  d127b98f-decd-446d-aef5-d22814770643:
+    name: cmd2
+    shortName: c2
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test2
+    - test3
+    command: echo -e "this is a test case"
+  b1d37802-9303-417c-a303-97fa0a45eddf:
+    name: cmd1
+    shortName: c1
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test1
+    - test3
+    command:
+    - echo
+    - -e
+    - '"this is a test case"'
+  07cce856-db31-4b8a-ba7c-8cf8527e72c4:
+    name: cmd2
+    shortName: c2
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test2
+    command: echo -e "this is a test case"
+  be36ced2-e5ea-4503-bdca-dc17348eac60:
+    name: cmd1
+    shortName: c1
+    description: this is a test case
+    usedEnvironmentGroups: []
+    command:
+    - echo
+    - -e
+    - '"this is a test case"'
+  0331cd67-6f91-4d98-bdfa-6c76b754e92a:
+    name: cmd2
+    shortName: c2
+    description: this is a test case
+    usedEnvironmentGroups: []
+    command: echo -e "this is a test case"
+  982cca65-2f7b-4cfd-ab88-41394c11a862:
+    name: cmd1
+    shortName: c1
+    description: this is a test case
+    usedEnvironmentGroups: []
+    command:
+    - echo
+    - -e
+    - '"this is a test case"'
+  aff25db8-b9c4-4a1d-9deb-5101ce7ac801:
+    name: cmd2
+    shortName: c2
+    description: this is a test case
+    usedEnvironmentGroups: []
+    command: echo -e "this is a test case"

@@ -33,4 +33,10 @@
     <ProjectReference Include="..\..\src\Sernager.Unit\Sernager.Unit.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Cases\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

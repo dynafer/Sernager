@@ -13,7 +13,7 @@ internal static class YamlWrapper
         }
 
         ISerializer serializer = new SerializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
             .WithQuotingNecessaryStrings(true)
             .Build();
 
@@ -25,7 +25,7 @@ internal static class YamlWrapper
         try
         {
             IDeserializer deserializer = new DeserializerBuilder()
-                .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
             return deserializer.Deserialize<T>(yaml);

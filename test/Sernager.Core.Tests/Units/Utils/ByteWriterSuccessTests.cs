@@ -5,6 +5,17 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteWriterSuccessTests
 {
+    [DatapointSource]
+    private static readonly Encoding[] ENCODING_LIST =
+    [
+        Encoding.UTF8,
+        Encoding.Unicode,
+        Encoding.BigEndianUnicode,
+        Encoding.UTF32,
+        Encoding.ASCII,
+        Encoding.Default,
+    ];
+
     [Test]
     public void WriteBytes_ShouldWriteProperly()
     {
@@ -94,7 +105,7 @@ public class ByteWriterSuccessTests
     public void WriteString_ShouldWriteProperly()
     {
         string value = "Hello, World!";
-        byte[] bytes = Encoding.UTF8.GetBytes(value);
+        byte[] bytes = Encoding.Default.GetBytes(value);
 
         using (ByteWriter writer = new ByteWriter())
         {
@@ -125,6 +136,51 @@ public class ByteWriterSuccessTests
             writer.WriteString(value)
                 .WriteString(value)
                 .WriteString(value);
+
+            result = writer.GetBytes();
+
+            Assert.That(result.Length, Is.EqualTo(bytes.Length * 4));
+            Assert.That(result, Is.EqualTo(bytes.Concat(bytes).Concat(bytes).Concat(bytes)));
+        }
+    }
+
+    [Theory]
+    public void WriteString_ShouldWriteProperly(Encoding encoding)
+    {
+        Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
+
+        string value = "Hello, World!";
+        byte[] bytes = encoding.GetBytes(value);
+
+        using (ByteWriter writer = new ByteWriter())
+        {
+            writer.WriteString(encoding, value);
+
+            byte[] result = writer.GetBytes();
+
+            Assert.That(result.Length, Is.EqualTo(bytes.Length));
+            Assert.That(result, Is.EqualTo(bytes));
+
+            writer.WriteString(encoding, value)
+                .WriteString(encoding, value)
+                .WriteString(encoding, value);
+
+            result = writer.GetBytes();
+
+            Assert.That(result.Length, Is.EqualTo(bytes.Length * 4));
+            Assert.That(result, Is.EqualTo(bytes.Concat(bytes).Concat(bytes).Concat(bytes)));
+        }
+
+        using (ByteWriter writer = new ByteWriter(bytes))
+        {
+            byte[] result = writer.GetBytes();
+
+            Assert.That(result.Length, Is.EqualTo(bytes.Length));
+            Assert.That(result, Is.EqualTo(bytes));
+
+            writer.WriteString(encoding, value)
+                .WriteString(encoding, value)
+                .WriteString(encoding, value);
 
             result = writer.GetBytes();
 

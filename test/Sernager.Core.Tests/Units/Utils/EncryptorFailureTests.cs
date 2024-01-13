@@ -70,7 +70,7 @@ public class EncryptorFailureTests : FailureFixture
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedNullKey()
     {
-        byte[] value = Encoding.UTF8.GetBytes("Hello, World!");
+        byte[] value = Encoding.Default.GetBytes("Hello, World!");
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
 
         TestNoneLevel(() => Encryptor.Decrypt(value, null!, iv), Is.Empty);
@@ -80,7 +80,7 @@ public class EncryptorFailureTests : FailureFixture
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedNullIv()
     {
-        byte[] value = Encoding.UTF8.GetBytes("Hello, World!");
+        byte[] value = Encoding.Default.GetBytes("Hello, World!");
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
 
         TestNoneLevel(() => Encryptor.Decrypt(value, key, null!), Is.Empty);
@@ -90,7 +90,7 @@ public class EncryptorFailureTests : FailureFixture
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedInvalidKeySize()
     {
-        byte[] value = Encoding.UTF8.GetBytes("Hello, World!");
+        byte[] value = Encoding.Default.GetBytes("Hello, World!");
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE - 1);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
 
@@ -101,7 +101,7 @@ public class EncryptorFailureTests : FailureFixture
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedInvalidIvSize()
     {
-        byte[] value = Encoding.UTF8.GetBytes("Hello, World!");
+        byte[] value = Encoding.Default.GetBytes("Hello, World!");
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE - 1);
 

@@ -46,7 +46,7 @@ public class YamlWrapperTests
         string yaml = YamlWrapper.Serialize(fakeModel).Replace("\r\n", "\n").Trim();
 
         Assert.That(yaml, Is.Not.Null);
-        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: sernager\nnull_name:"));
+        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 1\nisEnabled: true\ncaseName: sernager\nnullName:"));
     }
 
     [Test]
@@ -62,7 +62,7 @@ public class YamlWrapperTests
         string yaml = YamlWrapper.Serialize(fakeModel).Replace("\r\n", "\n").Trim();
 
         Assert.That(yaml, Is.Not.Null);
-        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: \"\"\nnull_name:"));
+        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 1\nisEnabled: true\ncaseName: \"\"\nnullName:"));
 
         Assert.That(YamlWrapper.Deserialize<FakeModel>(yaml), Is.EqualTo(fakeModel));
 
@@ -76,7 +76,7 @@ public class YamlWrapperTests
         yaml = YamlWrapper.Serialize(fakeModel).Replace("\r\n", "\n").Trim();
 
         Assert.That(yaml, Is.Not.Null);
-        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 1\nis_enabled: false\ncase_name: sernager\nnull_name:"));
+        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 1\nisEnabled: false\ncaseName: sernager\nnullName:"));
 
         fakeModel = new FakeModel()
         {
@@ -88,7 +88,7 @@ public class YamlWrapperTests
         yaml = YamlWrapper.Serialize(fakeModel).Replace("\r\n", "\n").Trim();
 
         Assert.That(yaml, Is.Not.Null);
-        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 0\nis_enabled: true\ncase_name: sernager\nnull_name:"));
+        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 0\nisEnabled: true\ncaseName: sernager\nnullName:"));
 
         fakeModel = new FakeModel()
         {
@@ -98,10 +98,9 @@ public class YamlWrapperTests
         yaml = YamlWrapper.Serialize(fakeModel).Replace("\r\n", "\n").Trim();
 
         Assert.That(yaml, Is.Not.Null);
-        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 0\nis_enabled: false\ncase_name: \"\"\nnull_name:"));
+        Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 0\nisEnabled: false\ncaseName: \"\"\nnullName:"));
     }
 
-    [Test]
     public void Deserialize_ShouldReturDefault_WhenPassedNull()
     {
         Assert.That(YamlWrapper.Deserialize<int>(null!), Is.Default);
@@ -129,9 +128,9 @@ public class YamlWrapperTests
     [Test]
     public void Deserialize_ShouldReturnDefault_WhenPassedInvalidCasesYaml()
     {
-        string camelCase = "name: Sernager\nnumber: 1\nisEnabled: true\ncaseName: sernager";
+        string snake_case = "name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: sernager";
 
-        Assert.That(YamlWrapper.Deserialize<FakeModel>(camelCase), Is.Default);
+        Assert.That(YamlWrapper.Deserialize<FakeModel>(snake_case), Is.Default);
 
         string PascalCase = "Name: Sernager\nNumber: 1\nIsEnabled: true\nCaseName: sernager";
 
@@ -158,7 +157,7 @@ public class YamlWrapperTests
     [Test]
     public void Deserialize_ShouldReturnClass_WhenPassedValidYaml()
     {
-        string yaml = "name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: sernager";
+        string yaml = "name: Sernager\nnumber: 1\nisEnabled: true\ncaseName: sernager";
         FakeModel? fakeModel = YamlWrapper.Deserialize<FakeModel>(yaml);
 
         Assert.That(fakeModel, Is.Not.Null);
@@ -189,7 +188,7 @@ public class YamlWrapperTests
             NullName = null
         }));
 
-        yaml = "name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: sernager\nnull_name: null";
+        yaml = "name: Sernager\nnumber: 1\nisEnabled: true\ncaseName: sernager\nnullName: null";
         fakeModel = YamlWrapper.Deserialize<FakeModel>(yaml);
 
         Assert.That(fakeModel, Is.Not.Null);
@@ -203,7 +202,7 @@ public class YamlWrapperTests
             NullName = null
         }));
 
-        yaml = "name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: sernager\nnull_name: \"\"";
+        yaml = "name: Sernager\nnumber: 1\nisEnabled: true\ncaseName: sernager\nnullName: \"\"";
         fakeModel = YamlWrapper.Deserialize<FakeModel>(yaml);
 
         Assert.That(fakeModel, Is.Not.Null);

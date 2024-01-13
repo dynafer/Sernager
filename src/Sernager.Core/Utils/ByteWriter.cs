@@ -63,7 +63,22 @@ internal sealed class ByteWriter : IDisposable
             return null!;
         }
 
-        byte[] bytes = Encoding.UTF8.GetBytes(value);
+        byte[] bytes = Encoding.Default.GetBytes(value);
+
+        WriteBytes(bytes);
+
+        return this;
+    }
+
+    internal ByteWriter WriteString(Encoding encoding, string value)
+    {
+        if (mBytes == null)
+        {
+            ExceptionManager.ThrowFail<ObjectDisposedException>(nameof(ByteWriter));
+            return null!;
+        }
+
+        byte[] bytes = encoding.GetBytes(value);
 
         WriteBytes(bytes);
 

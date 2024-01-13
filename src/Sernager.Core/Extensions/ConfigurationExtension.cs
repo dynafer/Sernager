@@ -43,14 +43,7 @@ internal static class ConfigurationExtension
 
         foreach (Guid itemId in model.Items)
         {
-            if (config.CommandSubgroups.ContainsKey(itemId))
-            {
-                traverseSubgroup(config, config.CommandSubgroups[itemId], subItems);
-            }
-            else if (config.Commands.ContainsKey(itemId))
-            {
-                subItems.Add(config.Commands[itemId]);
-            }
+            filterModel(config, itemId, subItems);
         }
 
         UserFriendlyGroupModel groupModel = new UserFriendlyGroupModel

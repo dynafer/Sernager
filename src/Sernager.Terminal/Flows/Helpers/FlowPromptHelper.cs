@@ -33,8 +33,6 @@ internal static class FlowPromptHelper
                 options.Add(("..", parent));
             }
 
-            bool bBackslahedPath = currentPath.Contains("\\");
-
             options.AddRange(
                 Directory.EnumerateFileSystemEntries(currentPath, "*")
                     .Where(path => Directory.Exists(path) || Path.GetExtension(path) == extension)
@@ -44,9 +42,7 @@ internal static class FlowPromptHelper
 
                         if (Directory.Exists(path))
                         {
-                            name = $"[Blue]{name}"
-                                + (bBackslahedPath ? "\\" : "/")
-                                + "[/Blue]";
+                            name = $"[Blue]{name}{Path.DirectorySeparatorChar}[/Blue]";
                         }
 
                         return (name, path);

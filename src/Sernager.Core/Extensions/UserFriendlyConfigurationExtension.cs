@@ -151,6 +151,11 @@ internal static class UserFriendlyConfigurationExtension
             bCommand = isCommand(jsonElement);
             json = jsonElement.GetRawText();
         }
+        else if (obj is Dictionary<object, object> dictionary)
+        {
+            bCommand = isCommand(dictionary);
+            json = JsonWrapper.Serialize(dictionary);
+        }
         else
         {
             bCommand = isCommand(obj);
@@ -176,6 +181,11 @@ internal static class UserFriendlyConfigurationExtension
         {
             bGroup = isGroup(jsonElement);
             json = jsonElement.GetRawText();
+        }
+        else if (obj is Dictionary<object, object> dictionary)
+        {
+            bGroup = isGroup(dictionary);
+            json = JsonWrapper.Serialize(dictionary);
         }
         else
         {
@@ -208,6 +218,21 @@ internal static class UserFriendlyConfigurationExtension
         return false;
     }
 
+    private static bool isCommand(Dictionary<object, object> dictionary)
+    {
+        if (dictionary.ContainsKey("command"))
+        {
+            return true;
+        }
+
+        if (dictionary.ContainsKey("usedEnvironmentGroups"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     private static bool isCommand(object obj)
     {
         Type type = obj.GetType();
@@ -226,6 +251,16 @@ internal static class UserFriendlyConfigurationExtension
     private static bool isGroup(JsonElement jsonElement)
     {
         if (jsonElement.TryGetProperty("items", out JsonElement _))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool isGroup(Dictionary<object, object> dictionary)
+    {
+        if (dictionary.ContainsKey("items"))
         {
             return true;
         }

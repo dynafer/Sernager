@@ -16,7 +16,7 @@ public class EncryptorSuccessTests
 
         Assert.That(encryptedBytes, Is.Not.Null);
         Assert.That(encryptedBytes, Is.Not.Empty);
-        Assert.That(encryptedBytes, Is.Not.EqualTo(Encoding.UTF8.GetBytes(cypherText)));
+        Assert.That(encryptedBytes, Is.Not.EqualTo(Encoding.Default.GetBytes(cypherText)));
 
         string decryptedText = Encryptor.Decrypt(encryptedBytes, key, iv);
 
@@ -30,7 +30,7 @@ public class EncryptorSuccessTests
 
         Assert.That(encryptedBytes, Is.Not.Null);
         Assert.That(encryptedBytes, Is.Not.Empty);
-        Assert.That(encryptedBytes, Is.Not.EqualTo(Encoding.UTF8.GetBytes(cypherText)));
+        Assert.That(encryptedBytes, Is.Not.EqualTo(Encoding.Default.GetBytes(cypherText)));
 
         decryptedText = Encryptor.Decrypt(encryptedBytes, key, iv);
 

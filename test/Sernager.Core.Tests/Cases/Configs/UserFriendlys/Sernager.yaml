@@ -1,0 +1,151 @@
+environments:
+  test1:
+    name: test1
+    preVariables:
+      TEST_ENV3: test3
+      TEST_ENV2: test2
+      TEST_ENV1: test1
+    variables:
+      ENV1: Pre-env set as ${TEST_ENV1}
+      ENV2: Pre-env set as ${TEST_ENV2}
+      ENV3: Pre-env set as ${TEST_ENV3}
+  test2:
+    name: test2
+    preVariables:
+      TEST_ENV3: test3
+      TEST_ENV2: test2
+      TEST_ENV1: test1
+    variables:
+      ENV1: Pre-env set as ${TEST_ENV1}
+      ENV2: Pre-env set as ${TEST_ENV2}
+      ENV3: Pre-env set as ${TEST_ENV3}
+  test3:
+    name: test3
+    preVariables:
+      TEST_ENV3: test3
+      TEST_ENV2: test2
+      TEST_ENV1: test1
+    variables:
+      ENV1: Pre-env set as ${TEST_ENV1}
+      ENV2: Pre-env set as ${TEST_ENV2}
+      ENV3: Pre-env set as ${TEST_ENV3}
+commands:
+  test1:
+    name: test1
+    shortName: t1
+    description: this is a test case
+    items:
+    - name: cmd1
+      shortName: c1
+      description: this is a test case
+      usedEnvironmentGroups:
+      - test1
+      - test2
+      command:
+      - echo
+      - -e
+      - '"this is a test case"'
+    - name: cmd2
+      shortName: c2
+      description: this is a test case
+      usedEnvironmentGroups:
+      - test3
+      command: echo -e "this is a test case"
+    - name: subtest1
+      shortName: st1
+      description: this is a test case
+      items:
+      - name: cmd1
+        shortName: c1
+        description: this is a test case
+        usedEnvironmentGroups:
+        - test1
+        command:
+        - echo
+        - -e
+        - '"this is a test case"'
+      - name: cmd2
+        shortName: c2
+        description: this is a test case
+        usedEnvironmentGroups:
+        - test2
+        - test3
+        command: echo -e "this is a test case"
+      - name: subtest1
+        shortName: st1
+        description: this is a test case
+        items: []
+      - name: subtest2
+        shortName: st2
+        description: this is a test case
+        items: []
+    - name: subtest2
+      shortName: st2
+      description: this is a test case
+      items:
+      - name: cmd1
+        shortName: c1
+        description: this is a test case
+        usedEnvironmentGroups:
+        - test1
+        - test3
+        command:
+        - echo
+        - -e
+        - '"this is a test case"'
+      - name: cmd2
+        shortName: c2
+        description: this is a test case
+        usedEnvironmentGroups:
+        - test2
+        command: echo -e "this is a test case"
+      - name: subtest1
+        shortName: st1
+        description: this is a test case
+        items:
+        - name: cmd1
+          shortName: c1
+          description: this is a test case
+          usedEnvironmentGroups: []
+          command:
+          - echo
+          - -e
+          - '"this is a test case"'
+        - name: cmd2
+          shortName: c2
+          description: this is a test case
+          usedEnvironmentGroups: []
+          command: echo -e "this is a test case"
+        - name: subtest1
+          shortName: st1
+          description: this is a test case
+          items: []
+        - name: subtest2
+          shortName: st2
+          description: this is a test case
+          items: []
+      - name: subtest2
+        shortName: st2
+        description: this is a test case
+        items:
+        - name: cmd1
+          shortName: c1
+          description: this is a test case
+          usedEnvironmentGroups: []
+          command:
+          - echo
+          - -e
+          - '"this is a test case"'
+        - name: cmd2
+          shortName: c2
+          description: this is a test case
+          usedEnvironmentGroups: []
+          command: echo -e "this is a test case"
+        - name: subtest1
+          shortName: st1
+          description: this is a test case
+          items: []
+        - name: subtest2
+          shortName: st2
+          description: this is a test case
+          items: []
