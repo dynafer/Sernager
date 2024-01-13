@@ -9,7 +9,7 @@ using Sernager.Terminal.Prompts.Plugins;
 namespace Sernager.Terminal.Flows.Commands;
 
 [Flow(Alias = "Command")]
-public class MainFlow : IFlow
+internal sealed class MainFlow : IFlow
 {
     void IFlow.Prompt()
     {
