@@ -13,4 +13,6 @@ internal sealed class BuilderModel
     internal EUserFriendlyConfigurationType? AutoSaveUserFriendlyType { get; set; } = null;
     [Arg(Name = "errorLevel", ShortName = "el", DescriptionResourceName = "ErrorLevelDescription")]
     internal EErrorLevel ErrorLevel { get; set; } = EErrorLevel.None;
+    [Arg(Name = "manage", ShortName = "mn", DescriptionResourceName = "ManagementTypeDescription")]
+    internal EManagementTypeFlags? ManagementType { get; set; } = null;
 }

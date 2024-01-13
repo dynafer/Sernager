@@ -60,6 +60,11 @@ internal static class Args
         return commandArgs.ToArray();
     }
 
+    internal static EManagementTypeFlags? GetManagementType()
+    {
+        return Model.ManagementType;
+    }
+
     internal static void Parse(string[] args)
     {
         if (args.Length == 0)
@@ -83,6 +88,11 @@ internal static class Args
             }
 
             string? value = args.ElementAtOrDefault(i + 1);
+            if (value != null && (value.StartsWith("--") || value.StartsWith("-")))
+            {
+                value = null;
+            }
+
             parseArg(arg, value);
         }
 

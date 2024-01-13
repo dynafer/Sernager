@@ -111,10 +111,17 @@ internal sealed class CurrentGroupFlow : IFlow
         {
             if (item.Item is CommandModel commandModel && (commandModel.Name == command || commandModel.ShortName == command))
             {
-                if (!bHasNext)
+                if (FlowManager.IsManagementMode)
                 {
-                    runCommand(item.Id);
-                    FlowManager.RunLastFlow();
+                    FlowManager.JumpFlow("Command.CurrentCommand.Manage", mManager, item.Id);
+                }
+                else
+                {
+                    if (!bHasNext)
+                    {
+                        runCommand(item.Id);
+                        FlowManager.RunLastFlow();
+                    }
                 }
 
                 return !bHasNext;

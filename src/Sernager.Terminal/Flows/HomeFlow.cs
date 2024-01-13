@@ -1,5 +1,6 @@
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Managers;
+using Sernager.Terminal.Models;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
@@ -53,10 +54,32 @@ internal sealed class HomeFlow : IFlow
         }
     }
 
-    bool IFlow.TryJump(string _, bool __)
+    bool IFlow.TryJump(string managementTypeName, bool __)
     {
-        FlowManager.IsManagementMode = false;
-        FlowManager.JumpFlow("Command.Main");
+        if (FlowManager.IsManagementMode)
+        {
+            EManagementTypeFlags managementType;
+            if (!Enum.TryParse(managementTypeName, out managementType))
+            {
+                return false;
+            }
+
+            switch (managementType)
+            {
+                case EManagementTypeFlags.Command:
+                    FlowManager.JumpFlow("Command.Main");
+                    break;
+                case EManagementTypeFlags.Environment:
+                    FlowManager.JumpFlow("Environment.Main");
+                    break;
+                default:
+                    return false;
+            }
+        }
+        else
+        {
+            FlowManager.JumpFlow("Command.Main");
+        }
 
         return true;
     }

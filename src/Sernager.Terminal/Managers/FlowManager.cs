@@ -2,6 +2,7 @@ using Sernager.Core;
 using Sernager.Core.Managers;
 using Sernager.Resources;
 using Sernager.Terminal.Attributes;
+using Sernager.Terminal.Models;
 using System.Reflection;
 
 namespace Sernager.Terminal.Managers;
@@ -72,7 +73,7 @@ internal static class FlowManager
         return $"{RESOURCE_NAMESPACE}.{type}";
     }
 
-    internal static void Start(string[] commands)
+    internal static void Start(EManagementTypeFlags? managementType, string[] commands)
     {
         if (commands.Length == 0)
         {
@@ -82,7 +83,12 @@ internal static class FlowManager
 
         mCommandQueue = new Queue<string>(commands);
 
-        mHomeFlow.TryJump(string.Empty, true);
+        if (managementType != null)
+        {
+            IsManagementMode = true;
+        }
+
+        mHomeFlow.TryJump(managementType?.ToString() ?? string.Empty, true);
     }
 
     internal static void RunFlow(string flowName)
