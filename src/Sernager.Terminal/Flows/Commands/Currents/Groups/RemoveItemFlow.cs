@@ -1,5 +1,4 @@
 using Sernager.Core.Managers;
-using Sernager.Core.Models;
 using Sernager.Terminal.Attributes;
 using Sernager.Terminal.Flows.Extensions;
 using Sernager.Terminal.Managers;
