@@ -12,7 +12,7 @@ internal static class ByteReaderExtension
 
         if (property == null)
         {
-            throw new NullReferenceException("Property 'Position' is null.");
+            throw new NullReferenceException($"{nameof(PropertyInfo)} 'Position' is null.");
         }
 
         property.SetValue(reader, position);

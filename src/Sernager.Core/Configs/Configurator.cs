@@ -3,6 +3,7 @@ using Sernager.Core.Options;
 using Sernager.Core.Utils;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Core.Configs;
 
@@ -47,7 +48,7 @@ internal static class Configurator
         using (ByteReader reader = new ByteReader(File.ReadAllBytes(filePath)))
         using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type.Value))
         {
-            string currentDirectoryName = Path.GetDirectoryName(filePath) ?? "./";
+            string? currentDirectoryName = Path.GetDirectoryName(filePath);
             if (string.IsNullOrWhiteSpace(currentDirectoryName))
             {
                 currentDirectoryName = "./";
@@ -59,20 +60,32 @@ internal static class Configurator
         }
     }
 
+    [ExcludeFromCodeCoverage]
     internal static void UseAutoSave(EConfigurationType type)
     {
-        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+        EventHandler? handler = null;
+
+        handler = [ExcludeFromCodeCoverage] (sender, args) =>
         {
+            AppDomain.CurrentDomain.ProcessExit -= handler;
             SaveAsFile(type);
         };
+
+        AppDomain.CurrentDomain.ProcessExit += handler;
     }
 
+    [ExcludeFromCodeCoverage]
     internal static void UseAutoSave(EUserFriendlyConfigurationType type)
     {
-        AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+        EventHandler? handler = null;
+
+        handler = [ExcludeFromCodeCoverage] (sender, args) =>
         {
+            AppDomain.CurrentDomain.ProcessExit -= handler;
             SaveAsFile(type);
         };
+
+        AppDomain.CurrentDomain.ProcessExit += handler;
     }
 
     internal static void SaveAsFile(EConfigurationType type)

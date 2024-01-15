@@ -12,7 +12,11 @@ fi
 
 if [ "$1" == "coverage" ]; then
     for i in "${test_dirs[@]}"; do
-        exclude_namespaces=("[Sernager.Unit]Sernager.Unit*")
+        exclude_namespaces=()
+
+        exclude_namespaces+=("[Sernager.Unit]Sernager.Unit*")
+        exclude_namespaces+=("[Sernager.Resources]Sernager.Resources*")
+
         for j in "${test_dirs[@]}"; do
             if [ "$j" != "$i" ]; then
                 exclude_namespace=$(basename "$j")

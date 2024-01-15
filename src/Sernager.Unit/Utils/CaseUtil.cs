@@ -10,7 +10,7 @@ public static class CaseUtil
 {
     public static readonly string DEFAULT_START_PATH = Path.Combine(Environment.CurrentDirectory, "Cases");
 
-    public static byte[] Read(string alias, string extension)
+    public static string GetPath(string alias, string extension)
     {
         if (!extension.StartsWith('.'))
         {
@@ -24,24 +24,20 @@ public static class CaseUtil
         {
             throw new FileNotFoundException($"Case file not found: Cases/{aliasPath}.{extension}");
         }
+
+        return path;
+    }
+
+    public static byte[] Read(string alias, string extension)
+    {
+        string path = GetPath(alias, extension);
 
         return File.ReadAllBytes(path);
     }
 
     public static string ReadString(string alias, string extension)
     {
-        if (!extension.StartsWith('.'))
-        {
-            extension = $".{extension}";
-        }
-
-        string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
-        string path = Path.Combine(DEFAULT_START_PATH, $"{aliasPath}{extension}");
-
-        if (!File.Exists(path))
-        {
-            throw new FileNotFoundException($"Case file not found: Cases/{aliasPath}.{extension}");
-        }
+        string path = GetPath(alias, extension);
 
         return File.ReadAllText(path);
     }
