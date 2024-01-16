@@ -86,13 +86,13 @@ internal static class Encryptor
             return string.Empty;
         }
 
-        if (key.Length != KEY_SIZE)
+        if (Encoding.UTF8.GetString(key).Length != KEY_SIZE)
         {
             ExceptionManager.ThrowFail<ArgumentException>("Invalid key size.");
             return string.Empty;
         }
 
-        if (iv.Length != IV_SIZE)
+        if (Encoding.UTF8.GetString(iv).Length != IV_SIZE)
         {
             ExceptionManager.ThrowFail<ArgumentException>("Invalid iv size.");
             return string.Empty;

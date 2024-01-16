@@ -24,7 +24,7 @@ public static class CaseUtil
 
         if (!File.Exists(path))
         {
-            throw new FileNotFoundException($"Case file not found: Cases/{aliasPath}{extension}");
+            throw new FileNotFoundException($"Case file not found: Cases{Path.DirectorySeparatorChar}{aliasPath}{extension}");
         }
 
         return path;
@@ -107,7 +107,7 @@ public static class CaseUtil
 
         if (result == null)
         {
-            throw new JsonException($"Failed to deserialize JSON to {typeof(T).Name}: Cases/{aliasPath}.json");
+            throw new JsonException($"Failed to deserialize JSON to {typeof(T).Name}: Cases{Path.DirectorySeparatorChar}{aliasPath}.json");
         }
 
         return result;
@@ -122,7 +122,7 @@ public static class CaseUtil
 
         if (result == null)
         {
-            throw new YamlException($"Failed to deserialize YAML to {typeof(T).Name}: Cases/{aliasPath}.yaml");
+            throw new YamlException($"Failed to deserialize YAML to {typeof(T).Name}: Cases{Path.DirectorySeparatorChar}{aliasPath}.yaml");
         }
 
         return result;

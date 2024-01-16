@@ -1,5 +1,4 @@
 using Sernager.Core.Extensions;
-using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
@@ -135,31 +134,17 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     private static ConfigurationMetadata fromSernagerBytes(ByteReader reader)
     {
-        int encodingInfo;
         int keyLength;
         int ivLength;
         int beginSaltLength;
         int endSaltLength;
 
-        if (!reader.TryReadInt32(out encodingInfo) ||
-            !reader.TryReadInt32(out keyLength) ||
+        if (!reader.TryReadInt32(out keyLength) ||
             !reader.TryReadInt32(out ivLength) ||
             !reader.TryReadInt32(out beginSaltLength) ||
             !reader.TryReadInt32(out endSaltLength))
         {
             return failToDeserialize();
-        }
-
-        Encoding encoding;
-
-        if (Encoding.Default.CodePage != encodingInfo)
-        {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            encoding = Encoding.GetEncoding(encodingInfo);
-        }
-        else
-        {
-            encoding = Encoding.Default;
         }
 
         byte[]? keyBytes;
@@ -182,7 +167,6 @@ internal sealed class ConfigurationMetadata : IDisposable
         }
 
         string saltedData = Encryptor.Decrypt(encryptedBytes, keyBytes, ivBytes);
-        saltedData = encoding.GetString(Encoding.UTF8.GetBytes(saltedData));
         saltedData = saltedData.Substring(beginSaltLength, saltedData.Length - beginSaltLength - endSaltLength);
 
         Configuration? config = JsonWrapper.Deserialize<Configuration>(saltedData);
@@ -227,7 +211,6 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     private byte[] toSernagerBytes()
     {
-        int encodingInfo = Encoding.Default.CodePage;
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
         string[] salts =
@@ -237,13 +220,12 @@ internal sealed class ConfigurationMetadata : IDisposable
         };
 
         string saltedData = $"{salts[0]}{JsonWrapper.Serialize(Config)}{salts[1]}";
-        saltedData = Encoding.UTF8.GetString(Encoding.Default.GetBytes(saltedData));
+        saltedData = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(saltedData));
         byte[] encrypted = Encryptor.Encrypt(saltedData, key, iv);
 
         using (ByteWriter writer = new ByteWriter())
         {
-            writer.WriteInt32(encodingInfo)
-                .WriteInt32(Encoding.UTF8.GetByteCount(key))
+            writer.WriteInt32(Encoding.UTF8.GetByteCount(key))
                 .WriteInt32(Encoding.UTF8.GetByteCount(iv))
                 .WriteInt32(salts[0].Length)
                 .WriteInt32(salts[1].Length)

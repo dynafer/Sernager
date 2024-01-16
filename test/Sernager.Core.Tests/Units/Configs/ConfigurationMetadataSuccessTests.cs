@@ -1,7 +1,9 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
+using Sernager.Unit.Extensions;
 using System.ComponentModel;
+using System.Text;
 
 namespace Sernager.Core.Tests.Units.Configs;
 
@@ -12,6 +14,15 @@ public class ConfigurationMetadataSuccessTests
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();
     [DatapointSource]
     private static readonly EUserFriendlyConfigurationType[] USER_FRIENDLY_CONFIGURATION_TYPES = Enum.GetValues<EUserFriendlyConfigurationType>();
+    [DatapointSource]
+    private static readonly Encoding[] ENCODING_LIST =
+    [
+        Encoding.UTF8,
+        Encoding.Unicode,
+        Encoding.BigEndianUnicode,
+        Encoding.UTF32,
+        Encoding.ASCII,
+    ];
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
@@ -29,6 +40,22 @@ public class ConfigurationMetadataSuccessTests
         using (ByteReader reader = new ByteReader(path))
         {
             ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type);
+
+            Assert.That(metadata.Config, Is.Not.Null);
+            Assert.That(metadata.Config, Is.TypeOf<Configuration>());
+        }
+    }
+
+    [Theory]
+    public void Parse_ShouldReturnConfigurationMetadata_SernagerType(Encoding encoding)
+    {
+        Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
+
+        string path = CaseUtil.GetPath($"Configs.Defaults.Sernager.{encoding.GetEncodingName()}", Configurator.GetExtension(EConfigurationType.Sernager));
+
+        using (ByteReader reader = new ByteReader(path))
+        {
+            ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, EConfigurationType.Sernager);
 
             Assert.That(metadata.Config, Is.Not.Null);
             Assert.That(metadata.Config, Is.TypeOf<Configuration>());

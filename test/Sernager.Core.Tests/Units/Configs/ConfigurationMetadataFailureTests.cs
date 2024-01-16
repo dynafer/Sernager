@@ -14,6 +14,16 @@ public class ConfigurationMetadataFailureTests : FailureFixture
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();
     [DatapointSource]
     private static readonly EUserFriendlyConfigurationType[] USER_FRIENDLY_CONFIGURATION_TYPES = Enum.GetValues<EUserFriendlyConfigurationType>();
+    [DatapointSource]
+    private static readonly Encoding[] ENCODING_LIST =
+    [
+        Encoding.UTF8,
+        Encoding.Unicode,
+        Encoding.BigEndianUnicode,
+        Encoding.UTF32,
+        Encoding.ASCII,
+        Encoding.Default,
+    ];
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
@@ -39,11 +49,10 @@ public class ConfigurationMetadataFailureTests : FailureFixture
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
         string path;
-        string configString = "InvalidConfiguration";
 
         if (type != EConfigurationType.Sernager)
         {
-            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, configString);
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, "InvalidConfiguration");
 
             using (ByteReader reader = new ByteReader(path))
             {
@@ -54,27 +63,30 @@ public class ConfigurationMetadataFailureTests : FailureFixture
 
             return;
         }
+        else
+        {
+            Assert.Pass();
+        }
+    }
 
+    [Theory]
+    public void Parse_ShouldThrow_WhenInvalidBytesPassed_SernagerType(Encoding encoding)
+    {
+        Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
+
+        EConfigurationType type = EConfigurationType.Sernager;
+        string path;
+        string configString = "InvalidConfiguration";
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
 
         string salt = "Salt";
         string encryptingString = $"{salt}{configString}{salt}";
-        encryptingString = Encoding.UTF8.GetString(Encoding.Default.GetBytes(encryptingString));
+        encryptingString = Encoding.UTF8.GetString(encoding.GetBytes(encryptingString));
         byte[] encrypted = Encryptor.Encrypt(encryptingString, key, iv);
 
         using (ByteWriter writer = new ByteWriter())
         {
-            writer.WriteInt32(Encoding.Default.CodePage);
-            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
-
-            using (ByteReader reader = new ByteReader(path))
-            {
-                TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
-                reader.ChangePosition(0);
-                TestExceptionLevel<SernagerException>(() => ConfigurationMetadata.Parse(reader, type));
-            }
-
             writer.WriteInt32(Encoding.UTF8.GetByteCount(key));
             path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
