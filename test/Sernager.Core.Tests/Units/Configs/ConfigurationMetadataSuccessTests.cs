@@ -1,5 +1,4 @@
 using Sernager.Core.Configs;
-using Sernager.Core.Helpers;
 using Sernager.Core.Options;
 using Sernager.Core.Utils;
 using System.ComponentModel;
@@ -8,19 +7,26 @@ namespace Sernager.Core.Tests.Units.Configs;
 
 public class ConfigurationMetadataSuccessTests
 {
+    private static readonly string TEMP_FILE_ALIAS = "ConfigurationMetadata";
     [DatapointSource]
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();
     [DatapointSource]
     private static readonly EUserFriendlyConfigurationType[] USER_FRIENDLY_CONFIGURATION_TYPES = Enum.GetValues<EUserFriendlyConfigurationType>();
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        CaseUtil.DeleteTempFiles(TEMP_FILE_ALIAS);
+    }
 
     [Theory]
     public void Parse_ShouldReturnConfigurationMetadata(EConfigurationType type)
     {
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
-        byte[] bytes = CaseUtil.Read("Configs.Defaults.Sernager", Configurator.GetExtension(type));
+        string path = CaseUtil.GetPath("Configs.Defaults.Sernager", Configurator.GetExtension(type));
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type);
 
@@ -34,7 +40,7 @@ public class ConfigurationMetadataSuccessTests
     {
         Assume.That(ufType, Is.AnyOf(USER_FRIENDLY_CONFIGURATION_TYPES));
 
-        byte[] ufBytes = CaseUtil.Read("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
+        string path = CaseUtil.GetPath("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
 
         EConfigurationType type = ufType switch
         {
@@ -43,7 +49,7 @@ public class ConfigurationMetadataSuccessTests
             _ => throw new InvalidEnumArgumentException(nameof(ufType), (int)ufType, typeof(EUserFriendlyConfigurationType))
         };
 
-        using (ByteReader reader = new ByteReader(ufBytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type);
 
@@ -57,13 +63,15 @@ public class ConfigurationMetadataSuccessTests
     {
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
+        string path = CaseUtil.GetPath("Configs.Defaults.Sernager", Configurator.GetExtension(type));
         byte[] bytes = CaseUtil.Read("Configs.Defaults.Sernager", Configurator.GetExtension(type));
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type);
 
             byte[] result = metadata.ToBytes(type);
+            string resultPath = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, result);
 
             if (type != EConfigurationType.Sernager)
             {
@@ -75,7 +83,7 @@ public class ConfigurationMetadataSuccessTests
 
             string expectJson = JsonWrapper.Serialize(metadata.Config);
 
-            using (ByteReader resultReader = new ByteReader(result))
+            using (ByteReader resultReader = new ByteReader(resultPath))
             {
                 ConfigurationMetadata resultMetadata = ConfigurationMetadata.Parse(resultReader, type);
 
@@ -91,6 +99,7 @@ public class ConfigurationMetadataSuccessTests
     {
         Assume.That(ufType, Is.AnyOf(USER_FRIENDLY_CONFIGURATION_TYPES));
 
+        string path = CaseUtil.GetPath("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
         byte[] ufBytes = CaseUtil.Read("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
 
         EConfigurationType type = ufType switch
@@ -100,13 +109,11 @@ public class ConfigurationMetadataSuccessTests
             _ => throw new InvalidEnumArgumentException(nameof(ufType), (int)ufType, typeof(EUserFriendlyConfigurationType))
         };
 
-        using (ByteReader reader = new ByteReader(ufBytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type);
 
             byte[] result = metadata.ToBytes(ufType);
-
-            Assert.That(EncodingHelper.GetString(result), Is.EqualTo(EncodingHelper.GetString(ufBytes)));
 
             Assert.That(result, Is.Not.Empty);
             Assert.That(result, Is.EqualTo(ufBytes));

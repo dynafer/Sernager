@@ -1,4 +1,3 @@
-using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -8,12 +7,18 @@ namespace Sernager.Core.Utils;
 internal sealed class ByteReader : IDisposable
 {
     private byte[] mBytes;
+    private Encoding mEncoding;
     internal int Position { get; private set; } = 0;
     internal int Length => mBytes.Length;
 
-    internal ByteReader(byte[] bytes)
+    internal ByteReader(string path)
     {
-        mBytes = bytes;
+        using (StreamReader reader = new StreamReader(path))
+        {
+            mEncoding = reader.CurrentEncoding;
+        }
+
+        mBytes = File.ReadAllBytes(path);
     }
 
     public void Dispose()
@@ -104,7 +109,7 @@ internal sealed class ByteReader : IDisposable
             return false;
         }
 
-        value = EncodingHelper.GetString(bytes);
+        value = mEncoding.GetString(bytes);
         return true;
     }
 

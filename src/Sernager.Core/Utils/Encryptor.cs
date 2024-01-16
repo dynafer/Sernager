@@ -66,7 +66,7 @@ internal static class Encryptor
         return encrypted;
     }
 
-    internal static string Decrypt(byte[] value, string key, string iv)
+    internal static string Decrypt(byte[] value, byte[] key, byte[] iv)
     {
         if (value == null)
         {
@@ -103,8 +103,8 @@ internal static class Encryptor
         using (Aes aes = Aes.Create())
         {
             aes.Padding = PaddingMode.Zeros;
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
+            aes.Key = key;
+            aes.IV = iv;
 
             ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 

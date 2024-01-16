@@ -60,52 +60,52 @@ public class EncryptorFailureTests : FailureFixture
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedNullValue()
     {
-        string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
-        string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
+        byte[] keyBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.KEY_SIZE));
+        byte[] ivBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.IV_SIZE));
 
-        TestNoneLevel(() => Encryptor.Decrypt(null!, key, iv), Is.Empty);
-        TestExceptionLevel<ArgumentNullException>(() => Encryptor.Decrypt(null!, key, iv));
+        TestNoneLevel(() => Encryptor.Decrypt(null!, keyBytes, ivBytes), Is.Empty);
+        TestExceptionLevel<ArgumentNullException>(() => Encryptor.Decrypt(null!, keyBytes, ivBytes));
     }
 
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedNullKey()
     {
         byte[] value = Encoding.Default.GetBytes("Hello, World!");
-        string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
+        byte[] ivBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.IV_SIZE));
 
-        TestNoneLevel(() => Encryptor.Decrypt(value, null!, iv), Is.Empty);
-        TestExceptionLevel<ArgumentNullException>(() => Encryptor.Decrypt(value, null!, iv));
+        TestNoneLevel(() => Encryptor.Decrypt(value, null!, ivBytes), Is.Empty);
+        TestExceptionLevel<ArgumentNullException>(() => Encryptor.Decrypt(value, null!, ivBytes));
     }
 
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedNullIv()
     {
         byte[] value = Encoding.Default.GetBytes("Hello, World!");
-        string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
+        byte[] keyBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.KEY_SIZE));
 
-        TestNoneLevel(() => Encryptor.Decrypt(value, key, null!), Is.Empty);
-        TestExceptionLevel<ArgumentNullException>(() => Encryptor.Decrypt(value, key, null!));
+        TestNoneLevel(() => Encryptor.Decrypt(value, keyBytes, null!), Is.Empty);
+        TestExceptionLevel<ArgumentNullException>(() => Encryptor.Decrypt(value, keyBytes, null!));
     }
 
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedInvalidKeySize()
     {
         byte[] value = Encoding.Default.GetBytes("Hello, World!");
-        string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE - 1);
-        string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
+        byte[] keyBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.KEY_SIZE - 1));
+        byte[] ivBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.IV_SIZE));
 
-        TestNoneLevel(() => Encryptor.Decrypt(value, key, iv), Is.Empty);
-        TestExceptionLevel<ArgumentException>(() => Encryptor.Decrypt(value, key, iv));
+        TestNoneLevel(() => Encryptor.Decrypt(value, keyBytes, ivBytes), Is.Empty);
+        TestExceptionLevel<ArgumentException>(() => Encryptor.Decrypt(value, keyBytes, ivBytes));
     }
 
     [Test]
     public void Decrypt_ShouldThrow_WhenPassedInvalidIvSize()
     {
         byte[] value = Encoding.Default.GetBytes("Hello, World!");
-        string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
-        string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE - 1);
+        byte[] keyBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.KEY_SIZE));
+        byte[] ivBytes = Encoding.UTF8.GetBytes(Randomizer.GenerateRandomString(Encryptor.IV_SIZE - 1));
 
-        TestNoneLevel(() => Encryptor.Decrypt(value, key, iv), Is.Empty);
-        TestExceptionLevel<ArgumentException>(() => Encryptor.Decrypt(value, key, iv));
+        TestNoneLevel(() => Encryptor.Decrypt(value, keyBytes, ivBytes), Is.Empty);
+        TestExceptionLevel<ArgumentException>(() => Encryptor.Decrypt(value, keyBytes, ivBytes));
     }
 }

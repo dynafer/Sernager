@@ -9,18 +9,24 @@ namespace Sernager.Core.Tests.Units.Configs;
 
 public class ConfigurationMetadataFailureTests : FailureFixture
 {
+    private static readonly string TEMP_FILE_ALIAS = "ConfigurationMetadata";
     [DatapointSource]
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();
     [DatapointSource]
     private static readonly EUserFriendlyConfigurationType[] USER_FRIENDLY_CONFIGURATION_TYPES = Enum.GetValues<EUserFriendlyConfigurationType>();
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        CaseUtil.DeleteTempFiles(TEMP_FILE_ALIAS);
+    }
+
     [Test]
     public void Parse_ShouldThrow_WhenConfigurationTypeDoesNotExist()
     {
-        string json = "{\"Hello\": \"World!\"}";
-        byte[] bytes = Encoding.Default.GetBytes(json);
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, "{\"Hello\": \"World!\"}");
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             TestNoneLevel(() => ConfigurationMetadata.Parse(reader, (EConfigurationType)9999), Is.TypeOf<ConfigurationMetadata>());
             TestExceptionLevel<InvalidEnumArgumentException>(() => ConfigurationMetadata.Parse(reader, (EConfigurationType)9999));
@@ -32,14 +38,14 @@ public class ConfigurationMetadataFailureTests : FailureFixture
     {
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
-        byte[] bytes;
+        string path;
         string configString = "InvalidConfiguration";
 
         if (type != EConfigurationType.Sernager)
         {
-            bytes = Encoding.UTF8.GetBytes(configString);
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, configString);
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -53,24 +59,36 @@ public class ConfigurationMetadataFailureTests : FailureFixture
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
 
         string salt = "Salt";
-        byte[] encrypted = Encryptor.Encrypt($"{salt}{configString}{salt}", key, iv);
+        string encryptingString = $"{salt}{configString}{salt}";
+        encryptingString = Encoding.UTF8.GetString(Encoding.Default.GetBytes(encryptingString));
+        byte[] encrypted = Encryptor.Encrypt(encryptingString, key, iv);
 
         using (ByteWriter writer = new ByteWriter())
         {
-            writer.WriteInt32(Encryptor.KEY_SIZE);
-            bytes = writer.GetBytes();
+            writer.WriteInt32(Encoding.Default.CodePage);
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
                 TestExceptionLevel<SernagerException>(() => ConfigurationMetadata.Parse(reader, type));
             }
 
-            writer.WriteInt32(Encryptor.IV_SIZE);
-            bytes = writer.GetBytes();
+            writer.WriteInt32(Encoding.UTF8.GetByteCount(key));
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
+            {
+                TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
+                reader.ChangePosition(0);
+                TestExceptionLevel<SernagerException>(() => ConfigurationMetadata.Parse(reader, type));
+            }
+
+            writer.WriteInt32(Encoding.UTF8.GetByteCount(iv));
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
+
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -78,9 +96,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             }
 
             writer.WriteInt32(salt.Length);
-            bytes = writer.GetBytes();
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -88,9 +106,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             }
 
             writer.WriteInt32(salt.Length);
-            bytes = writer.GetBytes();
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -98,9 +116,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             }
 
             writer.WriteString(Encoding.UTF8, key);
-            bytes = writer.GetBytes();
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -108,9 +126,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             }
 
             writer.WriteString(Encoding.UTF8, iv);
-            bytes = writer.GetBytes();
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -118,9 +136,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             }
 
             writer.WriteBytes(encrypted);
-            bytes = writer.GetBytes();
+            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, writer.GetBytes());
 
-            using (ByteReader reader = new ByteReader(bytes))
+            using (ByteReader reader = new ByteReader(path))
             {
                 TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
                 reader.ChangePosition(0);
@@ -134,9 +152,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
     {
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
-        byte[] bytes = CaseUtil.Read("Configs.Defaults.Sernager", Configurator.GetExtension(type));
+        string path = CaseUtil.GetPath("Configs.Defaults.Sernager", Configurator.GetExtension(type));
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type))
             {
@@ -160,9 +178,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             _ => throw new InvalidEnumArgumentException(nameof(ufType), (int)ufType, typeof(EUserFriendlyConfigurationType))
         };
 
-        byte[] ufBytes = CaseUtil.Read("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
+        string path = CaseUtil.GetPath("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
 
-        using (ByteReader reader = new ByteReader(ufBytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type))
             {
@@ -179,9 +197,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
     {
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
-        byte[] bytes = CaseUtil.Read("Configs.Defaults.Sernager", Configurator.GetExtension(type));
+        string path = CaseUtil.GetPath("Configs.Defaults.Sernager", Configurator.GetExtension(type));
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type))
             {
@@ -203,9 +221,9 @@ public class ConfigurationMetadataFailureTests : FailureFixture
             _ => throw new InvalidEnumArgumentException(nameof(ufType), (int)ufType, typeof(EUserFriendlyConfigurationType))
         };
 
-        byte[] ufBytes = CaseUtil.Read("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
+        string path = CaseUtil.GetPath("Configs.UserFriendlys.Sernager", Configurator.GetExtension(ufType));
 
-        using (ByteReader reader = new ByteReader(ufBytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type))
             {

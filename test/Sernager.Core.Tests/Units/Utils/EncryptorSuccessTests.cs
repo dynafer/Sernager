@@ -11,6 +11,8 @@ public class EncryptorSuccessTests
         string cypherText = "Hello World!";
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
+        byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+        byte[] ivBytes = Encoding.UTF8.GetBytes(iv);
 
         byte[] encryptedBytes = Encryptor.Encrypt(cypherText, key, iv);
 
@@ -18,7 +20,7 @@ public class EncryptorSuccessTests
         Assert.That(encryptedBytes, Is.Not.Empty);
         Assert.That(encryptedBytes, Is.Not.EqualTo(Encoding.Default.GetBytes(cypherText)));
 
-        string decryptedText = Encryptor.Decrypt(encryptedBytes, key, iv);
+        string decryptedText = Encryptor.Decrypt(encryptedBytes, keyBytes, ivBytes);
 
         Assert.That(decryptedText, Is.Not.Null);
         Assert.That(decryptedText, Is.Not.Empty);
@@ -32,7 +34,7 @@ public class EncryptorSuccessTests
         Assert.That(encryptedBytes, Is.Not.Empty);
         Assert.That(encryptedBytes, Is.Not.EqualTo(Encoding.Default.GetBytes(cypherText)));
 
-        decryptedText = Encryptor.Decrypt(encryptedBytes, key, iv);
+        decryptedText = Encryptor.Decrypt(encryptedBytes, keyBytes, ivBytes);
 
         Assert.That(decryptedText, Is.Not.Null);
         Assert.That(decryptedText, Is.Not.Empty);

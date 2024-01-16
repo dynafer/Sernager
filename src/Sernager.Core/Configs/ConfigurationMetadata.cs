@@ -30,11 +30,11 @@ internal sealed class ConfigurationMetadata : IDisposable
         switch (type)
         {
             case EConfigurationType.Yaml:
-                return fromYamlBytes(reader.ReadBytes(reader.Length - reader.Position));
+                return fromYamlBytes(reader);
             case EConfigurationType.Json:
-                return fromJsonBytes(reader.ReadBytes(reader.Length - reader.Position));
+                return fromJsonBytes(reader);
             case EConfigurationType.Sernager:
-                return fromSernagerBytes(reader.ReadBytes(reader.Length - reader.Position));
+                return fromSernagerBytes(reader);
             default:
                 ExceptionManager.ThrowFail<InvalidEnumArgumentException>("type", (int)type, typeof(EConfigurationType));
                 return new ConfigurationMetadata(new Configuration());
@@ -83,9 +83,14 @@ internal sealed class ConfigurationMetadata : IDisposable
         }
     }
 
-    private static ConfigurationMetadata fromYamlBytes(byte[] bytes)
+    private static ConfigurationMetadata fromYamlBytes(ByteReader reader)
     {
-        string yaml = EncodingHelper.GetString(bytes);
+        string? yaml;
+        if (!reader.TryReadString(reader.Length - reader.Position, out yaml))
+        {
+            return failToDeserialize();
+        }
+
         Configuration? config = YamlWrapper.Deserialize<Configuration>(yaml);
 
         if (config != null)
@@ -103,9 +108,14 @@ internal sealed class ConfigurationMetadata : IDisposable
         return failToDeserialize();
     }
 
-    private static ConfigurationMetadata fromJsonBytes(byte[] bytes)
+    private static ConfigurationMetadata fromJsonBytes(ByteReader reader)
     {
-        string json = EncodingHelper.GetString(bytes);
+        string? json;
+        if (!reader.TryReadString(reader.Length - reader.Position, out json))
+        {
+            return failToDeserialize();
+        }
+
         Configuration? config = JsonWrapper.Deserialize<Configuration>(json);
 
         if (config != null)
@@ -123,51 +133,66 @@ internal sealed class ConfigurationMetadata : IDisposable
         return failToDeserialize();
     }
 
-    private static ConfigurationMetadata fromSernagerBytes(byte[] bytes)
+    private static ConfigurationMetadata fromSernagerBytes(ByteReader reader)
     {
-        using (ByteReader reader = new ByteReader(bytes))
+        int encodingInfo;
+        int keyLength;
+        int ivLength;
+        int beginSaltLength;
+        int endSaltLength;
+
+        if (!reader.TryReadInt32(out encodingInfo) ||
+            !reader.TryReadInt32(out keyLength) ||
+            !reader.TryReadInt32(out ivLength) ||
+            !reader.TryReadInt32(out beginSaltLength) ||
+            !reader.TryReadInt32(out endSaltLength))
         {
-            int keyLength;
-            int ivLength;
-            int beginSaltLength;
-            int endSaltLength;
-
-            if (!reader.TryReadInt32(out keyLength)
-                || !reader.TryReadInt32(out ivLength)
-                || !reader.TryReadInt32(out beginSaltLength)
-                || !reader.TryReadInt32(out endSaltLength))
-            {
-                return failToDeserialize();
-            }
-
-            string? key;
-            string? iv;
-
-            if (!reader.TryReadString(Encoding.UTF8, keyLength, out key)
-                || !reader.TryReadString(Encoding.UTF8, ivLength, out iv))
-            {
-                return failToDeserialize();
-            }
-
-            byte[]? encryptedBytes;
-
-            if (!reader.TryReadBytes(reader.Length - reader.Position, out encryptedBytes))
-            {
-                return failToDeserialize();
-            }
-
-            string saltedData = Encryptor.Decrypt(encryptedBytes, key, iv);
-            saltedData = saltedData.Substring(beginSaltLength, saltedData.Length - beginSaltLength - endSaltLength);
-
-            Configuration? config = JsonWrapper.Deserialize<Configuration>(saltedData);
-
-            if (config == null)
-            {
-                return failToDeserialize();
-            }
-
-            return new ConfigurationMetadata(config);
+            return failToDeserialize();
         }
+
+        Encoding encoding;
+
+        if (Encoding.Default.CodePage != encodingInfo)
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            encoding = Encoding.GetEncoding(encodingInfo);
+        }
+        else
+        {
+            encoding = Encoding.Default;
+        }
+
+        byte[]? keyBytes;
+        byte[]? ivBytes;
+
+        if (!reader.TryReadBytes(keyLength, out keyBytes) ||
+            !reader.TryReadBytes(ivLength, out ivBytes))
+        {
+            return failToDeserialize();
+        }
+
+        byte[]? encryptedBytes;
+        int encryptedLength = reader.Length - reader.Position;
+
+        if (!reader.TryReadBytes(encryptedLength, out encryptedBytes) ||
+            encryptedBytes.Length != encryptedLength ||
+            encryptedBytes.Length == 0)
+        {
+            return failToDeserialize();
+        }
+
+        string saltedData = Encryptor.Decrypt(encryptedBytes, keyBytes, ivBytes);
+        saltedData = encoding.GetString(Encoding.UTF8.GetBytes(saltedData));
+        saltedData = saltedData.Substring(beginSaltLength, saltedData.Length - beginSaltLength - endSaltLength);
+
+        Configuration? config = JsonWrapper.Deserialize<Configuration>(saltedData);
+
+        if (config == null)
+        {
+            return failToDeserialize();
+        }
+
+        return new ConfigurationMetadata(config);
     }
 
     [StackTraceHidden]
@@ -202,6 +227,7 @@ internal sealed class ConfigurationMetadata : IDisposable
 
     private byte[] toSernagerBytes()
     {
+        int encodingInfo = Encoding.Default.CodePage;
         string key = Randomizer.GenerateRandomString(Encryptor.KEY_SIZE);
         string iv = Randomizer.GenerateRandomString(Encryptor.IV_SIZE);
         string[] salts =
@@ -211,12 +237,14 @@ internal sealed class ConfigurationMetadata : IDisposable
         };
 
         string saltedData = $"{salts[0]}{JsonWrapper.Serialize(Config)}{salts[1]}";
+        saltedData = Encoding.UTF8.GetString(Encoding.Default.GetBytes(saltedData));
         byte[] encrypted = Encryptor.Encrypt(saltedData, key, iv);
 
         using (ByteWriter writer = new ByteWriter())
         {
-            writer.WriteInt32(key.Length)
-                .WriteInt32(iv.Length)
+            writer.WriteInt32(encodingInfo)
+                .WriteInt32(Encoding.UTF8.GetByteCount(key))
+                .WriteInt32(Encoding.UTF8.GetByteCount(iv))
                 .WriteInt32(salts[0].Length)
                 .WriteInt32(salts[1].Length)
                 .WriteString(Encoding.UTF8, key)

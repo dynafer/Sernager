@@ -45,7 +45,7 @@ internal static class Configurator
             return;
         }
 
-        using (ByteReader reader = new ByteReader(File.ReadAllBytes(filePath)))
+        using (ByteReader reader = new ByteReader(filePath))
         using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type.Value))
         {
             string? currentDirectoryName = Path.GetDirectoryName(filePath);

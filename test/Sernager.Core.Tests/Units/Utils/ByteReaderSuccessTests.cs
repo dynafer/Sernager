@@ -5,6 +5,7 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteReaderSuccessTests
 {
+    private static readonly string TEMP_FILE_ALIAS = "ByteReader";
     [DatapointSource]
     private static readonly Encoding[] ENCODING_LIST =
     [
@@ -16,12 +17,19 @@ public class ByteReaderSuccessTests
         Encoding.Default,
     ];
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        CaseUtil.DeleteTempFiles(TEMP_FILE_ALIAS);
+    }
+
     [Test]
     public void ReadBytes_ShouldReturnBytes()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             byte[] result = reader.ReadBytes(bytes.Length);
 
@@ -35,8 +43,9 @@ public class ByteReaderSuccessTests
     public void TryReadInt32_ShouldReturnInt32()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             int result;
 
@@ -51,9 +60,9 @@ public class ByteReaderSuccessTests
         }
 
         int value = 20212223;
-        bytes = BitConverter.GetBytes(value);
+        path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, value);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             int result;
 
@@ -73,6 +82,7 @@ public class ByteReaderSuccessTests
     {
         string value = "Hello, World!";
         byte[] bytes = Encoding.Default.GetBytes(value);
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         int readSum = 0;
 
@@ -90,18 +100,18 @@ public class ByteReaderSuccessTests
             Assert.That(result, Is.EqualTo(str));
         };
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             assertString(reader, "Hello");
             assertString(reader, ", ");
             assertString(reader, "World!");
         }
 
-        value = "{ \"Hello\": \"World!\" }";
-        bytes = Encoding.Default.GetBytes(value);
+        bytes = Encoding.Default.GetBytes("{ \"Hello\": \"World!\" }");
+        path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         readSum = 0;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             assertString(reader, "{ ");
             assertString(reader, "\"Hello\": ");
@@ -117,6 +127,7 @@ public class ByteReaderSuccessTests
 
         string value = "Hello, World!";
         byte[] bytes = encoding.GetBytes(value);
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         int readLength;
         int readSum = 0;
@@ -136,18 +147,18 @@ public class ByteReaderSuccessTests
             Assert.That(result, Is.EqualTo(str));
         };
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             assertString(reader, "Hello");
             assertString(reader, ", ");
             assertString(reader, "World!");
         }
 
-        value = "{ \"Hello\": \"World!\" }";
-        bytes = encoding.GetBytes(value);
+        bytes = encoding.GetBytes("{ \"Hello\": \"World!\" }");
+        path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         readSum = 0;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             assertString(reader, "{ ");
             assertString(reader, "\"Hello\": ");
@@ -160,8 +171,9 @@ public class ByteReaderSuccessTests
     public void TrySkip_With_ReadBytes_ShouldReturnNextSkippedBytes()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             byte[] result = reader.ReadBytes(2);
 

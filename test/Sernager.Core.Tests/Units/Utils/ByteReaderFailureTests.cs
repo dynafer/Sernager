@@ -5,6 +5,7 @@ namespace Sernager.Core.Tests.Units.Utils;
 
 public class ByteReaderFailureTests : FailureFixture
 {
+    private static readonly string TEMP_FILE_ALIAS = "ByteReader";
     [DatapointSource]
     private static readonly Encoding[] ENCODING_LIST =
     [
@@ -16,12 +17,19 @@ public class ByteReaderFailureTests : FailureFixture
         Encoding.Default,
     ];
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        CaseUtil.DeleteTempFiles(TEMP_FILE_ALIAS);
+    }
+
     [Test]
     public void ReadBytes_ShouldThrow_WhenDisposed()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
@@ -34,14 +42,15 @@ public class ByteReaderFailureTests : FailureFixture
     public void ReadBytes_ShouldThrow_WhenLengthIsLessThanOrEqualToZero()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             TestNoneLevel(() => reader.ReadBytes(0), Is.Empty);
             TestExceptionLevel<ArgumentException>(() => reader.ReadBytes(0));
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             TestNoneLevel(() => reader.ReadBytes(-1), Is.Empty);
             TestExceptionLevel<ArgumentException>(() => reader.ReadBytes(-1));
@@ -52,14 +61,15 @@ public class ByteReaderFailureTests : FailureFixture
     public void ReadBytes_ShouldThrow_WhenPositionPlusLengthGreaterThanBytesLength()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             TestNoneLevel(() => reader.ReadBytes(5), Is.Empty);
             TestExceptionLevel<IndexOutOfRangeException>(() => reader.ReadBytes(5));
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.ReadBytes(2);
 
@@ -72,10 +82,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadBytes_ShouldReturnFalseAndOutNull_WhenDisposed()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         byte[]? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
@@ -90,10 +101,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadBytes_ShouldReturnFalseAndOutNull_WhenLengthIsLessThanOrEqualToZero()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         byte[]? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadBytes(0, out result);
 
@@ -101,7 +113,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadBytes(-1, out result);
 
@@ -114,10 +126,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadBytes_ShouldReturnFalseAndOutNull_WhenPositionPlusLengthGreaterThanBytesLength()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         byte[]? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadBytes(5, out result);
 
@@ -125,7 +138,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.ReadBytes(2);
 
@@ -140,10 +153,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadInt32_ShouldReturnFalseAndOutNegativeOne_WhenDisposed()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         int result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
@@ -158,10 +172,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadInt32_ShouldReturnFalseAndOutNegativeOne_WhenPositionPlusLengthGreaterThanBytesLength()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         int result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.TryReadInt32(out result);
             bResult = reader.TryReadInt32(out result);
@@ -170,7 +185,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.ReadBytes(2);
 
@@ -185,10 +200,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadString_ShouldReturnFalseAndOutNull_WhenDisposed()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
@@ -205,10 +221,11 @@ public class ByteReaderFailureTests : FailureFixture
         Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
 
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
@@ -223,10 +240,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadString_ShouldReturnFalseAndOutNull_WhenLengthIsLessThanOrEqualToZero()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadString(0, out result);
 
@@ -234,7 +252,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadString(-1, out result);
 
@@ -249,10 +267,11 @@ public class ByteReaderFailureTests : FailureFixture
         Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
 
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadString(encoding, 0, out result);
 
@@ -260,7 +279,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadString(encoding, -1, out result);
 
@@ -273,10 +292,11 @@ public class ByteReaderFailureTests : FailureFixture
     public void TryReadString_ShouldReturnFalseAndOutNull_WhenPositionPlusLengthGreaterThanBytesLength()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadString(5, out result);
 
@@ -284,7 +304,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.ReadBytes(2);
 
@@ -301,10 +321,11 @@ public class ByteReaderFailureTests : FailureFixture
         Assume.That(encoding, Is.AnyOf(ENCODING_LIST));
 
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         string? result;
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TryReadString(encoding, 5, out result);
 
@@ -312,7 +333,7 @@ public class ByteReaderFailureTests : FailureFixture
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.ReadBytes(2);
 
@@ -327,9 +348,10 @@ public class ByteReaderFailureTests : FailureFixture
     public void TrySkip_ShouldReturnFalse_WhenDisposed()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
@@ -343,16 +365,17 @@ public class ByteReaderFailureTests : FailureFixture
     public void TrySkip_ShouldReturnFalse_WhenPositionPlusLengthGreaterThanBytesLength()
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
         bool bResult;
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             bResult = reader.TrySkip(5);
 
             Assert.That(bResult, Is.False);
         }
 
-        using (ByteReader reader = new ByteReader(bytes))
+        using (ByteReader reader = new ByteReader(path))
         {
             reader.ReadBytes(2);
 
