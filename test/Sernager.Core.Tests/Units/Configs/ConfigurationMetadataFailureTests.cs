@@ -38,8 +38,8 @@ public class ConfigurationMetadataFailureTests : FailureFixture
 
         using (ByteReader reader = new ByteReader(path))
         {
-            TestNoneLevel(() => ConfigurationMetadata.Parse(reader, (EConfigurationType)9999), Is.TypeOf<ConfigurationMetadata>());
-            TestExceptionLevel<InvalidEnumArgumentException>(() => ConfigurationMetadata.Parse(reader, (EConfigurationType)9999));
+            TestNoneLevel(() => ConfigurationMetadata.Parse(reader, (EConfigurationType)int.MaxValue), Is.TypeOf<ConfigurationMetadata>());
+            TestExceptionLevel<InvalidEnumArgumentException>(() => ConfigurationMetadata.Parse(reader, (EConfigurationType)int.MaxValue));
         }
     }
 
@@ -219,8 +219,8 @@ public class ConfigurationMetadataFailureTests : FailureFixture
         {
             using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type))
             {
-                TestNoneLevel(() => metadata.ToBytes((EConfigurationType)9999), Is.Empty);
-                TestExceptionLevel<InvalidEnumArgumentException>(() => metadata.ToBytes((EConfigurationType)9999));
+                TestNoneLevel(() => metadata.ToBytes((EConfigurationType)int.MaxValue), Is.Empty);
+                TestExceptionLevel<InvalidEnumArgumentException>(() => metadata.ToBytes((EConfigurationType)int.MaxValue));
             }
         }
     }
@@ -243,8 +243,8 @@ public class ConfigurationMetadataFailureTests : FailureFixture
         {
             using (ConfigurationMetadata metadata = ConfigurationMetadata.Parse(reader, type))
             {
-                TestNoneLevel(() => metadata.ToBytes((EUserFriendlyConfigurationType)9999), Is.Empty);
-                TestExceptionLevel<InvalidEnumArgumentException>(() => metadata.ToBytes((EUserFriendlyConfigurationType)9999));
+                TestNoneLevel(() => metadata.ToBytes((EUserFriendlyConfigurationType)int.MaxValue), Is.Empty);
+                TestExceptionLevel<InvalidEnumArgumentException>(() => metadata.ToBytes((EUserFriendlyConfigurationType)int.MaxValue));
             }
         }
     }

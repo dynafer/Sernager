@@ -15,12 +15,7 @@ public static class EnumExtension
             return string.Empty;
         }
 
-        FieldInfo? field = type.GetField(name);
-
-        if (field == null)
-        {
-            return string.Empty;
-        }
+        FieldInfo field = type.GetField(name)!;
 
         DescriptionAttribute? attr = field.GetCustomAttribute<DescriptionAttribute>();
 

@@ -65,12 +65,12 @@ public class ConfiguratorFailureTests : FailureFixture
     [Test]
     public void GetExtension_ShouldThrow_WhenConfigurationTypeDoesNotExist()
     {
-        Assert.Throws<InvalidEnumArgumentException>(() => Configurator.GetExtension((EConfigurationType)9999));
+        Assert.Throws<InvalidEnumArgumentException>(() => Configurator.GetExtension((EConfigurationType)int.MaxValue));
     }
 
     [Test]
     public void GetExtension_ShouldThrow_WhenUserFriendlyConfigurationTypeDoesNotExist()
     {
-        Assert.Throws<InvalidEnumArgumentException>(() => Configurator.GetExtension((EUserFriendlyConfigurationType)9999));
+        Assert.Throws<InvalidEnumArgumentException>(() => Configurator.GetExtension((EUserFriendlyConfigurationType)int.MaxValue));
     }
 }
