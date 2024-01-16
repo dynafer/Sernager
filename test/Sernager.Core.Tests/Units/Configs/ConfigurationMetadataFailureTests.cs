@@ -48,24 +48,28 @@ public class ConfigurationMetadataFailureTests : FailureFixture
     {
         Assume.That(type, Is.AnyOf(CONFIGURATION_TYPES));
 
-        string path;
-
-        if (type != EConfigurationType.Sernager)
-        {
-            path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, "InvalidConfiguration");
-
-            using (ByteReader reader = new ByteReader(path))
-            {
-                TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
-                reader.ChangePosition(0);
-                TestExceptionLevel<SernagerException>(() => ConfigurationMetadata.Parse(reader, type));
-            }
-
-            return;
-        }
-        else
+        if (type == EConfigurationType.Sernager)
         {
             Assert.Pass();
+            return;
+        }
+
+        string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, "InvalidConfiguration");
+
+        using (ByteReader reader = new ByteReader(path))
+        {
+            TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
+            reader.ChangePosition(0);
+            TestExceptionLevel<SernagerException>(() => ConfigurationMetadata.Parse(reader, type));
+        }
+
+        path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, "");
+
+        using (ByteReader reader = new ByteReader(path))
+        {
+            TestNoneLevel(() => ConfigurationMetadata.Parse(reader, type), Is.TypeOf<ConfigurationMetadata>());
+            reader.ChangePosition(0);
+            TestExceptionLevel<SernagerException>(() => ConfigurationMetadata.Parse(reader, type));
         }
     }
 
