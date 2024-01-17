@@ -83,14 +83,13 @@ public class ByteReaderFailureTests : FailureFixture
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
         string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
-        byte[]? result;
-        bool bResult;
 
         using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
-            bResult = reader.TryReadBytes(4, out result);
+            byte[]? result;
+            bool bResult = reader.TryReadBytes(4, out result);
 
             Assert.That(result, Is.Null);
             Assert.That(bResult, Is.False);
@@ -154,14 +153,13 @@ public class ByteReaderFailureTests : FailureFixture
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
         string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
-        int result;
-        bool bResult;
 
         using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
-            bResult = reader.TryReadInt32(out result);
+            int result;
+            bool bResult = reader.TryReadInt32(out result);
 
             Assert.That(result, Is.EqualTo(-1));
             Assert.That(bResult, Is.False);
@@ -201,14 +199,13 @@ public class ByteReaderFailureTests : FailureFixture
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
         string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
-        string? result;
-        bool bResult;
 
         using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
-            bResult = reader.TryReadString(4, out result);
+            string? result;
+            bool bResult = reader.TryReadString(4, out result);
 
             Assert.That(result, Is.Null);
             Assert.That(bResult, Is.False);
@@ -222,14 +219,13 @@ public class ByteReaderFailureTests : FailureFixture
 
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
         string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
-        string? result;
-        bool bResult;
 
         using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
-            bResult = reader.TryReadString(encoding, 4, out result);
+            string? result;
+            bool bResult = reader.TryReadString(encoding, 4, out result);
 
             Assert.That(result, Is.Null);
             Assert.That(bResult, Is.False);
@@ -349,13 +345,12 @@ public class ByteReaderFailureTests : FailureFixture
     {
         byte[] bytes = [0x01, 0x02, 0x03, 0x04];
         string path = CaseUtil.CreateTempFile(TEMP_FILE_ALIAS, bytes);
-        bool bResult;
 
         using (ByteReader reader = new ByteReader(path))
         {
             reader.Dispose();
 
-            bResult = reader.TrySkip(4);
+            bool bResult = reader.TrySkip(4);
 
             Assert.That(bResult, Is.False);
         }
