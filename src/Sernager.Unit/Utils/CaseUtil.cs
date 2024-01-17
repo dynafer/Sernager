@@ -1,6 +1,5 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Utils;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using YamlDotNet.Core;
@@ -95,22 +94,14 @@ public static class CaseUtil
     {
         string path = GetPath(alias, extension);
 
-        return File.ReadAllText(path);
-    }
+        Encoding encoding;
 
-    public static T ReadJson<T>(string alias)
-    {
-        string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
-        string json = ReadString(aliasPath, "json");
-
-        T? result = JsonSerializer.Deserialize<T>(json);
-
-        if (result == null)
+        using (StreamReader reader = new StreamReader(path))
         {
-            throw new JsonException($"Failed to deserialize JSON to {typeof(T).Name}: Cases{Path.DirectorySeparatorChar}{aliasPath}.json");
+            encoding = reader.CurrentEncoding;
         }
 
-        return result;
+        return encoding.GetString(File.ReadAllBytes(path));
     }
 
     public static T ReadYaml<T>(string alias)
@@ -128,22 +119,34 @@ public static class CaseUtil
         return result;
     }
 
+    public static T ReadJson<T>(string alias)
+    {
+        string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
+        string json = ReadString(aliasPath, "json");
+
+        T? result = JsonWrapper.Deserialize<T>(json);
+
+        if (result == null)
+        {
+            throw new JsonException($"Failed to deserialize JSON to {typeof(T).Name}: Cases{Path.DirectorySeparatorChar}{aliasPath}.json");
+        }
+
+        return result;
+    }
+
     internal static Configuration ReadSernagerConfig(string alias)
     {
         string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
-        byte[] bytes = Read(aliasPath, "srn");
+        ConfigurationMetadata? metadata;
 
-        MethodInfo? method = typeof(ConfigurationMetadata).GetMethod("fromSernagerBytes", BindingFlags.NonPublic | BindingFlags.Static);
-        if (method == null)
+        using (ByteReader reader = new ByteReader(GetPath(aliasPath, "srn")))
         {
-            throw new MissingMethodException("fromSernagerBytes");
-        }
+            metadata = PrivateUtil.GetMethodResult<ConfigurationMetadata>(typeof(ConfigurationMetadata), "fromSernagerBytes", reader);
 
-        object? result = method.Invoke(null, [bytes]);
-
-        if (result is not ConfigurationMetadata metadata)
-        {
-            throw new Exception("Failed to deserialize Sernager to ConfigurationMetadata.");
+            if (metadata == null)
+            {
+                throw new InvalidOperationException($"Failed to deserialize Sernager configuration: Cases{Path.DirectorySeparatorChar}{aliasPath}.srn");
+            }
         }
 
         return metadata.Config;

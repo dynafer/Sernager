@@ -220,7 +220,7 @@ internal sealed class ConfigurationMetadata : IDisposable
         };
 
         string saltedData = $"{salts[0]}{JsonWrapper.Serialize(Config)}{salts[1]}";
-        saltedData = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(saltedData));
+        saltedData = Encoding.UTF8.GetString(Encoding.Default.GetBytes(saltedData));
         byte[] encrypted = Encryptor.Encrypt(saltedData, key, iv);
 
         using (ByteWriter writer = new ByteWriter())

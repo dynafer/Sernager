@@ -149,3 +149,15 @@ commands:
           shortName: st2
           description: this is a test case
           items: []
+  test2:
+    name: test2
+    shortName: t2
+    description: this is a test case
+    items:
+    - name: cmd1
+      shortName: c1
+      description: this is a test case
+      usedEnvironmentGroups:
+      - test2
+      command:
+      - echo -e "this is a test case"

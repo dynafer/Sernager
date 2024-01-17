@@ -216,6 +216,24 @@
           ]
         }
       ]
+    },
+    "test2": {
+      "name": "test2",
+      "shortName": "t2",
+      "description": "this is a test case",
+      "items": [
+        {
+          "name": "cmd1",
+          "shortName": "c1",
+          "description": "this is a test case",
+          "usedEnvironmentGroups": [
+            "test2"
+          ],
+          "command": [
+            "echo -e \u0022this is a test case\u0022"
+          ]
+        }
+      ]
     }
   }
 }

@@ -115,4 +115,60 @@ public static class PrivateUtil
 
         return (TValue)value;
     }
+
+    public static TValue? GetMethodResult<TClass, TValue>(string methodName, params object[] parameters)
+    {
+        Type type = typeof(TClass);
+        MethodInfo? method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+        if (method == null)
+        {
+            throw new InvalidOperationException($"{nameof(MethodInfo)} '{methodName}' is null.");
+        }
+
+        object? value = method.Invoke(null, parameters);
+
+        if (value == null)
+        {
+            return default;
+        }
+
+        return (TValue)value;
+    }
+
+    public static TValue? GetMethodResult<TValue>(Type classType, string methodName, params object[] parameters)
+    {
+        MethodInfo? method = classType.GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+        if (method == null)
+        {
+            throw new InvalidOperationException($"{nameof(MethodInfo)} '{methodName}' is null.");
+        }
+
+        object? value = method.Invoke(null, parameters);
+
+        if (value == null)
+        {
+            return default;
+        }
+
+        return (TValue)value;
+    }
+
+    public static TValue? GetMethodResult<TValue>(object obj, string methodName, params object[] parameters)
+    {
+        Type type = obj.GetType();
+        MethodInfo? method = type.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        if (method == null)
+        {
+            throw new InvalidOperationException($"{nameof(MethodInfo)} '{methodName}' is null.");
+        }
+
+        object? value = method.Invoke(obj, parameters);
+
+        if (value == null)
+        {
+            return default;
+        }
+
+        return (TValue)value;
+    }
 }

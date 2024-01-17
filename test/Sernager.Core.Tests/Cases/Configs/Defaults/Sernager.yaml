@@ -35,79 +35,85 @@ commandMainGroups:
     shortName: t1
     description: this is a test case
     items:
-    - aaffd2b4-7333-4af9-af04-f96fe21f1b59
-    - 53abdd0b-9e4c-4eea-843d-072bf5a815c1
-    - be04ec0c-6878-48e4-8cc7-dc3af4e584fb
-    - ec5cf1bd-e77d-4bad-af36-6ef9b5378667
+    - 458332fa-fd15-4354-a4b3-0faf79a57c77
+    - 72db7b3f-3ae2-4a49-9c4b-1baf7806d39f
+    - 1de72325-77e6-4718-9718-8ceb291bc8a9
+    - 0999b08b-6621-4d35-844b-01f1f21e7b97
+  test2:
+    name: test2
+    shortName: t2
+    description: this is a test case
+    items:
+    - 6fe71da7-f7c3-482a-a985-7691db5e4897
 commandSubgroups:
-  be04ec0c-6878-48e4-8cc7-dc3af4e584fb:
+  1de72325-77e6-4718-9718-8ceb291bc8a9:
     name: subtest1
     shortName: st1
     description: this is a test case
     items:
-    - 81c3ca77-8c5f-4dd9-810c-7ce21f59558b
-    - d127b98f-decd-446d-aef5-d22814770643
-    - 97c66887-8bea-41fa-9fe4-fdd8b6b251a0
-    - 7ad81532-0488-443e-b870-4fa2d62ce8e8
-  97c66887-8bea-41fa-9fe4-fdd8b6b251a0:
+    - b85eb8fe-b3af-4072-b446-435e8194d847
+    - df7203ab-43cd-4100-b93b-4c519996345b
+    - 9ce00a16-5d91-40c9-be8b-153a1656213a
+    - 7e4e179f-c580-42a2-a240-7d184c0f51ac
+  9ce00a16-5d91-40c9-be8b-153a1656213a:
     name: subtest1
     shortName: st1
     description: this is a test case
     items: []
-  7ad81532-0488-443e-b870-4fa2d62ce8e8:
+  7e4e179f-c580-42a2-a240-7d184c0f51ac:
     name: subtest2
     shortName: st2
     description: this is a test case
     items: []
-  ec5cf1bd-e77d-4bad-af36-6ef9b5378667:
-    name: subtest2
-    shortName: st2
-    description: this is a test case
-    items:
-    - b1d37802-9303-417c-a303-97fa0a45eddf
-    - 07cce856-db31-4b8a-ba7c-8cf8527e72c4
-    - c2147136-0d3c-4791-bfaf-5ebae33bb7ef
-    - 052a194e-b77a-4e12-b73f-6ecb3db1caa0
-  c2147136-0d3c-4791-bfaf-5ebae33bb7ef:
-    name: subtest1
-    shortName: st1
-    description: this is a test case
-    items:
-    - be36ced2-e5ea-4503-bdca-dc17348eac60
-    - 0331cd67-6f91-4d98-bdfa-6c76b754e92a
-    - 4ec42dcb-67f1-4dd7-b744-bc014d8c8d72
-    - 71a219ff-93e3-43b9-b844-5457efb13b10
-  4ec42dcb-67f1-4dd7-b744-bc014d8c8d72:
-    name: subtest1
-    shortName: st1
-    description: this is a test case
-    items: []
-  71a219ff-93e3-43b9-b844-5457efb13b10:
-    name: subtest2
-    shortName: st2
-    description: this is a test case
-    items: []
-  052a194e-b77a-4e12-b73f-6ecb3db1caa0:
+  0999b08b-6621-4d35-844b-01f1f21e7b97:
     name: subtest2
     shortName: st2
     description: this is a test case
     items:
-    - 982cca65-2f7b-4cfd-ab88-41394c11a862
-    - aff25db8-b9c4-4a1d-9deb-5101ce7ac801
-    - 16bfa018-efb2-4435-af28-d01807fccdd5
-    - edc18335-c0b1-4b39-8840-b64808f90b06
-  16bfa018-efb2-4435-af28-d01807fccdd5:
+    - 49364861-1b7e-49c7-a3e1-847a43a34963
+    - d5b0a9e5-785a-41fd-9d77-d03ddf58d86d
+    - fee04a8f-ee12-4497-b50a-3c499165ce0f
+    - 1157d24f-175f-4f95-aa71-17301851a566
+  fee04a8f-ee12-4497-b50a-3c499165ce0f:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items:
+    - 7247af2c-e460-4ada-8ed7-2558af7d334b
+    - 28b83198-1ef4-441c-bfca-9ff88d2de39d
+    - f7fd0c79-a323-4c42-a3d5-92d471694545
+    - 23355be6-a50a-4bf4-a5ce-2bad14d26684
+  f7fd0c79-a323-4c42-a3d5-92d471694545:
     name: subtest1
     shortName: st1
     description: this is a test case
     items: []
-  edc18335-c0b1-4b39-8840-b64808f90b06:
+  23355be6-a50a-4bf4-a5ce-2bad14d26684:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items: []
+  1157d24f-175f-4f95-aa71-17301851a566:
+    name: subtest2
+    shortName: st2
+    description: this is a test case
+    items:
+    - 6be9fdb6-7313-4a12-ae0c-045b003a7be6
+    - 75c25d3a-49db-4a3a-8298-82a0cfdb43f8
+    - 656eb9b9-d6e2-4d56-a572-2184169fbe16
+    - 177a42bb-ae4a-482e-8fe0-69df0d6cb5ca
+  656eb9b9-d6e2-4d56-a572-2184169fbe16:
+    name: subtest1
+    shortName: st1
+    description: this is a test case
+    items: []
+  177a42bb-ae4a-482e-8fe0-69df0d6cb5ca:
     name: subtest2
     shortName: st2
     description: this is a test case
     items: []
 commands:
-  aaffd2b4-7333-4af9-af04-f96fe21f1b59:
+  458332fa-fd15-4354-a4b3-0faf79a57c77:
     name: cmd1
     shortName: c1
     description: this is a test case
@@ -118,14 +124,14 @@ commands:
     - echo
     - -e
     - '"this is a test case"'
-  53abdd0b-9e4c-4eea-843d-072bf5a815c1:
+  72db7b3f-3ae2-4a49-9c4b-1baf7806d39f:
     name: cmd2
     shortName: c2
     description: this is a test case
     usedEnvironmentGroups:
     - test3
     command: echo -e "this is a test case"
-  81c3ca77-8c5f-4dd9-810c-7ce21f59558b:
+  b85eb8fe-b3af-4072-b446-435e8194d847:
     name: cmd1
     shortName: c1
     description: this is a test case
@@ -135,7 +141,7 @@ commands:
     - echo
     - -e
     - '"this is a test case"'
-  d127b98f-decd-446d-aef5-d22814770643:
+  df7203ab-43cd-4100-b93b-4c519996345b:
     name: cmd2
     shortName: c2
     description: this is a test case
@@ -143,7 +149,7 @@ commands:
     - test2
     - test3
     command: echo -e "this is a test case"
-  b1d37802-9303-417c-a303-97fa0a45eddf:
+  49364861-1b7e-49c7-a3e1-847a43a34963:
     name: cmd1
     shortName: c1
     description: this is a test case
@@ -154,14 +160,14 @@ commands:
     - echo
     - -e
     - '"this is a test case"'
-  07cce856-db31-4b8a-ba7c-8cf8527e72c4:
+  d5b0a9e5-785a-41fd-9d77-d03ddf58d86d:
     name: cmd2
     shortName: c2
     description: this is a test case
     usedEnvironmentGroups:
     - test2
     command: echo -e "this is a test case"
-  be36ced2-e5ea-4503-bdca-dc17348eac60:
+  7247af2c-e460-4ada-8ed7-2558af7d334b:
     name: cmd1
     shortName: c1
     description: this is a test case
@@ -170,13 +176,13 @@ commands:
     - echo
     - -e
     - '"this is a test case"'
-  0331cd67-6f91-4d98-bdfa-6c76b754e92a:
+  28b83198-1ef4-441c-bfca-9ff88d2de39d:
     name: cmd2
     shortName: c2
     description: this is a test case
     usedEnvironmentGroups: []
     command: echo -e "this is a test case"
-  982cca65-2f7b-4cfd-ab88-41394c11a862:
+  6be9fdb6-7313-4a12-ae0c-045b003a7be6:
     name: cmd1
     shortName: c1
     description: this is a test case
@@ -185,9 +191,17 @@ commands:
     - echo
     - -e
     - '"this is a test case"'
-  aff25db8-b9c4-4a1d-9deb-5101ce7ac801:
+  75c25d3a-49db-4a3a-8298-82a0cfdb43f8:
     name: cmd2
     shortName: c2
     description: this is a test case
     usedEnvironmentGroups: []
     command: echo -e "this is a test case"
+  6fe71da7-f7c3-482a-a985-7691db5e4897:
+    name: cmd1
+    shortName: c1
+    description: this is a test case
+    usedEnvironmentGroups:
+    - test2
+    command:
+    - echo -e "this is a test case"
