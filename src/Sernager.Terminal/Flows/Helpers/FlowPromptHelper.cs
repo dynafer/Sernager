@@ -24,7 +24,7 @@ internal static class FlowPromptHelper
 
         while (true)
         {
-            List<(string, string)> options = [];
+            List<(string, string)> options = new List<(string, string)>();
 
             string? parent = Directory.GetParent(currentPath)?.FullName;
 

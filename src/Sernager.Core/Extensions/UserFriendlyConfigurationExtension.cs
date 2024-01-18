@@ -12,18 +12,28 @@ internal static class UserFriendlyConfigurationExtension
 {
     private static readonly BindingFlags OBJECT_BINDING_FLAGS = BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-    internal static Configuration ToConfiguration(this UserFriendlyConfiguration userFriendlyConfig)
+    internal static Configuration ToConfiguration(this UserFriendlyConfiguration ufConfig)
     {
         Configuration config = new Configuration();
 
-        foreach (KeyValuePair<string, EnvironmentModel> pair in userFriendlyConfig.Environments)
+        List<string> environmentNames = new List<string>();
+
+        foreach (KeyValuePair<string, EnvironmentModel> pair in ufConfig.Environments)
         {
+            if (!canUseName(pair.Value.Name, string.Empty, environmentNames))
+            {
+                return config;
+            }
+
             config.EnvironmentGroups.Add(pair.Key, pair.Value);
+            environmentNames.Add(pair.Value.Name);
         }
 
-        List<string> mainGroupNames = [];
+        environmentNames.Clear();
 
-        foreach (KeyValuePair<string, UserFriendlyGroupModel> pair in userFriendlyConfig.Commands)
+        List<string> mainGroupNames = new List<string>();
+
+        foreach (KeyValuePair<string, UserFriendlyGroupModel> pair in ufConfig.Commands)
         {
             if (!canUseName(pair.Value.Name, pair.Value.ShortName, mainGroupNames))
             {
@@ -44,13 +54,18 @@ internal static class UserFriendlyConfigurationExtension
                 mainGroupNames.Add(pair.Value.ShortName);
             }
 
+            List<string> subNames = new List<string>();
+
             foreach (object item in pair.Value.Items)
             {
-                List<string> subNames = new List<string>();
-
-                filterModel(config, groupModel.Items, subNames, item);
+                if (!tryFilterModel(config, groupModel.Items, subNames, item))
+                {
+                    return config;
+                }
             }
         }
+
+        mainGroupNames.Clear();
 
         return config;
     }
@@ -71,7 +86,7 @@ internal static class UserFriendlyConfigurationExtension
 
         if (!string.IsNullOrWhiteSpace(shortName))
         {
-            if (names.Contains(shortName))
+            if (name == shortName || names.Contains(shortName))
             {
                 ExceptionManager.ThrowFail<SernagerException>($"Short name must be unique in the group: {shortName}");
                 return false;
@@ -81,64 +96,63 @@ internal static class UserFriendlyConfigurationExtension
         return true;
     }
 
-    private static void filterModel(Configuration config, List<Guid> groupItems, List<string> groupNames, object item)
+    private static bool tryFilterModel(Configuration config, List<Guid> parentItems, List<string> parentNames, object item)
     {
         CommandModel? commandModel;
-        UserFriendlyGroupModel? userFriendlyGroupModel;
+        UserFriendlyGroupModel? ufGroupModel;
 
         if (tryToCommandModel(item, out commandModel))
         {
-            if (!canUseName(commandModel.Name, commandModel.ShortName, groupNames))
+            if (!canUseName(commandModel.Name, commandModel.ShortName, parentNames))
             {
-                return;
+                return false;
             }
 
             Guid guid = Guid.NewGuid();
 
             config.Commands.Add(guid, commandModel);
-            groupItems.Add(guid);
-            groupNames.Add(commandModel.Name);
+            parentItems.Add(guid);
+            parentNames.Add(commandModel.Name);
             if (!string.IsNullOrWhiteSpace(commandModel.ShortName))
             {
-                groupNames.Add(commandModel.ShortName);
+                parentNames.Add(commandModel.ShortName);
             }
         }
-        else if (tryToUserFriendlyGroupModel(item, out userFriendlyGroupModel))
+        else if (tryToUserFriendlyGroupModel(item, out ufGroupModel))
         {
-            if (!canUseName(userFriendlyGroupModel.Name, userFriendlyGroupModel.ShortName, groupNames))
+            if (!canUseName(ufGroupModel.Name, ufGroupModel.ShortName, parentNames))
             {
-                return;
+                return false;
             }
 
-            groupNames.Add(userFriendlyGroupModel.Name);
-            if (!string.IsNullOrWhiteSpace(userFriendlyGroupModel.ShortName))
+            Guid groupGuid = Guid.NewGuid();
+            GroupModel groupModel = new GroupModel
             {
-                groupNames.Add(userFriendlyGroupModel.ShortName);
+                Name = ufGroupModel.Name,
+                ShortName = ufGroupModel.ShortName,
+                Description = ufGroupModel.Description,
+            };
+
+            config.CommandSubgroups.Add(groupGuid, groupModel);
+            parentItems.Add(groupGuid);
+            parentNames.Add(ufGroupModel.Name);
+            if (!string.IsNullOrWhiteSpace(ufGroupModel.ShortName))
+            {
+                parentNames.Add(ufGroupModel.ShortName);
             }
 
-            traverseSubgroup(config, groupItems, userFriendlyGroupModel);
+            List<string> subNames = new List<string>();
+
+            foreach (object subItem in ufGroupModel.Items)
+            {
+                if (!tryFilterModel(config, groupModel.Items, subNames, subItem))
+                {
+                    return false;
+                }
+            }
         }
-    }
 
-    private static void traverseSubgroup(Configuration config, List<Guid> parentItems, UserFriendlyGroupModel model)
-    {
-        List<string> subNames = new List<string>();
-
-        Guid groupGuid = Guid.NewGuid();
-        GroupModel groupModel = new GroupModel
-        {
-            Name = model.Name,
-            ShortName = model.ShortName,
-            Description = model.Description,
-        };
-
-        config.CommandSubgroups.Add(groupGuid, groupModel);
-        parentItems.Add(groupGuid);
-
-        foreach (object item in model.Items)
-        {
-            filterModel(config, groupModel.Items, subNames, item);
-        }
+        return true;
     }
 
     private static bool tryToCommandModel(object obj, [NotNullWhen(true)] out CommandModel? commandModel)
@@ -172,7 +186,7 @@ internal static class UserFriendlyConfigurationExtension
         return commandModel != null;
     }
 
-    private static bool tryToUserFriendlyGroupModel(object obj, [NotNullWhen(true)] out UserFriendlyGroupModel? userFriendlyGroupModel)
+    private static bool tryToUserFriendlyGroupModel(object obj, [NotNullWhen(true)] out UserFriendlyGroupModel? ufGroupModel)
     {
         bool bGroup;
         string json;
@@ -195,12 +209,12 @@ internal static class UserFriendlyConfigurationExtension
 
         if (!bGroup)
         {
-            userFriendlyGroupModel = null;
+            ufGroupModel = null;
             return false;
         }
 
-        userFriendlyGroupModel = JsonWrapper.Deserialize<UserFriendlyGroupModel>(json);
-        return userFriendlyGroupModel != null;
+        ufGroupModel = JsonWrapper.Deserialize<UserFriendlyGroupModel>(json);
+        return ufGroupModel != null;
     }
 
     private static bool isCommand(JsonElement jsonElement)
@@ -236,14 +250,14 @@ internal static class UserFriendlyConfigurationExtension
     private static bool isCommand(object obj)
     {
         Type type = obj.GetType();
-        PropertyInfo? propertyInfo = type.GetProperty("command", OBJECT_BINDING_FLAGS);
+        PropertyInfo? propertyInfo = type.GetProperty("command", OBJECT_BINDING_FLAGS) ?? type.GetProperty("Command", OBJECT_BINDING_FLAGS);
 
         if (propertyInfo != null)
         {
             return true;
         }
 
-        propertyInfo = type.GetProperty("usedEnvironmentGroups", OBJECT_BINDING_FLAGS);
+        propertyInfo = type.GetProperty("usedEnvironmentGroups", OBJECT_BINDING_FLAGS) ?? type.GetProperty("UsedEnvironmentGroups", OBJECT_BINDING_FLAGS);
 
         return propertyInfo != null;
     }
@@ -271,7 +285,7 @@ internal static class UserFriendlyConfigurationExtension
     private static bool isGroup(object obj)
     {
         Type type = obj.GetType();
-        PropertyInfo? propertyInfo = type.GetProperty("items", OBJECT_BINDING_FLAGS);
+        PropertyInfo? propertyInfo = type.GetProperty("items", OBJECT_BINDING_FLAGS) ?? type.GetProperty("Items", OBJECT_BINDING_FLAGS);
 
         return propertyInfo != null;
     }

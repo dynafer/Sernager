@@ -7,11 +7,11 @@ internal static class ConfigurationExtension
 {
     internal static UserFriendlyConfiguration ToUserFriendlyConfiguration(this Configuration config)
     {
-        UserFriendlyConfiguration userFriendlyConfig = new UserFriendlyConfiguration();
+        UserFriendlyConfiguration ufConfig = new UserFriendlyConfiguration();
 
         foreach (KeyValuePair<string, EnvironmentModel> pair in config.EnvironmentGroups)
         {
-            userFriendlyConfig.Environments.Add(pair.Key, pair.Value);
+            ufConfig.Environments.Add(pair.Key, pair.Value);
         }
 
         foreach (KeyValuePair<string, GroupModel> pair in config.CommandMainGroups)
@@ -31,10 +31,10 @@ internal static class ConfigurationExtension
                 Items = items
             };
 
-            userFriendlyConfig.Commands.Add(pair.Value.Name, groupModel);
+            ufConfig.Commands.Add(pair.Value.Name, groupModel);
         }
 
-        return userFriendlyConfig;
+        return ufConfig;
     }
 
     private static void traverseSubgroup(Configuration config, GroupModel model, List<object> parentItems)

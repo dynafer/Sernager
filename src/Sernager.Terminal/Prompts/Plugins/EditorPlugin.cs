@@ -27,7 +27,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
 
     internal EditorPlugin SetInitialLines(params string[] rawLines)
     {
-        List<string> lines = [];
+        List<string> lines = new List<string>();
 
         foreach (string rawLine in rawLines)
         {

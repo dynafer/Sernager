@@ -44,7 +44,7 @@ internal sealed class CurrentGroupFlow : IFlow
             })
             .ToArray();
 
-        List<(string, Guid)> managementOptions = [];
+        List<(string, Guid)> managementOptions = new List<(string, Guid)>();
 
         if (FlowManager.IsManagementMode)
         {

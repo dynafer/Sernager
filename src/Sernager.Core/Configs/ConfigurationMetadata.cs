@@ -97,11 +97,11 @@ internal sealed class ConfigurationMetadata : IDisposable
             return new ConfigurationMetadata(config);
         }
 
-        UserFriendlyConfiguration? userFriendlyConfig = YamlWrapper.Deserialize<UserFriendlyConfiguration>(yaml);
+        UserFriendlyConfiguration? ufConfig = YamlWrapper.Deserialize<UserFriendlyConfiguration>(yaml);
 
-        if (userFriendlyConfig != null)
+        if (ufConfig != null)
         {
-            return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
+            return new ConfigurationMetadata(ufConfig.ToConfiguration());
         }
 
         return failToDeserialize();
@@ -122,11 +122,11 @@ internal sealed class ConfigurationMetadata : IDisposable
             return new ConfigurationMetadata(config);
         }
 
-        UserFriendlyConfiguration? userFriendlyConfig = JsonWrapper.Deserialize<UserFriendlyConfiguration>(json);
+        UserFriendlyConfiguration? ufConfig = JsonWrapper.Deserialize<UserFriendlyConfiguration>(json);
 
-        if (userFriendlyConfig != null)
+        if (ufConfig != null)
         {
-            return new ConfigurationMetadata(userFriendlyConfig.ToConfiguration());
+            return new ConfigurationMetadata(ufConfig.ToConfiguration());
         }
 
         return failToDeserialize();

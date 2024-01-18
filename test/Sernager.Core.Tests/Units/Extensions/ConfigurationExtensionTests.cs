@@ -89,21 +89,21 @@ public class ConfigurationExtensionTests
         config.Commands.Add(commandId1, commandModel1);
         config.Commands.Add(commandId2, commandModel2);
 
-        UserFriendlyConfiguration userFriendlyConfig = config.ToUserFriendlyConfiguration();
+        UserFriendlyConfiguration ufConfig = config.ToUserFriendlyConfiguration();
 
-        Assert.That(userFriendlyConfig.Environments.Keys.Count, Is.EqualTo(1));
-        Assert.That(userFriendlyConfig.Commands.Keys.Count, Is.EqualTo(1));
+        Assert.That(ufConfig.Environments.Keys.Count, Is.EqualTo(1));
+        Assert.That(ufConfig.Commands.Keys.Count, Is.EqualTo(1));
 
-        Assert.That(userFriendlyConfig.Environments["env"], Is.EqualTo(envModel));
+        Assert.That(ufConfig.Environments["env"], Is.EqualTo(envModel));
 
-        Assert.That(userFriendlyConfig.Commands["group"].Name, Is.EqualTo("group"));
-        Assert.That(userFriendlyConfig.Commands["group"].ShortName, Is.EqualTo("g"));
-        Assert.That(userFriendlyConfig.Commands["group"].Description, Is.EqualTo("group description"));
-        Assert.That(userFriendlyConfig.Commands["group"].Items.Count, Is.EqualTo(2));
+        Assert.That(ufConfig.Commands["group"].Name, Is.EqualTo("group"));
+        Assert.That(ufConfig.Commands["group"].ShortName, Is.EqualTo("g"));
+        Assert.That(ufConfig.Commands["group"].Description, Is.EqualTo("group description"));
+        Assert.That(ufConfig.Commands["group"].Items.Count, Is.EqualTo(2));
 
-        Assert.That(userFriendlyConfig.Commands["group"].Items[0], Is.EqualTo(commandModel1));
+        Assert.That(ufConfig.Commands["group"].Items[0], Is.EqualTo(commandModel1));
 
-        UserFriendlyGroupModel subgroup = (UserFriendlyGroupModel)userFriendlyConfig.Commands["group"].Items[1];
+        UserFriendlyGroupModel subgroup = (UserFriendlyGroupModel)ufConfig.Commands["group"].Items[1];
         Assert.That(subgroup.Name, Is.EqualTo("subgroup"));
         Assert.That(subgroup.ShortName, Is.EqualTo("sg"));
         Assert.That(subgroup.Description, Is.EqualTo("subgroup description"));
@@ -125,10 +125,10 @@ public class ConfigurationExtensionTests
             _ => throw new NotImplementedException()
         };
 
-        UserFriendlyConfiguration userFriendlyConfig = config.ToUserFriendlyConfiguration();
+        UserFriendlyConfiguration ufConfig = config.ToUserFriendlyConfiguration();
 
-        Assert.That(userFriendlyConfig.Environments.Keys.Count, Is.EqualTo(3));
-        Assert.That(userFriendlyConfig.Commands.Keys.Count, Is.EqualTo(2));
+        Assert.That(ufConfig.Environments.Keys.Count, Is.EqualTo(3));
+        Assert.That(ufConfig.Commands.Keys.Count, Is.EqualTo(2));
     }
 
     [Theory]
@@ -138,9 +138,9 @@ public class ConfigurationExtensionTests
 
         Configuration config = CaseUtil.ReadSernagerConfig($"Configs.Defaults.Sernager.{encoding.GetEncodingName()}");
 
-        UserFriendlyConfiguration userFriendlyConfig = config.ToUserFriendlyConfiguration();
+        UserFriendlyConfiguration ufConfig = config.ToUserFriendlyConfiguration();
 
-        Assert.That(userFriendlyConfig.Environments.Keys.Count, Is.EqualTo(3));
-        Assert.That(userFriendlyConfig.Commands.Keys.Count, Is.EqualTo(2));
+        Assert.That(ufConfig.Environments.Keys.Count, Is.EqualTo(3));
+        Assert.That(ufConfig.Commands.Keys.Count, Is.EqualTo(2));
     }
 }
