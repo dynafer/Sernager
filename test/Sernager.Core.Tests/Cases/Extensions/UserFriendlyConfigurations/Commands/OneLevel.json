@@ -1,0 +1,14 @@
+{
+  "commands": {
+    "CommandMainGroup1": {
+      "name": "CommandMainGroup1",
+      "shortName": "CMG1",
+      "items": []
+    },
+    "CommandMainGroup2": {
+      "name": "CommandMainGroup2",
+      "shortName": "CMG2",
+      "items": []
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "commands": {
+    "CommandMainGroup1": {
+      "name": "CommandMainGroup1",
+      "shortName": "CMG1",
+      "items": [
+        {
+          "name": "CommandSubgroup1",
+          "shortName": "CSG1",
+          "items": [
+            {
+              "name": "CommandSubgroup1",
+              "shortName": "CSG1",
+              "items": []
+            },
+            {
+              "name": "CommandSubgroup2",
+              "shortName": "CSG2",
+              "items": []
+            },
+            {
+              "name": "Command1",
+              "shortName": "C1",
+              "usedEnvironmentGroups": [],
+              "command": "echo 'Hello World!'"
+            },
+            {
+              "name": "Command2",
+              "shortName": "C2",
+              "usedEnvironmentGroups": [],
+              "command": "echo 'Hello World!'"
+            }
+          ]
+        },
+        {
+          "name": "CommandSubgroup2",
+          "shortName": "CSG2",
+          "items": []
+        },
+        {
+          "name": "Command1",
+          "shortName": "C1",
+          "usedEnvironmentGroups": [],
+          "command": "echo 'Hello World!'"
+        },
+        {
+          "name": "Command2",
+          "shortName": "C2",
+          "usedEnvironmentGroups": [],
+          "command": "echo 'Hello World!'"
+        }
+      ]
+    },
+    "CommandMainGroup2": {
+      "name": "CommandMainGroup2",
+      "shortName": "CMG2",
+      "items": []
+    }
+  }
+}

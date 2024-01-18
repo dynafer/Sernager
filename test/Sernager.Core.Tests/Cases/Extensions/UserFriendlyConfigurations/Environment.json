@@ -1,0 +1,10 @@
+{
+  "environments": {
+    "Environment1": {
+      "name": "Environment1"
+    },
+    "Environment2": {
+      "name": "Environment2"
+    }
+  }
+}
