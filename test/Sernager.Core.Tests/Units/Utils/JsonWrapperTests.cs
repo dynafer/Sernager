@@ -191,33 +191,26 @@ public class JsonWrapperTests
 
         string[] someEmptyPropertiesCases =
         [
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
-            "{\"name\":\"Sernager\",\"number\":1}",
+            "{\"name\":\"Sernager1\",\"number\":1,\"caseName\":\"Sernager1\"}",
+            "{\"name\":\"Sernager2\",\"number\":2,\"isEnabled\":true}",
+            "{\"name\":\"Sernager3\",\"number\":3,\"caseName\":\"Sernager3\"}",
+            "{\"name\":\"Sernager4\",\"number\":4,\"isEnabled\":true}",
+            "{\"name\":\"Sernager5\",\"number\":5,\"caseName\":\"Sernager5\"}",
+            "{\"name\":\"Sernager6\",\"number\":6,\"isEnabled\":true}",
+            "{\"name\":\"Sernager7\",\"number\":7,\"caseName\":\"Sernager7\"}",
+            "{\"name\":\"Sernager8\",\"number\":8,\"isEnabled\":true}",
+            "{\"name\":\"Sernager9\",\"number\":9,\"caseName\":\"Sernager9\"}",
         ];
 
-        foreach (string testCase in someEmptyPropertiesCases)
+        for (int i = 1; i < 10; ++i)
         {
-            FakeModel? model = JsonWrapper.Deserialize<FakeModel>(testCase);
+            FakeModel? model = JsonWrapper.Deserialize<FakeModel>(someEmptyPropertiesCases[i - 1]);
 
             Assert.That(model, Is.Not.Null);
-            Assert.That(model.Name, Is.EqualTo("Sernager"));
-            Assert.That(model.Number, Is.EqualTo(1));
-            Assert.That(model.IsEnabled, Is.Default);
-            Assert.That(model.CaseName, Is.Empty);
+            Assert.That(model.Name, Is.EqualTo($"Sernager{i}"));
+            Assert.That(model.Number, Is.EqualTo(i));
+            Assert.That(model.IsEnabled, i % 2 == 0 ? Is.True : Is.Default);
+            Assert.That(model.CaseName, i % 2 != 0 ? Is.EqualTo($"Sernager{i}") : Is.Empty);
         }
     }
 
