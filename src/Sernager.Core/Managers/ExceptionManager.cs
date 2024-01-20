@@ -41,8 +41,6 @@ public static class ExceptionManager
 
         switch (ErrorLevel)
         {
-            case EErrorLevel.None:
-                break;
             case EErrorLevel.Debug:
                 Debug.Fail(exception.ToString());
                 break;
@@ -59,11 +57,20 @@ public static class ExceptionManager
         combinedArgs[0] = message;
         args.CopyTo(combinedArgs, 1);
 
-        T? exception = (T?)Activator.CreateInstance(typeof(T), combinedArgs);
+        T? exception;
 
-        if (exception == null)
+        try
         {
-            throw new NullReferenceException("Exception type must be inherited from System.Exception.");
+            exception = (T?)Activator.CreateInstance(typeof(T), combinedArgs);
+
+            if (exception == null)
+            {
+                throw new Exception();
+            }
+        }
+        catch
+        {
+            throw new NullReferenceException("Exception could not be created.");
         }
 
         return exception;
