@@ -3,6 +3,7 @@ using Sernager.Core.Extensions;
 using Sernager.Core.Models;
 using Sernager.Core.Options;
 using Sernager.Unit.Extensions;
+using System.ComponentModel;
 using System.Text;
 
 namespace Sernager.Core.Tests.Units.Extensions;
@@ -122,7 +123,7 @@ public class ConfigurationExtensionTests
             EConfigurationType.Yaml => CaseUtil.ReadYaml<Configuration>("Configs.Defaults.Sernager"),
             EConfigurationType.Json => CaseUtil.ReadJson<Configuration>("Configs.Defaults.Sernager"),
             EConfigurationType.Sernager => CaseUtil.ReadSernagerConfig("Configs.Defaults.Sernager"),
-            _ => throw new NotImplementedException()
+            _ => throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(EConfigurationType))
         };
 
         UserFriendlyConfiguration ufConfig = config.ToUserFriendlyConfiguration();

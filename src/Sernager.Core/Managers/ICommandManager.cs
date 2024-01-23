@@ -12,7 +12,7 @@ public interface ICommandManager
     bool IsCommand(Guid id);
     CommandModel GetCommand(Guid id);
     ICommandManager UseItem(Guid id);
-    string[] GetPath();
+    string[] GetBreadcrumb();
     ICommandManager PrevGroup();
     ICommandManager GoMainGroup();
     GroupModel GetPrevGroup();

@@ -101,40 +101,37 @@ public class YamlWrapperTests
         Assert.That(yaml, Is.EqualTo("name: Sernager\nnumber: 0\nisEnabled: false\ncaseName: \"\"\nnullName:"));
     }
 
-    public void Deserialize_ShouldReturDefault_WhenPassedNull()
+    public void Deserialize_ShouldReturNull_WhenPassedNull()
     {
-        Assert.That(YamlWrapper.Deserialize<int>(null!), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<string>(null!), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<object>(null!), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<FakeModel>(null!), Is.Default);
+        Assert.That(YamlWrapper.Deserialize<string>(null!), Is.Null);
+        Assert.That(YamlWrapper.Deserialize<object>(null!), Is.Null);
+        Assert.That(YamlWrapper.Deserialize<FakeModel>(null!), Is.Null);
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedEmptyString()
+    public void Deserialize_ShouldReturnNull_WhenPassedEmptyString()
     {
-        Assert.That(YamlWrapper.Deserialize<int>(string.Empty), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<string>(string.Empty), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<object>(string.Empty), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<FakeModel>(string.Empty), Is.Default);
+        Assert.That(YamlWrapper.Deserialize<string>(string.Empty), Is.Null);
+        Assert.That(YamlWrapper.Deserialize<object>(string.Empty), Is.Null);
+        Assert.That(YamlWrapper.Deserialize<FakeModel>(string.Empty), Is.Null);
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedWrongYaml()
+    public void Deserialize_ShouldReturnNull_WhenPassedWrongYaml()
     {
-        Assert.That(YamlWrapper.Deserialize<int>("name: Sernager"), Is.Default);
-        Assert.That(YamlWrapper.Deserialize<string>("name: Sernager"), Is.Default);
+        Assert.That(YamlWrapper.Deserialize<string>("name: Sernager"), Is.Null);
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedInvalidCasesYaml()
+    public void Deserialize_ShouldReturnNull_WhenPassedInvalidCasesYaml()
     {
         string snake_case = "name: Sernager\nnumber: 1\nis_enabled: true\ncase_name: sernager";
 
-        Assert.That(YamlWrapper.Deserialize<FakeModel>(snake_case), Is.Default);
+        Assert.That(YamlWrapper.Deserialize<FakeModel>(snake_case), Is.Null);
 
         string PascalCase = "Name: Sernager\nNumber: 1\nIsEnabled: true\nCaseName: sernager";
 
-        Assert.That(YamlWrapper.Deserialize<FakeModel>(PascalCase), Is.Default);
+        Assert.That(YamlWrapper.Deserialize<FakeModel>(PascalCase), Is.Null);
     }
 
     [Test]

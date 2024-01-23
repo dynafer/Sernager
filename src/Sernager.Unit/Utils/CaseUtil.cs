@@ -105,6 +105,7 @@ public static class CaseUtil
     }
 
     public static T ReadYaml<T>(string alias)
+        where T : class
     {
         string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
         string yaml = ReadString(aliasPath, "yaml");
@@ -120,6 +121,7 @@ public static class CaseUtil
     }
 
     public static T ReadJson<T>(string alias)
+        where T : class
     {
         string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
         string json = ReadString(aliasPath, "json");

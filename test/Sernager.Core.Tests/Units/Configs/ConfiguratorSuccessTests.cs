@@ -1,5 +1,6 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Options;
+using System.ComponentModel;
 
 namespace Sernager.Core.Tests.Units.Configs;
 
@@ -194,7 +195,7 @@ public class ConfiguratorSuccessTests
             EConfigurationType.Json => ".json",
             EConfigurationType.Yaml => ".yaml",
             EConfigurationType.Sernager => ".srn",
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            _ => throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(EConfigurationType))
         };
 
         Assert.That(result, Is.Not.Null);
@@ -212,7 +213,7 @@ public class ConfiguratorSuccessTests
         {
             EUserFriendlyConfigurationType.Json => ".json",
             EUserFriendlyConfigurationType.Yaml => ".yaml",
-            _ => throw new ArgumentOutOfRangeException(nameof(ufType), ufType, null)
+            _ => throw new InvalidEnumArgumentException(nameof(ufType), (int)ufType, typeof(EUserFriendlyConfigurationType))
         };
 
         Assert.That(result, Is.Not.Null);

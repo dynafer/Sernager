@@ -21,6 +21,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
         }
     }
 
+    private static readonly string PREFIX_ALIAS = "Configs.UserFriendlys.Specifications";
     [DatapointSource]
     private static readonly (int, string)[] LEVEL_CASE_PAIRS =
     [
@@ -32,7 +33,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
     [Test]
     public void ToConfiguration_ShouldThrow_WhenEnvironmentGroupNameIsEmpty()
     {
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>("Extensions.UserFriendlyConfigurations.Environment");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Environment");
         EnvironmentModel environment = findItems<EnvironmentModel>(ufConfig.Environments.Values.Cast<object>().ToList(), 1)[0].Item;
         environment.Name = string.Empty;
 
@@ -43,7 +44,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
     [Test]
     public void ToConfiguration_ShouldThrow_WhenEnvironmentGroupNameIsNotUnique()
     {
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>("Extensions.UserFriendlyConfigurations.Environment");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Environment");
         FoundItem<EnvironmentModel>[] environments = findItems<EnvironmentModel>(ufConfig.Environments.Values.Cast<object>().ToList(), 2);
         environments[0].Item.Name = "Environment1";
         environments[1].Item.Name = "Environment1";
@@ -59,7 +60,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
 
         (int level, string caseLevelName) = pair;
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
         UserFriendlyGroupModel mainGroup = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 1)[0].Item;
         string mainGroupName = mainGroup.Name;
         mainGroup.Name = string.Empty;
@@ -98,7 +99,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
 
         (int level, string caseLevelName) = pair;
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
         UserFriendlyGroupModel mainGroupModel = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 1)[0].Item;
         string mainGroupShortName = mainGroupModel.ShortName;
         mainGroupModel.ShortName = mainGroupModel.Name;
@@ -137,7 +138,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
 
         (int level, string caseLevelName) = pair;
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
         FoundItem<UserFriendlyGroupModel>[] mainGroupModels = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 2);
         string mainGroupName1 = mainGroupModels[0].Item.Name;
         string mainGroupName2 = mainGroupModels[1].Item.Name;
@@ -188,7 +189,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
 
         (int level, string caseLevelName) = pair;
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
         FoundItem<UserFriendlyGroupModel>[] mainGroupModels = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 2);
         string mainGroupShortName1 = mainGroupModels[0].Item.ShortName;
         string mainGroupShortName2 = mainGroupModels[1].Item.ShortName;
@@ -244,7 +245,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
             return;
         }
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
 
         UserFriendlyGroupModel groupModel = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 1)[0].Item;
         for (int i = 1; i < level; ++i)
@@ -278,7 +279,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
             return;
         }
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
 
         UserFriendlyGroupModel groupModel = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 1)[0].Item;
         for (int i = 1; i < level; ++i)
@@ -312,7 +313,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
             return;
         }
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
 
         UserFriendlyGroupModel groupModel = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 1)[0].Item;
         for (int i = 1; i < level; ++i)
@@ -350,7 +351,7 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
             return;
         }
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseLevelName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"{PREFIX_ALIAS}.Commands.{caseLevelName}");
 
         UserFriendlyGroupModel groupModel = findItems(ufConfig.Commands.Values.Cast<object>().ToList(), 1)[0].Item;
         for (int i = 1; i < level; ++i)

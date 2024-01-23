@@ -40,7 +40,7 @@ public class UserFriendlyConfigurationExtensionSuccessTests
     [Test]
     public void ToConfiguration_ShouldReturnConfiguration_Environments()
     {
-        UserFriendlyConfiguration config = CaseUtil.ReadJson<UserFriendlyConfiguration>("Extensions.UserFriendlyConfigurations.Environment");
+        UserFriendlyConfiguration config = CaseUtil.ReadJson<UserFriendlyConfiguration>("Configs.UserFriendlys.Specifications.Environment");
 
         Configuration configuration = config.ToConfiguration();
         Assert.That(configuration.EnvironmentGroups.Count, Is.EqualTo(config.Environments.Count));
@@ -53,7 +53,7 @@ public class UserFriendlyConfigurationExtensionSuccessTests
 
         (int level, string caseName) = levelCasePair;
 
-        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Extensions.UserFriendlyConfigurations.Commands.{caseName}");
+        UserFriendlyConfiguration ufConfig = CaseUtil.ReadJson<UserFriendlyConfiguration>($"Configs.UserFriendlys.Specifications.Commands.{caseName}");
 
         Configuration config = ufConfig.ToConfiguration();
         Assert.That(config.CommandMainGroups.Count, Is.EqualTo(ufConfig.Commands.Count));

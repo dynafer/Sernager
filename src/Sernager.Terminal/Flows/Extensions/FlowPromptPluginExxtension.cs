@@ -52,7 +52,7 @@ internal static class FlowPromptPluginExxtension
             description.Add($"{FlowManager.CommonResourcePack.GetString("Description")}: {manager.CurrentGroup.Description}");
         }
 
-        description.Add($"{FlowManager.CommonResourcePack.GetString("Path")}: {manager.CreateCommandGroupPath(" > ")}");
+        description.Add($"{FlowManager.CommonResourcePack.GetString("Path")}: {manager.CreateCommandGroupBreadcrumb(" > ")}");
 
         plugin.AddDescriptions(description.ToArray());
 
@@ -76,7 +76,7 @@ internal static class FlowPromptPluginExxtension
             description.Add($"{FlowManager.CommonResourcePack.GetString("Description")}: {commandModel.Description}");
         }
 
-        description.Add($"{FlowManager.CommonResourcePack.GetString("Path")}: {manager.CreateCommandPath(" > ", commandModel.Name)}");
+        description.Add($"{FlowManager.CommonResourcePack.GetString("Path")}: {manager.CreateCommandBreadcrumb(" > ", commandModel.Name)}");
 
         plugin.AddDescriptions(description.ToArray());
 

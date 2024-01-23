@@ -105,25 +105,23 @@ public class JsonWrapperTests
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedNull()
+    public void Deserialize_ShouldReturnNull_WhenPassedNull()
     {
-        Assert.That(JsonWrapper.Deserialize<int>(null!), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<string>(null!), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<object>(null!), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<FakeModel>(null!), Is.Default);
+        Assert.That(JsonWrapper.Deserialize<string>(null!), Is.Null);
+        Assert.That(JsonWrapper.Deserialize<object>(null!), Is.Null);
+        Assert.That(JsonWrapper.Deserialize<FakeModel>(null!), Is.Null);
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedEmptyString()
+    public void Deserialize_ShouldReturnNull_WhenPassedEmptyString()
     {
-        Assert.That(JsonWrapper.Deserialize<int>(string.Empty), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<string>(string.Empty), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<object>(string.Empty), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<FakeModel>(string.Empty), Is.Default);
+        Assert.That(JsonWrapper.Deserialize<string>(string.Empty), Is.Null);
+        Assert.That(JsonWrapper.Deserialize<object>(string.Empty), Is.Null);
+        Assert.That(JsonWrapper.Deserialize<FakeModel>(string.Empty), Is.Null);
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedInvalidJsonString()
+    public void Deserialize_ShouldReturnNull_WhenPassedInvalidJsonString()
     {
         string[] testCases = [
             "1",
@@ -149,18 +147,16 @@ public class JsonWrapperTests
 
         foreach (string testCase in testCases)
         {
-            Assert.That(JsonWrapper.Deserialize<int>(testCase), Is.Default);
-            Assert.That(JsonWrapper.Deserialize<string>(testCase), Is.Default);
-            Assert.That(JsonWrapper.Deserialize<object>(testCase), Is.Default);
-            Assert.That(JsonWrapper.Deserialize<FakeModel>(testCase), Is.Default);
+            Assert.That(JsonWrapper.Deserialize<string>(testCase), Is.Null);
+            Assert.That(JsonWrapper.Deserialize<object>(testCase), Is.Null);
+            Assert.That(JsonWrapper.Deserialize<FakeModel>(testCase), Is.Null);
         }
     }
 
     [Test]
-    public void Deserialize_ShouldReturnDefault_WhenPassedInvalidType()
+    public void Deserialize_ShouldReturnNull_WhenPassedInvalidType()
     {
-        Assert.That(JsonWrapper.Deserialize<int>("{}"), Is.Default);
-        Assert.That(JsonWrapper.Deserialize<string>("{}"), Is.Default);
+        Assert.That(JsonWrapper.Deserialize<string>("{}"), Is.Null);
     }
 
     [Test]

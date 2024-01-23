@@ -26,10 +26,11 @@ internal static class JsonWrapper
     }
 
     internal static T? Deserialize<T>(string json)
+        where T : class
     {
         if (!IsValid(json))
         {
-            return default;
+            return null;
         }
 
         T? obj;
@@ -40,11 +41,12 @@ internal static class JsonWrapper
             {
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
             });
         }
         catch
         {
-            obj = default;
+            obj = null;
         }
 
         return obj;

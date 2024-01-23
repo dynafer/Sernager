@@ -21,6 +21,7 @@ internal static class YamlWrapper
     }
 
     internal static T? Deserialize<T>(string yaml)
+        where T : class
     {
         try
         {
@@ -32,7 +33,7 @@ internal static class YamlWrapper
         }
         catch
         {
-            return default;
+            return null;
         }
     }
 }

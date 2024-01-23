@@ -59,7 +59,6 @@ internal sealed class CommandManager : ICommandManager
 
         Guid id = mParents.Peek();
         CurrentGroup = Configurator.Config.CommandSubgroups[id];
-
         CurrentGroup.Items.Remove(currentId);
     }
 
@@ -134,7 +133,7 @@ internal sealed class CommandManager : ICommandManager
         return this;
     }
 
-    public string[] GetPath()
+    public string[] GetBreadcrumb()
     {
         List<string> path = [
             MainGroup.Name
