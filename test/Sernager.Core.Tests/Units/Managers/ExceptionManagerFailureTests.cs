@@ -28,4 +28,24 @@ public class ExceptionManagerFailureTests : FailureFixture
         Assert.Throws<NullReferenceException>(() => ExceptionManager.Throw<FakeException>("message", string.Empty, 1));
         Assert.Throws<NullReferenceException>(() => ExceptionManager.Throw<FakeException>("message", 1, string.Empty));
     }
+
+    [Theory]
+    public void ThrowFail_ShouldThrowNullReferenceException_WhenPassedInvalidArguments(EErrorLevel level)
+    {
+        Assume.That(level, Is.AnyOf(TEST_ERROR_LEVELS));
+
+        ExceptionManager.ErrorLevel = level;
+
+        if (level == EErrorLevel.None)
+        {
+            Assert.Pass();
+
+            return;
+        }
+
+        Assert.Throws<NullReferenceException>(() => ExceptionManager.ThrowFail<FakeException>("message", 1));
+        Assert.Throws<NullReferenceException>(() => ExceptionManager.ThrowFail<FakeException>("message", 1, 2));
+        Assert.Throws<NullReferenceException>(() => ExceptionManager.ThrowFail<FakeException>("message", string.Empty, 1));
+        Assert.Throws<NullReferenceException>(() => ExceptionManager.ThrowFail<FakeException>("message", 1, string.Empty));
+    }
 }
