@@ -233,7 +233,7 @@ internal static class Args
 
         foreach (KeyValuePair<string, TArgInfo> argInfo in mArgInfos)
         {
-            (PropertyInfo property, ArgAttribute attribute, object? _) = argInfo.Value;
+            (PropertyInfo property, ArgAttribute attribute, _) = argInfo.Value;
 
             string arguments = $"--{argInfo.Key}";
             if (!string.IsNullOrWhiteSpace(attribute.ShortName))

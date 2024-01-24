@@ -219,12 +219,12 @@ internal static class UserFriendlyConfigurationExtension
 
     private static bool isCommand(JsonElement jsonElement)
     {
-        if (jsonElement.TryGetProperty("command", out JsonElement _))
+        if (jsonElement.TryGetProperty("command", out _))
         {
             return true;
         }
 
-        if (jsonElement.TryGetProperty("usedEnvironmentGroups", out JsonElement _))
+        if (jsonElement.TryGetProperty("usedEnvironmentGroups", out _))
         {
             return true;
         }
@@ -264,7 +264,7 @@ internal static class UserFriendlyConfigurationExtension
 
     private static bool isGroup(JsonElement jsonElement)
     {
-        if (jsonElement.TryGetProperty("items", out JsonElement _))
+        if (jsonElement.TryGetProperty("items", out _))
         {
             return true;
         }

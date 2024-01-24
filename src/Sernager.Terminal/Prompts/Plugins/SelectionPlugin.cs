@@ -25,7 +25,7 @@ internal sealed class SelectionPlugin<TOptionValue> : ListBasePlugin<TOptionValu
         switch (keyInfo.Key)
         {
             case ConsoleKey.Enter:
-                (List<OptionItem<TOptionValue>> options, int _) = getOptions();
+                (List<OptionItem<TOptionValue>> options, _) = getOptions();
                 result = options[Pagination.Offset].Value;
                 mResult = options[Pagination.Offset].Name;
 

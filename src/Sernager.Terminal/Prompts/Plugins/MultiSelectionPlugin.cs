@@ -67,7 +67,7 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
         {
             case ConsoleKey.Enter:
             {
-                (List<OptionItem<TOptionValue>> options, int _) = getOptions();
+                (List<OptionItem<TOptionValue>> options, _) = getOptions();
                 result = options.Where(x => x.IsSelected).Select(x => x.Value);
                 mResult = options.Where(x => x.IsSelected).Select(x => x.Name).ToArray();
 
@@ -81,7 +81,7 @@ internal sealed class MultiSelectionPlugin<TOptionValue> : ListBasePlugin<TOptio
                 break;
             case ConsoleKey.Spacebar:
             {
-                (List<OptionItem<TOptionValue>> options, int _) = getOptions();
+                (List<OptionItem<TOptionValue>> options, _) = getOptions();
                 options[Pagination.Offset].ToggleSelection();
                 break;
             }

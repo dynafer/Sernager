@@ -147,7 +147,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
         components.AddRange(
             mLines
                 .GetRange(mCurrentEditorY, countPrintableLines)
-                .Select((string line, int _) =>
+                .Select((string line) =>
                 {
                     return new TextComponent()
                         .SetText(line)
@@ -163,7 +163,7 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
             components.AddRange(
                 Enumerable
                     .Range(0, mMaxEditorHeight - countPrintableLines)
-                    .Select((int _) =>
+                    .Select((_) =>
                     {
                         return new TextComponent()
                             .UseLineBreak();

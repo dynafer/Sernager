@@ -476,13 +476,13 @@ public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
     {
         if (typeof(TCast) == typeof(CommandModel))
         {
-            return jsonElement.TryGetProperty("command", out JsonElement _) &&
-                jsonElement.TryGetProperty("usedEnvironmentGroups", out JsonElement _);
+            return jsonElement.TryGetProperty("command", out _) &&
+                jsonElement.TryGetProperty("usedEnvironmentGroups", out _);
         }
 
         if (typeof(TCast) == typeof(UserFriendlyGroupModel))
         {
-            return jsonElement.TryGetProperty("items", out JsonElement _);
+            return jsonElement.TryGetProperty("items", out _);
         }
 
         return true;
