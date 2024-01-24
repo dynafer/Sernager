@@ -175,31 +175,6 @@ public class CommandManagerSuccessTests
     }
 
     [Theory]
-    public void IsCommand_ShouldReturnBoolean((int, string) pair)
-    {
-        Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
-
-        (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
-
-        if (level == 1)
-        {
-            Assert.Pass();
-            return;
-        }
-
-        GroupModel groupModel = findMainGroupWithMostItems();
-
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-
-        Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-        Guid commandId = findCommandIdWithMostItems(groupModel.Items);
-
-        Assert.That(commandManager.IsCommand(subgroupId), Is.False);
-        Assert.That(commandManager.IsCommand(commandId), Is.True);
-    }
-
-    [Theory]
     public void GetCommand_ShouldReturnCommandModel((int, string) pair)
     {
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));

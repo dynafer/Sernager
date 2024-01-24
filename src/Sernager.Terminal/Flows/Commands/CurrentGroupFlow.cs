@@ -1,3 +1,4 @@
+using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
 using Sernager.Resources;
@@ -81,7 +82,7 @@ internal sealed class CurrentGroupFlow : IFlow
                 FlowManager.RunFlow("Command.CurrentGroup.Manage", mManager);
                 break;
             default:
-                if (mManager.IsCommand(result))
+                if (ManagerHelper.IsCommand(result))
                 {
                     if (FlowManager.IsManagementMode)
                     {

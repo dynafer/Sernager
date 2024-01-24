@@ -22,4 +22,9 @@ public static class ManagerHelper
             .Select(x => x.Name)
             .FirstOrDefault();
     }
+
+    public static bool IsCommand(Guid id)
+    {
+        return Configurator.Config.Commands.ContainsKey(id);
+    }
 }

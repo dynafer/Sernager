@@ -78,6 +78,12 @@ internal sealed class CommandManager : ICommandManager
 
     public void RemoveItem(Guid Id)
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return;
+        }
+
         if (!CurrentGroup.Items.Contains(Id))
         {
             ExceptionManager.Throw<SernagerException>($"Item not found in group. Id: {Id}");
@@ -99,11 +105,6 @@ internal sealed class CommandManager : ICommandManager
         }
 
         CurrentGroup.Items.Remove(Id);
-    }
-
-    public bool IsCommand(Guid id)
-    {
-        return Configurator.Config.Commands.ContainsKey(id);
     }
 
     public CommandModel GetCommand(Guid id)
