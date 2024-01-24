@@ -29,6 +29,12 @@ internal sealed class CommandManager : ICommandManager
 
     public void RemoveMainGroup()
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return;
+        }
+
         CurrentGroup = null!;
 
         removeItems(MainGroup);
@@ -40,6 +46,12 @@ internal sealed class CommandManager : ICommandManager
 
     public void RemoveCurrentGroup()
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return;
+        }
+
         if (CurrentGroup == MainGroup)
         {
             RemoveMainGroup();
@@ -49,6 +61,8 @@ internal sealed class CommandManager : ICommandManager
         removeItems(CurrentGroup);
 
         Guid currentId = mParents.Pop();
+
+        Configurator.Config.CommandSubgroups.Remove(currentId);
 
         if (mParents.Count == 0)
         {
