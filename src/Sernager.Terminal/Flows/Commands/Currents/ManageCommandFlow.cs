@@ -1,3 +1,4 @@
+using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
 using Sernager.Terminal.Attributes;
@@ -20,7 +21,17 @@ internal sealed class ManageCommandFlow : IFlow
     {
         mManager = manager;
         mCommandId = commandId;
-        mCommandModel = mManager.GetCommand(commandId);
+
+        CommandModel? commandModel = ManagerHelper.GetCommandOrNull(commandId);
+
+        if (commandModel == null)
+        {
+            mCommandModel = null!;
+            FlowManager.RunPreviousFlow();
+            return;
+        }
+
+        mCommandModel = commandModel;
     }
 
     void IFlow.Prompt()

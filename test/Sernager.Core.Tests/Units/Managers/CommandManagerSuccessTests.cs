@@ -109,7 +109,7 @@ public class CommandManagerSuccessTests
 
         commandManager.RemoveCurrentGroup();
 
-        if (level == 0)
+        if (level == 1)
         {
             Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(groupModel.Name), Is.False);
 
@@ -130,13 +130,13 @@ public class CommandManagerSuccessTests
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
-
         if (level == 1)
         {
             Assert.Pass();
             return;
         }
+
+        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
         GroupModel groupModel = findMainGroupWithMostItems();
 
@@ -171,39 +171,6 @@ public class CommandManagerSuccessTests
             Assert.That(commandManager.CurrentGroup.Items.Count, Is.EqualTo(countBefore - 2));
             Assert.That(Configurator.Config.CommandSubgroups.ContainsKey(subgroupId), Is.False);
             Assert.That(Configurator.Config.Commands.ContainsKey(commandId), Is.False);
-        }
-    }
-
-    [Theory]
-    public void GetCommand_ShouldReturnCommandModel((int, string) pair)
-    {
-        Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
-
-        (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
-
-        if (level == 1)
-        {
-            Assert.Pass();
-            return;
-        }
-
-        GroupModel groupModel = findMainGroupWithMostItems();
-
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-
-        for (int i = 1; i < level; ++i)
-        {
-            Guid commandId = findCommandIdWithMostItems(groupModel.Items);
-
-            Assert.That(commandManager.GetCommand(commandId), Is.Not.Null);
-            Assert.That(commandManager.GetCommand(commandId), Is.InstanceOf<CommandModel>());
-
-            Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-
-            commandManager.UseItem(subgroupId);
-
-            groupModel = commandManager.CurrentGroup;
         }
     }
 
@@ -244,13 +211,13 @@ public class CommandManagerSuccessTests
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
-
         if (level == 1)
         {
             Assert.Pass();
             return;
         }
+
+        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
         GroupModel groupModel = findMainGroupWithMostItems();
 

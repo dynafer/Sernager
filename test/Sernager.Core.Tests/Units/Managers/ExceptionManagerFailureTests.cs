@@ -10,7 +10,7 @@ public class ExceptionManagerFailureTests : FailureFixture
     private static readonly EErrorLevel[] TEST_ERROR_LEVELS = Enum.GetValues<EErrorLevel>();
 
     [Theory]
-    public void Throw_ShouldThrowNullReferenceException_WhenPassedInvalidArguments(EErrorLevel level)
+    public void Throw_ShouldThrow_WhenPassedInvalidArguments(EErrorLevel level)
     {
         Assume.That(level, Is.AnyOf(TEST_ERROR_LEVELS));
 
@@ -30,7 +30,7 @@ public class ExceptionManagerFailureTests : FailureFixture
     }
 
     [Theory]
-    public void ThrowFail_ShouldThrowNullReferenceException_WhenPassedInvalidArguments(EErrorLevel level)
+    public void ThrowFail_ShouldThrow_WhenPassedInvalidArguments(EErrorLevel level)
     {
         Assume.That(level, Is.AnyOf(TEST_ERROR_LEVELS));
 

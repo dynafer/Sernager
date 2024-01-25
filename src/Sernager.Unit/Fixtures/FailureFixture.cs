@@ -6,6 +6,13 @@ namespace Sernager.Unit.Fixtures;
 
 public abstract class FailureFixture
 {
+    [DatapointSource]
+    public static readonly EErrorLevel[] TESTABLE_LEVELS =
+    [
+        EErrorLevel.None,
+        EErrorLevel.Exception
+    ];
+
     [StackTraceHidden]
     public void TestNoneLevel<TActual>(Func<TActual> actual, IResolveConstraint expression)
     {

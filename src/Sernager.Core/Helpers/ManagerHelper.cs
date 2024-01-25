@@ -1,4 +1,6 @@
 using Sernager.Core.Configs;
+using Sernager.Core.Managers;
+using Sernager.Core.Models;
 
 namespace Sernager.Core.Helpers;
 
@@ -26,5 +28,16 @@ public static class ManagerHelper
     public static bool IsCommand(Guid id)
     {
         return Configurator.Config.Commands.ContainsKey(id);
+    }
+
+    public static CommandModel? GetCommandOrNull(Guid id)
+    {
+        if (!Configurator.Config.Commands.ContainsKey(id))
+        {
+            ExceptionManager.Throw<SernagerException>($"Command not found. Id: {id}");
+            return null;
+        }
+
+        return Configurator.Config.Commands[id];
     }
 }

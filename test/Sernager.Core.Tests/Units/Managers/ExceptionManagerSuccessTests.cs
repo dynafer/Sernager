@@ -14,7 +14,7 @@ public class ExceptionManagerSuccessTests
     ];
 
     [Theory]
-    public void Throw_ShouldThrowExceptionOrNot(EErrorLevel level)
+    public void Throw_ShouldThrow(EErrorLevel level)
     {
         Assume.That(level, Is.AnyOf(TEST_ERROR_LEVELS));
 
@@ -33,7 +33,7 @@ public class ExceptionManagerSuccessTests
     }
 
     [Theory]
-    public void ThrowFaile_ShouldThrowExceptionOrNot(EErrorLevel level)
+    public void ThrowFaile_ShouldThrow(EErrorLevel level)
     {
         Assume.That(level, Is.AnyOf(TEST_ERROR_LEVELS));
 

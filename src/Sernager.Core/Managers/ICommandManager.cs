@@ -9,7 +9,6 @@ public interface ICommandManager
     void RemoveMainGroup();
     void RemoveCurrentGroup();
     void RemoveItem(Guid Id);
-    CommandModel GetCommand(Guid id);
     ICommandManager UseItem(Guid id);
     string[] GetBreadcrumb();
     ICommandManager PrevGroup();

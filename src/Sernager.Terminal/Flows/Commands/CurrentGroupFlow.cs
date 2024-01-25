@@ -146,10 +146,10 @@ internal sealed class CurrentGroupFlow : IFlow
     private void runCommand(Guid commandId)
     {
         IExecutor executor = Program.Service.GetExecutor(commandId);
-        CommandModel model = mManager.GetCommand(commandId);
+        CommandModel? model = ManagerHelper.GetCommandOrNull(commandId);
         IResourcePack resourcePack = ResourceRetriever.UsePack(FlowManager.GetResourceNamespace("Command"));
 
-        if (executor == null)
+        if (executor == null || model == null)
         {
             return;
         }

@@ -39,6 +39,8 @@ internal sealed class CommandManager : ICommandManager
 
         removeItems(MainGroup);
 
+        mParents.Clear();
+
         MainGroup.Items.Clear();
         Configurator.Config.CommandMainGroups.Remove(MainGroup.Name);
         MainGroup = null!;
@@ -107,18 +109,14 @@ internal sealed class CommandManager : ICommandManager
         CurrentGroup.Items.Remove(Id);
     }
 
-    public CommandModel GetCommand(Guid id)
-    {
-        if (!Configurator.Config.Commands.ContainsKey(id))
-        {
-            ExceptionManager.Throw<SernagerException>($"Command not found. Id: {id}");
-        }
-
-        return Configurator.Config.Commands[id];
-    }
-
     public ICommandManager UseItem(Guid id)
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return this;
+        }
+
         if (!CurrentGroup.Items.Contains(id))
         {
             ExceptionManager.Throw<SernagerException>($"Item not found in group. Id: {id}");
@@ -150,6 +148,12 @@ internal sealed class CommandManager : ICommandManager
 
     public string[] GetBreadcrumb()
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return Array.Empty<string>();
+        }
+
         List<string> path = [
             MainGroup.Name
         ];
@@ -164,6 +168,12 @@ internal sealed class CommandManager : ICommandManager
 
     public ICommandManager PrevGroup()
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return this;
+        }
+
         if (mParents.Count == 0)
         {
             CurrentGroup = MainGroup;
@@ -188,6 +198,12 @@ internal sealed class CommandManager : ICommandManager
 
     public ICommandManager GoMainGroup()
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return this;
+        }
+
         mParents.Clear();
         CurrentGroup = MainGroup;
 
@@ -196,6 +212,12 @@ internal sealed class CommandManager : ICommandManager
 
     public GroupModel GetPrevGroup()
     {
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return null!;
+        }
+
         if (mParents.Count <= 1)
         {
             return MainGroup;
@@ -209,6 +231,12 @@ internal sealed class CommandManager : ICommandManager
     public List<GroupItemModel> GetItems()
     {
         List<GroupItemModel> items = new List<GroupItemModel>();
+
+        if (MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            return items;
+        }
 
         foreach (Guid id in CurrentGroup.Items)
         {
