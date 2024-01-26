@@ -1,12 +1,11 @@
 using Sernager.Core.Models;
 using Sernager.Core.Options;
-using System.Collections.ObjectModel;
 
 namespace Sernager.Core.Managers;
 
 public interface IEnvironmentManager
 {
-    EnvironmentModel EnvironmentGroup { get; }
+    EnvironmentModel Group { get; }
     EAddDataOption AdditionMode { get; set; }
     void RemoveGroup();
     IEnvironmentManager AddFromPreFile(string filePath);
@@ -15,8 +14,6 @@ public interface IEnvironmentManager
     IEnvironmentManager AddLines(params string[] lines);
     string? GetPreVariableOrNull(string key);
     string? GetVariableOrNull(string key);
-    ReadOnlyDictionary<string, string> GetPreVariables();
-    ReadOnlyDictionary<string, string> GetVariables();
     IEnvironmentManager SetPreVariable(string key, string value);
     IEnvironmentManager SetVariable(string key, string value);
     IEnvironmentManager SetPreVariables(Dictionary<string, string> keyValues);

@@ -87,7 +87,7 @@ internal static class FlowPromptPluginExxtension
         where TPlugin : IBasePlugin
     {
         plugin.AddDescriptions(
-            $"{FlowManager.CommonResourcePack.GetString("Name")}: {manager.EnvironmentGroup.Name}",
+            $"{FlowManager.CommonResourcePack.GetString("Name")}: {manager.Group.Name}",
             $"{FlowManager.CommonResourcePack.GetString("AdditionMode")}: {manager.AdditionMode.GetDescription()}"
         );
 

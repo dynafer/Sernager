@@ -34,6 +34,8 @@ public class CommandManagerSuccessTests
         string shortName = "iet";
         string description = "This is a description.";
 
+        Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(name), Is.False);
+
         ICommandManager commandManager = new CommandManager(name, shortName, description);
 
         Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(name), Is.True);
@@ -57,6 +59,7 @@ public class CommandManagerSuccessTests
 
         Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(groupModel.Name), Is.True);
 
+        Assert.That(commandManager.MainGroup, Is.EqualTo(groupModel));
         Assert.That(commandManager.MainGroup.Name, Is.EqualTo(groupModel.Name));
         Assert.That(commandManager.MainGroup.ShortName, Is.EqualTo(groupModel.ShortName));
         Assert.That(commandManager.MainGroup.Description, Is.EqualTo(groupModel.Description));

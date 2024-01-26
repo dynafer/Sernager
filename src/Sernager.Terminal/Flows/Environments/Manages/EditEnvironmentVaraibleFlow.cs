@@ -4,7 +4,6 @@ using Sernager.Terminal.Managers;
 using Sernager.Terminal.Prompts;
 using Sernager.Terminal.Prompts.Extensions;
 using Sernager.Terminal.Prompts.Plugins;
-using System.Collections.ObjectModel;
 
 namespace Sernager.Terminal.Flows.Environments.Manages;
 
@@ -22,7 +21,7 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
 
     void IFlow.Prompt()
     {
-        ReadOnlyDictionary<string, string> variables = mbPre ? mManager.GetPreVariables() : mManager.GetVariables();
+        Dictionary<string, string> variables = mbPre ? mManager.Group.PreVariables : mManager.Group.Variables;
         string[] initialLines = variables.Select(x => $"{x.Key}={x.Value}").ToArray();
         string prompt = mbPre ? "EditPreEnvironmentVariablePrompt" : "EditEnvironmentVariablePrompt";
 

@@ -25,11 +25,11 @@ internal sealed class EditNameFlow : IFlow
         string name = Prompter.Prompt(
             new InputPlugin()
                 .SetPrompt(FlowManager.CommonResourcePack.GetString("EnterNamePromptWithCancelForEdit"))
-                .SetInitialInput(mManager.EnvironmentGroup.Name)
+                .SetInitialInput(mManager.Group.Name)
                 .UseValidator(new InputValidator()
                     .AddRules(
                         (
-                            (string name) => name == mManager.EnvironmentGroup.Name || string.IsNullOrWhiteSpace(name),
+                            (string name) => name == mManager.Group.Name || string.IsNullOrWhiteSpace(name),
                             null,
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
@@ -42,7 +42,7 @@ internal sealed class EditNameFlow : IFlow
                 )
         ).Replace(" ", string.Empty);
 
-        if (!string.IsNullOrWhiteSpace(name) && name != mManager.EnvironmentGroup.Name)
+        if (!string.IsNullOrWhiteSpace(name) && name != mManager.Group.Name)
         {
             mManager.ChangeGroupName(name);
         }

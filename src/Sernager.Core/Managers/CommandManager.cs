@@ -31,7 +31,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return;
         }
 
@@ -50,7 +50,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return;
         }
 
@@ -82,7 +82,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return;
         }
 
@@ -113,7 +113,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return this;
         }
 
@@ -150,7 +150,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return Array.Empty<string>();
         }
 
@@ -170,7 +170,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return this;
         }
 
@@ -200,7 +200,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return this;
         }
 
@@ -214,7 +214,7 @@ internal sealed class CommandManager : ICommandManager
     {
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return null!;
         }
 
@@ -234,7 +234,7 @@ internal sealed class CommandManager : ICommandManager
 
         if (MainGroup == null)
         {
-            ExceptionManager.Throw<SernagerException>("Main group already removed.");
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return items;
         }
 

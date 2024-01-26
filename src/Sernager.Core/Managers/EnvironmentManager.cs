@@ -1,14 +1,14 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Models;
 using Sernager.Core.Options;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Text;
 
 namespace Sernager.Core.Managers;
 
 internal sealed class EnvironmentManager : IEnvironmentManager
 {
-    public EnvironmentModel EnvironmentGroup { get; private set; }
+    public EnvironmentModel Group { get; private set; }
     public EAddDataOption AdditionMode { get; set; } = EAddDataOption.SkipIfExists;
 
     internal EnvironmentManager(string name)
@@ -23,49 +23,73 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             Configurator.Config.EnvironmentGroups.Add(name, environmentModel);
         }
 
-        EnvironmentGroup = Configurator.Config.EnvironmentGroups[name];
+        Group = Configurator.Config.EnvironmentGroups[name];
     }
 
     public void RemoveGroup()
     {
-        Configurator.Config.EnvironmentGroups.Remove(EnvironmentGroup.Name);
-        foreach (CommandModel commandModel in Configurator.Config.Commands.Values)
+        if (Group == null)
         {
-            commandModel.UsedEnvironmentGroups.Remove(EnvironmentGroup.Name);
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return;
         }
 
-        EnvironmentGroup = null!;
+        Configurator.Config.EnvironmentGroups.Remove(Group.Name);
+        foreach (CommandModel commandModel in Configurator.Config.Commands.Values)
+        {
+            commandModel.UsedEnvironmentGroups.Remove(Group.Name);
+        }
+
+        Group = null!;
     }
 
     public IEnvironmentManager AddFromPreFile(string filePath)
     {
-        if (AdditionMode == EAddDataOption.OverwriteAll)
+        if (Group == null)
         {
-            EnvironmentGroup.PreVariables.Clear();
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
         }
 
-        tryAddFromFile(EnvironmentGroup.PreVariables, filePath);
+        if (AdditionMode == EAddDataOption.OverwriteAll)
+        {
+            Group.PreVariables.Clear();
+        }
+
+        tryAddFromFile(Group.PreVariables, filePath);
 
         return this;
     }
 
     public IEnvironmentManager AddFromFile(string filePath)
     {
-        if (AdditionMode == EAddDataOption.OverwriteAll)
+        if (Group == null)
         {
-            EnvironmentGroup.Variables.Clear();
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
         }
 
-        tryAddFromFile(EnvironmentGroup.Variables, filePath);
+        if (AdditionMode == EAddDataOption.OverwriteAll)
+        {
+            Group.Variables.Clear();
+        }
+
+        tryAddFromFile(Group.Variables, filePath);
 
         return this;
     }
 
     public IEnvironmentManager AddPreLines(params string[] lines)
     {
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
         foreach (string line in lines)
         {
-            tryAddLine(EnvironmentGroup.PreVariables, line);
+            tryAddLine(Group.PreVariables, line);
         }
 
         return this;
@@ -73,9 +97,15 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
     public IEnvironmentManager AddLines(params string[] lines)
     {
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
         foreach (string line in lines)
         {
-            tryAddLine(EnvironmentGroup.Variables, line);
+            tryAddLine(Group.Variables, line);
         }
 
         return this;
@@ -83,43 +113,63 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
     public string? GetPreVariableOrNull(string key)
     {
-        return getVariableOrNull(EnvironmentGroup.PreVariables, key);
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return null;
+        }
+
+        return getVariableOrNull(Group.PreVariables, key);
     }
 
     public string? GetVariableOrNull(string key)
     {
-        return getVariableOrNull(EnvironmentGroup.Variables, key);
-    }
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return null;
+        }
 
-    public ReadOnlyDictionary<string, string> GetPreVariables()
-    {
-        return getVariables(EnvironmentGroup.PreVariables);
-    }
-
-    public ReadOnlyDictionary<string, string> GetVariables()
-    {
-        return getVariables(EnvironmentGroup.Variables);
+        return getVariableOrNull(Group.Variables, key);
     }
 
     public IEnvironmentManager SetPreVariable(string key, string value)
     {
-        setVariable(EnvironmentGroup.PreVariables, key, value);
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
+        setVariable(Group.PreVariables, key, value);
 
         return this;
     }
 
     public IEnvironmentManager SetVariable(string key, string value)
     {
-        setVariable(EnvironmentGroup.Variables, key, value);
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
+        setVariable(Group.Variables, key, value);
 
         return this;
     }
 
     public IEnvironmentManager SetPreVariables(Dictionary<string, string> variables)
     {
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
         foreach (KeyValuePair<string, string> variable in variables)
         {
-            setVariable(EnvironmentGroup.PreVariables, variable.Key, variable.Value);
+            setVariable(Group.PreVariables, variable.Key, variable.Value);
         }
 
         return this;
@@ -127,9 +177,15 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
     public IEnvironmentManager SetVariables(Dictionary<string, string> variables)
     {
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
         foreach (KeyValuePair<string, string> variable in variables)
         {
-            setVariable(EnvironmentGroup.Variables, variable.Key, variable.Value);
+            setVariable(Group.Variables, variable.Key, variable.Value);
         }
 
         return this;
@@ -137,23 +193,41 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
     public IEnvironmentManager RemovePreVariable(string key)
     {
-        removeVariable(EnvironmentGroup.PreVariables, key);
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
+        removeVariable(Group.PreVariables, key);
 
         return this;
     }
 
     public IEnvironmentManager RemoveVariable(string key)
     {
-        removeVariable(EnvironmentGroup.Variables, key);
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
+        removeVariable(Group.Variables, key);
 
         return this;
     }
 
     public IEnvironmentManager RemovePreVariables(params string[] keys)
     {
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
         foreach (string key in keys)
         {
-            removeVariable(EnvironmentGroup.PreVariables, key);
+            removeVariable(Group.PreVariables, key);
         }
 
         return this;
@@ -161,9 +235,15 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
     public IEnvironmentManager RemoveVariables(params string[] keys)
     {
+        if (Group == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The group already removed.");
+            return this;
+        }
+
         foreach (string key in keys)
         {
-            removeVariable(EnvironmentGroup.Variables, key);
+            removeVariable(Group.Variables, key);
         }
 
         return this;
@@ -200,25 +280,82 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return false;
         }
 
-        string[] keyValue = line.Split('#')[0].Split('=');
-        if (keyValue.Length != 2)
+        StringBuilder keyStringBuilder = new StringBuilder();
+        StringBuilder valueStringBuilder = new StringBuilder();
+
+        bool bValue = false;
+        bool bSingleQuote = false;
+        bool bDoubleQuote = false;
+
+        foreach (char c in line)
+        {
+            if (!bValue)
+            {
+                if (c == '#')
+                {
+                    break;
+                }
+                else if (c == ' ' || c == '\t')
+                {
+                    continue;
+                }
+                else if (c == '=')
+                {
+                    bValue = true;
+                }
+                else
+                {
+                    keyStringBuilder.Append(c);
+                }
+
+                continue;
+            }
+
+            if (valueStringBuilder.Length == 0)
+            {
+                if (c == ' ' || c == '\t')
+                {
+                    continue;
+                }
+                else if (c == '\'' || c == '"')
+                {
+                    bSingleQuote = c == '\'';
+                    bDoubleQuote = c == '"';
+                }
+                else
+                {
+                    valueStringBuilder.Append(c);
+                }
+
+                continue;
+            }
+
+            if ((c == '\'' && bSingleQuote) ||
+                (c == '"' && bDoubleQuote) ||
+                (c == '#' && !bSingleQuote && !bDoubleQuote)
+            )
+            {
+                bSingleQuote = false;
+                bDoubleQuote = false;
+                break;
+            }
+            else
+            {
+                valueStringBuilder.Append(c);
+            }
+        }
+
+        if (!bValue ||
+            bSingleQuote ||
+            bDoubleQuote ||
+            valueStringBuilder[valueStringBuilder.Length - 1] == '\'' ||
+            valueStringBuilder[valueStringBuilder.Length - 1] == '"')
         {
             Debug.WriteLine($"Invalid environment variable format: {line}");
-
             return false;
         }
 
-        keyValue[0] = keyValue[0].Trim();
-        keyValue[1] = keyValue[1].Split('#')[0].Trim();
-
-        if (keyValue[1].StartsWith('"') && keyValue[1].EndsWith('"')
-            || keyValue[1].StartsWith('\'') && keyValue[1].EndsWith('\'')
-        )
-        {
-            keyValue[1] = keyValue[1].Substring(1, keyValue[1].Length - 2);
-        }
-
-        setVariable(target, keyValue[0], keyValue[1]);
+        setVariable(target, keyStringBuilder.ToString(), valueStringBuilder.ToString());
         return true;
     }
 
@@ -230,11 +367,6 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         }
 
         return target[key];
-    }
-
-    private ReadOnlyDictionary<string, string> getVariables(Dictionary<string, string> target)
-    {
-        return new ReadOnlyDictionary<string, string>(target);
     }
 
     private void setVariable(Dictionary<string, string> target, string key, string value)

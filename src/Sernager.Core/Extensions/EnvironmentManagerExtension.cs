@@ -21,10 +21,10 @@ public static class EnvironmentManagerExtension
             return false;
         }
 
-        Configurator.Config.EnvironmentGroups.Remove(manager.EnvironmentGroup.Name);
-        Configurator.Config.EnvironmentGroups.Add(name, manager.EnvironmentGroup);
+        Configurator.Config.EnvironmentGroups.Remove(manager.Group.Name);
+        Configurator.Config.EnvironmentGroups.Add(name, manager.Group);
 
-        manager.EnvironmentGroup.Name = name;
+        manager.Group.Name = name;
 
         return true;
     }
