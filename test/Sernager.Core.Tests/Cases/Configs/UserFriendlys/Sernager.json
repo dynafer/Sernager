@@ -2,7 +2,7 @@
   "environments": {
     "test1": {
       "name": "test1",
-      "preVariables": {
+      "substVariables": {
         "TEST_ENV3": "test3",
         "TEST_ENV2": "test2",
         "TEST_ENV1": "test1"
@@ -15,7 +15,7 @@
     },
     "test2": {
       "name": "test2",
-      "preVariables": {
+      "substVariables": {
         "TEST_ENV3": "test3",
         "TEST_ENV2": "test2",
         "TEST_ENV1": "test1"
@@ -28,7 +28,7 @@
     },
     "test3": {
       "name": "test3",
-      "preVariables": {
+      "substVariables": {
         "TEST_ENV3": "test3",
         "TEST_ENV2": "test2",
         "TEST_ENV1": "test1"
