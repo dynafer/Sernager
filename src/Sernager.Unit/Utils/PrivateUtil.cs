@@ -171,4 +171,74 @@ public static class PrivateUtil
 
         return (TValue)value;
     }
+
+    public static void SetFieldValue<TClass, TValue>(string fieldName, TValue value)
+    {
+        Type type = typeof(TClass);
+        FieldInfo? field = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
+        if (field == null)
+        {
+            throw new InvalidOperationException($"{nameof(FieldInfo)} '{fieldName}' is null.");
+        }
+
+        field.SetValue(null, value);
+    }
+
+    public static void SetFieldValue<TValue>(Type classType, string fieldName, TValue value)
+    {
+        FieldInfo? field = classType.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
+        if (field == null)
+        {
+            throw new InvalidOperationException($"{nameof(FieldInfo)} '{fieldName}' is null.");
+        }
+
+        field.SetValue(null, value);
+    }
+
+    public static void SetFieldValue<TValue>(object obj, string fieldName, TValue value)
+    {
+        Type type = obj.GetType();
+        FieldInfo? field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        if (field == null)
+        {
+            throw new InvalidOperationException($"{nameof(FieldInfo)} '{fieldName}' is null.");
+        }
+
+        field.SetValue(obj, value);
+    }
+
+    public static void SetPropertyValue<TClass, TValue>(string propertyName, TValue value)
+    {
+        Type type = typeof(TClass);
+        PropertyInfo? property = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.NonPublic);
+        if (property == null)
+        {
+            throw new InvalidOperationException($"{nameof(PropertyInfo)} '{propertyName}' is null.");
+        }
+
+        property.SetValue(null, value);
+    }
+
+    public static void SetPropertyValue<TValue>(Type classType, string propertyName, TValue value)
+    {
+        PropertyInfo? property = classType.GetProperty(propertyName, BindingFlags.Static | BindingFlags.NonPublic);
+        if (property == null)
+        {
+            throw new InvalidOperationException($"{nameof(PropertyInfo)} '{propertyName}' is null.");
+        }
+
+        property.SetValue(null, value);
+    }
+
+    public static void SetPropertyValue<TValue>(object obj, string propertyName, TValue value)
+    {
+        Type type = obj.GetType();
+        PropertyInfo? property = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic);
+        if (property == null)
+        {
+            throw new InvalidOperationException($"{nameof(PropertyInfo)} '{propertyName}' is null.");
+        }
+
+        property.SetValue(obj, value);
+    }
 }
