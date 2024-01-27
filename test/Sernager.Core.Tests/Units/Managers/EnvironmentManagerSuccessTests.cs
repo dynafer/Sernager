@@ -10,6 +10,7 @@ public class EnvironmentManagerSuccessTests
 {
     private static readonly string CONFIG_ALIAS = "Configs.Defaults.Specifications.Environment";
     private static readonly string ENV_FILE_ALIAS = "Envs.ValidEnv";
+    private static readonly string INVALID_ENV_FILE_ALIAS = "Envs.InvalidEnv";
     private static readonly string EXISTING_KEY_NAME = "TEST2";
     [DatapointSource]
     private static readonly string[] TEST_TYPES = ["Pre", "Normal"];
@@ -146,6 +147,50 @@ public class EnvironmentManagerSuccessTests
                 break;
             default:
                 throw new Exception("Invalid addition mode");
+        }
+    }
+
+    [Theory]
+    public void AddFromFile_ShouldNotAddAnyInvalidVariablesFromFile(string testType, EAddDataOption additionMode)
+    {
+        Assume.That(testType, Is.AnyOf(TEST_TYPES));
+        Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
+
+        mManager.AdditionMode = additionMode;
+
+        string path = CaseUtil.GetPath(INVALID_ENV_FILE_ALIAS, "env");
+
+        Dictionary<string, string> target = getVariableDictionary(mGroup, testType);
+
+        int countBefore = target.Count;
+        KeyValuePair<string, string>[] existingVars = target.ToArray();
+
+        switch (testType)
+        {
+            case "Pre":
+                mManager.AddFromPreFile(path);
+                break;
+            case "Normal":
+                mManager.AddFromFile(path);
+                break;
+            default:
+                throw new Exception("Invalid test type");
+        }
+
+        if (additionMode == EAddDataOption.OverwriteAll)
+        {
+            Assert.That(target.Count, Is.Zero);
+            return;
+        }
+        else
+        {
+            Assert.That(target.Count, Is.EqualTo(countBefore));
+        }
+
+        foreach (var var in existingVars)
+        {
+            Assert.That(target.ContainsKey(var.Key), Is.True);
+            Assert.That(target[var.Key], Is.EqualTo(var.Value));
         }
     }
 
