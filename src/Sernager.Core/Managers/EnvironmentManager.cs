@@ -43,7 +43,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         Group = null!;
     }
 
-    public IEnvironmentManager AddFromPreFile(string filePath)
+    public IEnvironmentManager AddFromSubstFile(string filePath)
     {
         if (Group == null)
         {
@@ -53,10 +53,10 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         if (AdditionMode == EAddDataOption.OverwriteAll)
         {
-            Group.PreVariables.Clear();
+            Group.SubstVariables.Clear();
         }
 
-        tryAddFromFile(Group.PreVariables, filePath);
+        tryAddFromFile(Group.SubstVariables, filePath);
 
         return this;
     }
@@ -79,7 +79,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
-    public IEnvironmentManager AddPreLines(params string[] lines)
+    public IEnvironmentManager AddSubstLines(params string[] lines)
     {
         if (Group == null)
         {
@@ -89,7 +89,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (string line in lines)
         {
-            tryAddLine(Group.PreVariables, line);
+            tryAddLine(Group.SubstVariables, line);
         }
 
         return this;
@@ -111,7 +111,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
-    public string? GetPreVariableOrNull(string key)
+    public string? GetSubstVariableOrNull(string key)
     {
         if (Group == null)
         {
@@ -119,7 +119,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return null;
         }
 
-        return getVariableOrNull(Group.PreVariables, key);
+        return getVariableOrNull(Group.SubstVariables, key);
     }
 
     public string? GetVariableOrNull(string key)
@@ -133,7 +133,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return getVariableOrNull(Group.Variables, key);
     }
 
-    public IEnvironmentManager SetPreVariable(string key, string value)
+    public IEnvironmentManager SetSubstVariable(string key, string value)
     {
         if (Group == null)
         {
@@ -141,7 +141,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        setVariable(Group.PreVariables, key, value);
+        setVariable(Group.SubstVariables, key, value);
 
         return this;
     }
@@ -159,7 +159,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
-    public IEnvironmentManager SetPreVariables(Dictionary<string, string> variables)
+    public IEnvironmentManager SetSubstVariables(Dictionary<string, string> variables)
     {
         if (Group == null)
         {
@@ -167,9 +167,9 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        foreach (KeyValuePair<string, string> variable in variables)
+        foreach (var variable in variables)
         {
-            setVariable(Group.PreVariables, variable.Key, variable.Value);
+            setVariable(Group.SubstVariables, variable.Key, variable.Value);
         }
 
         return this;
@@ -183,7 +183,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        foreach (KeyValuePair<string, string> variable in variables)
+        foreach (var variable in variables)
         {
             setVariable(Group.Variables, variable.Key, variable.Value);
         }
@@ -191,7 +191,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
-    public IEnvironmentManager RemovePreVariable(string key)
+    public IEnvironmentManager RemoveSubstVariable(string key)
     {
         if (Group == null)
         {
@@ -199,7 +199,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        removeVariable(Group.PreVariables, key);
+        removeVariable(Group.SubstVariables, key);
 
         return this;
     }
@@ -217,7 +217,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return this;
     }
 
-    public IEnvironmentManager RemovePreVariables(params string[] keys)
+    public IEnvironmentManager RemoveSubstVariables(params string[] keys)
     {
         if (Group == null)
         {
@@ -227,7 +227,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (string key in keys)
         {
-            removeVariable(Group.PreVariables, key);
+            removeVariable(Group.SubstVariables, key);
         }
 
         return this;

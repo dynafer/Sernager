@@ -104,7 +104,7 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.AddFromPreFile(path);
+                mManager.AddFromSubstFile(path);
                 break;
             case "Normal":
                 mManager.AddFromFile(path);
@@ -163,12 +163,12 @@ public class EnvironmentManagerSuccessTests
         Dictionary<string, string> target = getVariableDictionary(mGroup, testType);
 
         int countBefore = target.Count;
-        KeyValuePair<string, string>[] existingVars = target.ToArray();
+        var existingVars = target.ToArray();
 
         switch (testType)
         {
             case "Pre":
-                mManager.AddFromPreFile(path);
+                mManager.AddFromSubstFile(path);
                 break;
             case "Normal":
                 mManager.AddFromFile(path);
@@ -220,7 +220,7 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.AddPreLines(newLinesArr);
+                mManager.AddSubstLines(newLinesArr);
                 break;
             case "Normal":
                 mManager.AddLines(newLinesArr);
@@ -280,8 +280,8 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                Assert.That(mManager.GetPreVariableOrNull(key), Is.EqualTo(value));
-                Assert.That(mManager.GetPreVariableOrNull(inexistentKey), Is.Null);
+                Assert.That(mManager.GetSubstVariableOrNull(key), Is.EqualTo(value));
+                Assert.That(mManager.GetSubstVariableOrNull(inexistentKey), Is.Null);
                 break;
             case "Normal":
                 Assert.That(mManager.GetVariableOrNull(key), Is.EqualTo(value));
@@ -312,7 +312,7 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.SetPreVariable(key, value);
+                mManager.SetSubstVariable(key, value);
                 break;
             case "Normal":
                 mManager.SetVariable(key, value);
@@ -332,7 +332,7 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.SetPreVariable(key, value);
+                mManager.SetSubstVariable(key, value);
                 break;
             case "Normal":
                 mManager.SetVariable(key, value);
@@ -382,7 +382,7 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.SetPreVariables(newLines);
+                mManager.SetSubstVariables(newLines);
                 break;
             case "Normal":
                 mManager.SetVariables(newLines);
@@ -443,8 +443,8 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.RemovePreVariable(key);
-                mManager.RemovePreVariable(inexistentKey);
+                mManager.RemoveSubstVariable(key);
+                mManager.RemoveSubstVariable(inexistentKey);
                 break;
             case "Normal":
                 mManager.RemoveVariable(key);
@@ -472,8 +472,8 @@ public class EnvironmentManagerSuccessTests
         switch (testType)
         {
             case "Pre":
-                mManager.RemovePreVariables(keys);
-                mManager.RemovePreVariables(inexistentKeys);
+                mManager.RemoveSubstVariables(keys);
+                mManager.RemoveSubstVariables(inexistentKeys);
                 break;
             case "Normal":
                 mManager.RemoveVariables(keys);
@@ -497,7 +497,7 @@ public class EnvironmentManagerSuccessTests
 
         foreach (var group in Configurator.Config.EnvironmentGroups)
         {
-            int cur = group.Value.PreVariables.Count + group.Value.Variables.Count;
+            int cur = group.Value.SubstVariables.Count + group.Value.Variables.Count;
             if (cur > max)
             {
                 max = cur;
@@ -518,7 +518,7 @@ public class EnvironmentManagerSuccessTests
     {
         return testType switch
         {
-            "Pre" => group.PreVariables,
+            "Pre" => group.SubstVariables,
             "Normal" => group.Variables,
             _ => throw new Exception("Invalid test type")
         };

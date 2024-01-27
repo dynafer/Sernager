@@ -31,7 +31,7 @@ public class ConfigurationExtensionTests
         EnvironmentModel envModel = new EnvironmentModel
         {
             Name = "env",
-            PreVariables = new Dictionary<string, string>
+            SubstVariables = new Dictionary<string, string>
             {
                 { "PRE_ENV", "PRE_ENV" }
             },

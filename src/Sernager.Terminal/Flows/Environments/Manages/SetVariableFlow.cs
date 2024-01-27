@@ -11,12 +11,12 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 internal sealed class SetVariableFlow : IFlow
 {
     private readonly IEnvironmentManager mManager;
-    private readonly bool mbPre;
+    private readonly bool mbSubst;
 
-    internal SetVariableFlow(IEnvironmentManager manager, bool bPre)
+    internal SetVariableFlow(IEnvironmentManager manager, bool bSubst)
     {
         mManager = manager;
-        mbPre = bPre;
+        mbSubst = bSubst;
     }
 
     void IFlow.Prompt()
@@ -45,9 +45,9 @@ internal sealed class SetVariableFlow : IFlow
             return;
         }
 
-        if (mbPre)
+        if (mbSubst)
         {
-            mManager.SetPreVariable(key, value);
+            mManager.SetSubstVariable(key, value);
         }
         else
         {

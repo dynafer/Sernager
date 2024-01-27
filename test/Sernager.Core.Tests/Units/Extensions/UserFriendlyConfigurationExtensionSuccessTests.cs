@@ -64,7 +64,7 @@ public class UserFriendlyConfigurationExtensionSuccessTests
         }
 
         int sum = 0;
-        foreach (KeyValuePair<string, UserFriendlyGroupModel> pair in ufConfig.Commands)
+        foreach (var pair in ufConfig.Commands)
         {
             calculateSum(pair.Value, ref sum);
         }

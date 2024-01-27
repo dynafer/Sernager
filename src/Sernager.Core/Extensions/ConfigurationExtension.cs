@@ -9,12 +9,12 @@ internal static class ConfigurationExtension
     {
         UserFriendlyConfiguration ufConfig = new UserFriendlyConfiguration();
 
-        foreach (KeyValuePair<string, EnvironmentModel> pair in config.EnvironmentGroups)
+        foreach (var pair in config.EnvironmentGroups)
         {
             ufConfig.Environments.Add(pair.Key, pair.Value);
         }
 
-        foreach (KeyValuePair<string, GroupModel> pair in config.CommandMainGroups)
+        foreach (var pair in config.CommandMainGroups)
         {
             List<object> items = new List<object>();
 

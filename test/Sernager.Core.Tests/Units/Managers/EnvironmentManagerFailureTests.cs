@@ -12,7 +12,7 @@ public class EnvironmentManagerFailureTests : FailureFixture
     private static readonly string ENV_FILE_ALIAS = "Envs.InvalidEnv";
     private static readonly string EXISTING_KEY_NAME = "TEST2";
     [DatapointSource]
-    private static readonly string[] TEST_TYPES = ["Pre", "Normal"];
+    private static readonly string[] TEST_TYPES = ["Subst", "Normal"];
     [DatapointSource]
     private static readonly EAddDataOption[] ADDITION_MODES = Enum.GetValues<EAddDataOption>();
     private EnvironmentModel mGroup;
@@ -55,9 +55,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.AddFromPreFile(path), Is.EqualTo(mManager));
-                TestExceptionLevel<SernagerException>(() => mManager.AddFromPreFile(path));
+            case "Subst":
+                TestNoneLevel(() => mManager.AddFromSubstFile(path), Is.EqualTo(mManager));
+                TestExceptionLevel<SernagerException>(() => mManager.AddFromSubstFile(path));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.AddFromFile(path), Is.EqualTo(mManager));
@@ -80,9 +80,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.AddFromPreFile(path), Is.EqualTo(mManager));
-                TestExceptionLevel<FileNotFoundException>(() => mManager.AddFromPreFile(path));
+            case "Subst":
+                TestNoneLevel(() => mManager.AddFromSubstFile(path), Is.EqualTo(mManager));
+                TestExceptionLevel<FileNotFoundException>(() => mManager.AddFromSubstFile(path));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.AddFromFile(path), Is.EqualTo(mManager));
@@ -112,9 +112,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.AddPreLines(lines), Is.EqualTo(mManager));
-                TestExceptionLevel<SernagerException>(() => mManager.AddPreLines(lines));
+            case "Subst":
+                TestNoneLevel(() => mManager.AddSubstLines(lines), Is.EqualTo(mManager));
+                TestExceptionLevel<SernagerException>(() => mManager.AddSubstLines(lines));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.AddLines(lines), Is.EqualTo(mManager));
@@ -134,9 +134,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.GetPreVariableOrNull(EXISTING_KEY_NAME), Is.Null);
-                TestExceptionLevel<SernagerException>(() => mManager.GetPreVariableOrNull(EXISTING_KEY_NAME));
+            case "Subst":
+                TestNoneLevel(() => mManager.GetSubstVariableOrNull(EXISTING_KEY_NAME), Is.Null);
+                TestExceptionLevel<SernagerException>(() => mManager.GetSubstVariableOrNull(EXISTING_KEY_NAME));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.GetVariableOrNull(EXISTING_KEY_NAME), Is.Null);
@@ -156,9 +156,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.SetPreVariable(EXISTING_KEY_NAME, "TEST"), Is.EqualTo(mManager));
-                TestExceptionLevel<SernagerException>(() => mManager.SetPreVariable(EXISTING_KEY_NAME, "TEST"));
+            case "Subst":
+                TestNoneLevel(() => mManager.SetSubstVariable(EXISTING_KEY_NAME, "TEST"), Is.EqualTo(mManager));
+                TestExceptionLevel<SernagerException>(() => mManager.SetSubstVariable(EXISTING_KEY_NAME, "TEST"));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.SetVariable(EXISTING_KEY_NAME, "TEST"), Is.EqualTo(mManager));
@@ -186,9 +186,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.SetPreVariables(variables), Is.EqualTo(mManager));
-                TestExceptionLevel<SernagerException>(() => mManager.SetPreVariables(variables));
+            case "Subst":
+                TestNoneLevel(() => mManager.SetSubstVariables(variables), Is.EqualTo(mManager));
+                TestExceptionLevel<SernagerException>(() => mManager.SetSubstVariables(variables));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.SetVariables(variables), Is.EqualTo(mManager));
@@ -208,9 +208,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.RemovePreVariable(EXISTING_KEY_NAME), Is.EqualTo(mManager));
-                TestExceptionLevel<SernagerException>(() => mManager.RemovePreVariable(EXISTING_KEY_NAME));
+            case "Subst":
+                TestNoneLevel(() => mManager.RemoveSubstVariable(EXISTING_KEY_NAME), Is.EqualTo(mManager));
+                TestExceptionLevel<SernagerException>(() => mManager.RemoveSubstVariable(EXISTING_KEY_NAME));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.RemoveVariable(EXISTING_KEY_NAME), Is.EqualTo(mManager));
@@ -238,9 +238,9 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         switch (testType)
         {
-            case "Pre":
-                TestNoneLevel(() => mManager.RemovePreVariables(keys), Is.EqualTo(mManager));
-                TestExceptionLevel<SernagerException>(() => mManager.RemovePreVariables(keys));
+            case "Subst":
+                TestNoneLevel(() => mManager.RemoveSubstVariables(keys), Is.EqualTo(mManager));
+                TestExceptionLevel<SernagerException>(() => mManager.RemoveSubstVariables(keys));
                 break;
             case "Normal":
                 TestNoneLevel(() => mManager.RemoveVariables(keys), Is.EqualTo(mManager));
@@ -259,7 +259,7 @@ public class EnvironmentManagerFailureTests : FailureFixture
 
         foreach (var group in Configurator.Config.EnvironmentGroups)
         {
-            int cur = group.Value.PreVariables.Count + group.Value.Variables.Count;
+            int cur = group.Value.SubstVariables.Count + group.Value.Variables.Count;
             if (cur > max)
             {
                 max = cur;

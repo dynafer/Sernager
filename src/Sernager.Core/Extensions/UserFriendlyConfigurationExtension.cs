@@ -18,7 +18,7 @@ internal static class UserFriendlyConfigurationExtension
 
         List<string> environmentNames = new List<string>();
 
-        foreach (KeyValuePair<string, EnvironmentModel> pair in ufConfig.Environments)
+        foreach (var pair in ufConfig.Environments)
         {
             if (!canUseName(pair.Value.Name, string.Empty, environmentNames))
             {
@@ -33,7 +33,7 @@ internal static class UserFriendlyConfigurationExtension
 
         List<string> mainGroupNames = new List<string>();
 
-        foreach (KeyValuePair<string, UserFriendlyGroupModel> pair in ufConfig.Commands)
+        foreach (var pair in ufConfig.Commands)
         {
             if (!canUseName(pair.Value.Name, pair.Value.ShortName, mainGroupNames))
             {

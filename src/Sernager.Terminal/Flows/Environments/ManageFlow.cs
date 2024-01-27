@@ -29,11 +29,11 @@ internal sealed class ManageFlow : IFlow
                 .UseAutoComplete()
                 .AddOptionsUsingResourcePack(
                     ("ChangeAdditionMode", "ChangeAdditionMode"),
-                    ("AddFromPreFile", "AddFromPreFile"),
+                    ("AddFromSubstFile", "AddFromSubstFile"),
                     ("AddFromFile", "AddFromFile"),
-                    ("SetPreVariable", "SetPreVariable"),
+                    ("SetSubstVariable", "SetSubstVariable"),
                     ("SetVariable", "SetVariable"),
-                    ("EditPreEnvironmentVaraible", "EditPreEnvironmentVaraible"),
+                    ("EditSubstEnvrionmentVaraible", "EditSubstEnvrionmentVaraible"),
                     ("EditEnvironmentVaraible", "EditEnvironmentVaraible")
                 )
                 .AddOptions(
@@ -53,19 +53,19 @@ internal sealed class ManageFlow : IFlow
             case "ChangeAdditionMode":
                 FlowManager.RunFlow("Environment.Manage.ChangeAdditionMode", mManager);
                 break;
-            case "AddFromPreFile":
+            case "AddFromSubstFile":
                 FlowManager.RunFlow("Environment.Manage.AddFromFile", mManager, true);
                 break;
             case "AddFromFile":
                 FlowManager.RunFlow("Environment.Manage.AddFromFile", mManager, false);
                 break;
-            case "SetPreVariable":
+            case "SetSubstVariable":
                 FlowManager.RunFlow("Environment.Manage.SetVariable", mManager, true);
                 break;
             case "SetVariable":
                 FlowManager.RunFlow("Environment.Manage.SetVariable", mManager, false);
                 break;
-            case "EditPreEnvironmentVaraible":
+            case "EditSubstEnvrionmentVaraible":
                 FlowManager.RunFlow("Environment.Manage.EditEnvironmentVaraible", mManager, true);
                 break;
             case "EditEnvironmentVaraible":

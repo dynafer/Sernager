@@ -231,7 +231,7 @@ internal static class Args
                 )
             );
 
-        foreach (KeyValuePair<string, TArgInfo> argInfo in mArgInfos)
+        foreach (var argInfo in mArgInfos)
         {
             (PropertyInfo property, ArgAttribute attribute, _) = argInfo.Value;
 

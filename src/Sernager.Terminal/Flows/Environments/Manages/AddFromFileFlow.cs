@@ -9,25 +9,25 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 internal sealed class AddFromFileFlow : IFlow
 {
     private readonly IEnvironmentManager mManager;
-    private readonly bool mbPre;
+    private readonly bool mbSubst;
 
-    internal AddFromFileFlow(IEnvironmentManager manager, bool bPre)
+    internal AddFromFileFlow(IEnvironmentManager manager, bool bSubst)
     {
         mManager = manager;
-        mbPre = bPre;
+        mbSubst = bSubst;
     }
 
     void IFlow.Prompt()
     {
-        string prompt = mbPre ? "SelectPreEnvFilePrompt" : "SelectEnvFilePrompt";
+        string prompt = mbSubst ? "SelectSubstEnvFilePrompt" : "SelectEnvFilePrompt";
         string extension = ".env";
         string? path;
 
         if (FlowPromptHelper.TrySelectFile("Environment", prompt, extension, FlowManager.PageSize, out path))
         {
-            if (mbPre)
+            if (mbSubst)
             {
-                mManager.AddFromPreFile(path);
+                mManager.AddFromSubstFile(path);
             }
             else
             {

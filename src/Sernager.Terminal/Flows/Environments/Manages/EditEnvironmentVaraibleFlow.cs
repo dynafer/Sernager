@@ -11,19 +11,19 @@ namespace Sernager.Terminal.Flows.Environments.Manages;
 internal sealed class EditEnvironmentVaraibleFlow : IFlow
 {
     private readonly IEnvironmentManager mManager;
-    private readonly bool mbPre;
+    private readonly bool mbSubst;
 
-    internal EditEnvironmentVaraibleFlow(IEnvironmentManager manager, bool bPre)
+    internal EditEnvironmentVaraibleFlow(IEnvironmentManager manager, bool bSubst)
     {
         mManager = manager;
-        mbPre = bPre;
+        mbSubst = bSubst;
     }
 
     void IFlow.Prompt()
     {
-        Dictionary<string, string> variables = mbPre ? mManager.Group.PreVariables : mManager.Group.Variables;
+        Dictionary<string, string> variables = mbSubst ? mManager.Group.SubstVariables : mManager.Group.Variables;
         string[] initialLines = variables.Select(x => $"{x.Key}={x.Value}").ToArray();
-        string prompt = mbPre ? "EditPreEnvironmentVariablePrompt" : "EditEnvironmentVariablePrompt";
+        string prompt = mbSubst ? "EditSubstEnvrionmentVariablePrompt" : "EditEnvironmentVariablePrompt";
 
         IEnumerable<string> editedVariables = Prompter.Prompt(
             new EditorPlugin()
@@ -38,10 +38,10 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
             return;
         }
 
-        if (mbPre)
+        if (mbSubst)
         {
-            mManager.RemovePreVariables(variables.Keys.ToArray());
-            mManager.AddPreLines(editedVariables.ToArray());
+            mManager.RemoveSubstVariables(variables.Keys.ToArray());
+            mManager.AddSubstLines(editedVariables.ToArray());
         }
         else
         {

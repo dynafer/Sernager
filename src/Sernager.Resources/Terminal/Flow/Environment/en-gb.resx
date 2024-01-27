@@ -120,8 +120,8 @@
   <data name="AddFromFile" xml:space="preserve">
     <value>Add from an env file</value>
   </data>
-  <data name="AddFromPreFile" xml:space="preserve">
-    <value>Add from a pre-env file</value>
+  <data name="AddFromSubstFile" xml:space="preserve">
+    <value>Add from a substitution env file</value>
   </data>
   <data name="ChangeAdditionMode" xml:space="preserve">
     <value>Change addition mode</value>
@@ -132,11 +132,11 @@
   <data name="EditEnvironmentVariablePrompt" xml:space="preserve">
     <value>Edit environment variables</value>
   </data>
-  <data name="EditPreEnvironmentVaraible" xml:space="preserve">
-    <value>Edit pre-environment variables</value>
+  <data name="EditSubstEnvrionmentVaraible" xml:space="preserve">
+    <value>Edit substitution-environment variables</value>
   </data>
-  <data name="EditPreEnvironmentVariablePrompt" xml:space="preserve">
-    <value>Edit pre-environment variables</value>
+  <data name="EditSubstEnvrionmentVariablePrompt" xml:space="preserve">
+    <value>Edit substitution-environment variables</value>
   </data>
   <data name="EnterKeyPromptWithCancel" xml:space="preserve">
     <value>Enter a key (Cancel: Empty input)</value>
@@ -147,11 +147,11 @@
   <data name="SelectEnvFilePrompt" xml:space="preserve">
     <value>Select an env file (.env extension only)</value>
   </data>
-  <data name="SelectPreEnvFilePrompt" xml:space="preserve">
-    <value>Select a pre-env file (.env extension only)</value>
+  <data name="SelectSubstEnvFilePrompt" xml:space="preserve">
+    <value>Select a substitution env file (.env extension only)</value>
   </data>
-  <data name="SetPreVariable" xml:space="preserve">
-    <value>Set a pre-environment variable</value>
+  <data name="SetSubstVariable" xml:space="preserve">
+    <value>Set a substitution environment variable</value>
   </data>
   <data name="SetVariable" xml:space="preserve">
     <value>Set an environment variable</value>
