@@ -5,47 +5,47 @@
       "shortName": "CMG1",
       "items": [
         {
-          "name": "CommandSubgroup1",
-          "shortName": "CSG1",
+          "name": "CommandSubgroup11",
+          "shortName": "CSG11",
           "items": [
             {
-              "name": "CommandSubgroup1",
-              "shortName": "CSG1",
+              "name": "CommandSubgroup21",
+              "shortName": "CSG21",
               "items": []
             },
             {
-              "name": "CommandSubgroup2",
-              "shortName": "CSG2",
+              "name": "CommandSubgroup22",
+              "shortName": "CSG22",
               "items": []
             },
             {
-              "name": "Command1",
-              "shortName": "C1",
+              "name": "Command21",
+              "shortName": "C21",
               "usedEnvironmentGroups": [],
               "command": "echo 'Hello World!'"
             },
             {
-              "name": "Command2",
-              "shortName": "C2",
+              "name": "Command22",
+              "shortName": "C22",
               "usedEnvironmentGroups": [],
               "command": "echo 'Hello World!'"
             }
           ]
         },
         {
-          "name": "CommandSubgroup2",
-          "shortName": "CSG2",
+          "name": "CommandSubgroup12",
+          "shortName": "CSG12",
           "items": []
         },
         {
-          "name": "Command1",
-          "shortName": "C1",
+          "name": "Command11",
+          "shortName": "C11",
           "usedEnvironmentGroups": [],
           "command": "echo 'Hello World!'"
         },
         {
-          "name": "Command2",
-          "shortName": "C2",
+          "name": "Command12",
+          "shortName": "C12",
           "usedEnvironmentGroups": [],
           "command": "echo 'Hello World!'"
         }

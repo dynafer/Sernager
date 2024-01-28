@@ -1,11 +1,12 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
+using Sernager.Core.Tests.Fixtures;
 using System.Diagnostics;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class CommandManagerSuccessTests
+public class CommandManagerSuccessTests : CommandManagerFixture
 {
     private static readonly string PREFIX_ALIAS = "Configs.Defaults.Specifications.Commands";
     [DatapointSource]
@@ -36,13 +37,13 @@ public class CommandManagerSuccessTests
 
         Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(name), Is.False);
 
-        ICommandManager commandManager = new CommandManager(name, shortName, description);
+        ICommandManager manager = new CommandManager(name, shortName, description);
 
         Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(name), Is.True);
 
-        Assert.That(commandManager.MainGroup.Name, Is.EqualTo(name));
-        Assert.That(commandManager.MainGroup.ShortName, Is.EqualTo(shortName));
-        Assert.That(commandManager.MainGroup.Description, Is.EqualTo(description));
+        Assert.That(manager.MainGroup.Name, Is.EqualTo(name));
+        Assert.That(manager.MainGroup.ShortName, Is.EqualTo(shortName));
+        Assert.That(manager.MainGroup.Description, Is.EqualTo(description));
     }
 
     [Theory]
@@ -54,15 +55,14 @@ public class CommandManagerSuccessTests
         Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
         GroupModel groupModel = findMainGroupWithMostItems();
-
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        ICommandManager manager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
 
         Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(groupModel.Name), Is.True);
 
-        Assert.That(commandManager.MainGroup, Is.EqualTo(groupModel));
-        Assert.That(commandManager.MainGroup.Name, Is.EqualTo(groupModel.Name));
-        Assert.That(commandManager.MainGroup.ShortName, Is.EqualTo(groupModel.ShortName));
-        Assert.That(commandManager.MainGroup.Description, Is.EqualTo(groupModel.Description));
+        Assert.That(manager.MainGroup, Is.EqualTo(groupModel));
+        Assert.That(manager.MainGroup.Name, Is.EqualTo(groupModel.Name));
+        Assert.That(manager.MainGroup.ShortName, Is.EqualTo(groupModel.ShortName));
+        Assert.That(manager.MainGroup.Description, Is.EqualTo(groupModel.Description));
     }
 
     [Theory]
@@ -70,19 +70,17 @@ public class CommandManagerSuccessTests
     {
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
-        (_, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
+        (int level, string caseName) = pair;
 
-        GroupModel groupModel = findMainGroupWithMostItems();
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        string name = manager.MainGroup.Name;
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        manager.RemoveMainGroup();
 
-        commandManager.RemoveMainGroup();
+        Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(name), Is.False);
 
-        Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(groupModel.Name), Is.False);
-
-        Assert.That(commandManager.MainGroup, Is.Null);
-        Assert.That(commandManager.CurrentGroup, Is.Null);
+        Assert.That(manager.MainGroup, Is.Null);
+        Assert.That(manager.CurrentGroup, Is.Null);
     }
 
     [Theory]
@@ -91,39 +89,28 @@ public class CommandManagerSuccessTests
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
-        GroupModel groupModel = findMainGroupWithMostItems();
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        string name = manager.CurrentGroup.Name;
+        GroupModel currentModel = manager.CurrentGroup;
+        Guid subgroupId = level == 1
+            ? Guid.Empty
+            : getCurrentGroupId(manager);
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-
-        Guid subgroupId = Guid.Empty;
-
-        for (int i = 1; i < level; ++i)
-        {
-            subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-
-            commandManager.UseItem(subgroupId);
-
-            groupModel = commandManager.CurrentGroup;
-        }
-
-        GroupModel currentGroup = commandManager.CurrentGroup;
-
-        commandManager.RemoveCurrentGroup();
+        manager.RemoveCurrentGroup();
 
         if (level == 1)
         {
-            Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(groupModel.Name), Is.False);
+            Assert.That(Configurator.Config.CommandMainGroups.ContainsKey(name), Is.False);
 
-            Assert.That(commandManager.MainGroup, Is.Null);
-            Assert.That(commandManager.CurrentGroup, Is.Null);
+            Assert.That(manager.MainGroup, Is.Null);
+            Assert.That(manager.CurrentGroup, Is.Null);
         }
         else
         {
             Assert.That(Configurator.Config.CommandSubgroups.ContainsKey(subgroupId), Is.False);
 
-            Assert.That(commandManager.GetPrevGroup(), Is.Not.EqualTo(currentGroup));
+            Assert.That(manager.GetPrevGroup(), Is.Not.EqualTo(currentModel));
         }
     }
 
@@ -139,39 +126,23 @@ public class CommandManagerSuccessTests
             return;
         }
 
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
-
-        GroupModel groupModel = findMainGroupWithMostItems();
-
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-
-        Guid subgroupId;
-
-        for (int i = 1; i < level; ++i)
-        {
-            subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-
-            commandManager.UseItem(subgroupId);
-
-            groupModel = commandManager.CurrentGroup;
-        }
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         for (int i = 0; i < 2; ++i)
         {
-            commandManager.PrevGroup();
-            groupModel = commandManager.CurrentGroup;
+            manager.PrevGroup();
 
-            subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-            Guid commandId = findCommandIdWithMostItems(groupModel.Items);
+            Guid subgroupId = findSubgroupIdWithMostItems(manager.CurrentGroup.Items);
+            Guid commandId = findCommandIdWithMostItems(manager.CurrentGroup.Items);
 
-            int countBefore = groupModel.Items.Count;
+            int countBefore = manager.CurrentGroup.Items.Count;
 
-            commandManager.RemoveItem(subgroupId);
-            commandManager.RemoveItem(commandId);
+            manager.RemoveItem(subgroupId);
+            manager.RemoveItem(commandId);
 
-            Assert.That(commandManager.CurrentGroup.Items.Contains(subgroupId), Is.False);
-            Assert.That(commandManager.CurrentGroup.Items.Contains(commandId), Is.False);
-            Assert.That(commandManager.CurrentGroup.Items.Count, Is.EqualTo(countBefore - 2));
+            Assert.That(manager.CurrentGroup.Items.Contains(subgroupId), Is.False);
+            Assert.That(manager.CurrentGroup.Items.Contains(commandId), Is.False);
+            Assert.That(manager.CurrentGroup.Items.Count, Is.EqualTo(countBefore - 2));
             Assert.That(Configurator.Config.CommandSubgroups.ContainsKey(subgroupId), Is.False);
             Assert.That(Configurator.Config.Commands.ContainsKey(commandId), Is.False);
         }
@@ -187,22 +158,22 @@ public class CommandManagerSuccessTests
 
         GroupModel groupModel = findMainGroupWithMostItems();
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        ICommandManager manager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
 
-        Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(groupModel.Name));
-        Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(groupModel.ShortName));
-        Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(groupModel.Description));
+        Assert.That(manager.CurrentGroup.Name, Is.EqualTo(groupModel.Name));
+        Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(groupModel.ShortName));
+        Assert.That(manager.CurrentGroup.Description, Is.EqualTo(groupModel.Description));
 
         for (int i = 1; i < level; ++i)
         {
             Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
             GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
 
-            commandManager.UseItem(subgroupId);
+            manager.UseItem(subgroupId);
 
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
+            Assert.That(manager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
+            Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
+            Assert.That(manager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
 
             groupModel = subgroupModel;
         }
@@ -224,26 +195,26 @@ public class CommandManagerSuccessTests
 
         GroupModel groupModel = findMainGroupWithMostItems();
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        ICommandManager manager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
 
         for (int i = 1; i < level; ++i)
         {
             Guid commandId = findCommandIdWithMostItems(groupModel.Items);
 
-            commandManager.UseItem(commandId);
+            manager.UseItem(commandId);
 
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(groupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(groupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(groupModel.Description));
+            Assert.That(manager.CurrentGroup.Name, Is.EqualTo(groupModel.Name));
+            Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(groupModel.ShortName));
+            Assert.That(manager.CurrentGroup.Description, Is.EqualTo(groupModel.Description));
 
             Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
             GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
 
-            commandManager.UseItem(subgroupId);
+            manager.UseItem(subgroupId);
 
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
+            Assert.That(manager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
+            Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
+            Assert.That(manager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
 
             groupModel = subgroupModel;
         }
@@ -255,29 +226,13 @@ public class CommandManagerSuccessTests
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
-        GroupModel groupModel = findMainGroupWithMostItems();
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-        string[] breadcrumb = commandManager.GetBreadcrumb();
+        string[] breadcrumb = manager.GetBreadcrumb();
 
-        Assert.That(breadcrumb.Length, Is.EqualTo(1));
-        Assert.That(breadcrumb[0], Is.EqualTo(groupModel.Name));
-
-        for (int i = 1; i < level; ++i)
-        {
-            Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-            GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
-
-            commandManager.UseItem(subgroupId);
-            breadcrumb = commandManager.GetBreadcrumb();
-
-            Assert.That(breadcrumb.Length, Is.EqualTo(i + 1));
-            Assert.That(breadcrumb[i], Is.EqualTo(subgroupModel.Name));
-
-            groupModel = subgroupModel;
-        }
+        Assert.That(breadcrumb[0], Is.EqualTo(manager.MainGroup.Name));
+        Assert.That(breadcrumb.Length, Is.EqualTo(level));
     }
 
     [Theory]
@@ -286,40 +241,20 @@ public class CommandManagerSuccessTests
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
-        GroupModel groupModel = findMainGroupWithMostItems();
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-
-        commandManager.PrevGroup();
-
-        Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(groupModel.Name));
-        Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(groupModel.ShortName));
-        Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(groupModel.Description));
-
-        for (int i = 1; i < level; ++i)
+        for (int i = 0; i < level; ++i)
         {
-            Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-            GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
+            GroupModel prevGroup = manager.GetPrevGroup();
 
-            commandManager.UseItem(subgroupId);
+            manager.PrevGroup();
 
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
-
-            if (i != level - 1)
-            {
-                groupModel = subgroupModel;
-            }
+            Assert.That(prevGroup, Is.EqualTo(manager.CurrentGroup), $"i: {i}, name: {prevGroup.Name}, name: {manager.CurrentGroup.Name}");
+            Assert.That(prevGroup.Name, Is.EqualTo(manager.CurrentGroup.Name));
+            Assert.That(prevGroup.ShortName, Is.EqualTo(manager.CurrentGroup.ShortName));
+            Assert.That(prevGroup.Description, Is.EqualTo(manager.CurrentGroup.Description));
         }
-
-        commandManager.PrevGroup();
-
-        Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(groupModel.Name));
-        Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(groupModel.ShortName));
-        Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(groupModel.Description));
     }
 
     [Theory]
@@ -328,31 +263,23 @@ public class CommandManagerSuccessTests
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
 
-        GroupModel groupModel = findMainGroupWithMostItems();
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        GroupModel currentGroup = manager.CurrentGroup;
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        manager.GoMainGroup();
 
-        for (int i = 1; i < level; ++i)
+        Assert.That(manager.CurrentGroup, Is.EqualTo(manager.MainGroup));
+        Assert.That(manager.CurrentGroup.Name, Is.EqualTo(manager.MainGroup.Name));
+        Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(manager.MainGroup.ShortName));
+        Assert.That(manager.CurrentGroup.Description, Is.EqualTo(manager.MainGroup.Description));
+
+        if (level > 1)
         {
-            Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
-            GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
-
-            commandManager.UseItem(subgroupId);
-
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
-
-            groupModel = subgroupModel;
+            Assert.That(manager.CurrentGroup, Is.Not.EqualTo(currentGroup));
+            Assert.That(manager.CurrentGroup.Name, Is.Not.EqualTo(currentGroup.Name));
+            Assert.That(manager.CurrentGroup.ShortName, Is.Not.EqualTo(currentGroup.ShortName));
         }
-
-        commandManager.GoMainGroup();
-
-        Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(commandManager.MainGroup.Name));
-        Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(commandManager.MainGroup.ShortName));
-        Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(commandManager.MainGroup.Description));
     }
 
     [Theory]
@@ -365,8 +292,8 @@ public class CommandManagerSuccessTests
 
         GroupModel groupModel = findMainGroupWithMostItems();
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-        GroupModel prevGroup = commandManager.GetPrevGroup();
+        ICommandManager manager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        GroupModel prevGroup = manager.GetPrevGroup();
 
         Assert.That(prevGroup.Name, Is.EqualTo(groupModel.Name));
         Assert.That(prevGroup.ShortName, Is.EqualTo(groupModel.ShortName));
@@ -377,13 +304,13 @@ public class CommandManagerSuccessTests
             Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
             GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
 
-            commandManager.UseItem(subgroupId);
+            manager.UseItem(subgroupId);
 
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
+            Assert.That(manager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
+            Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
+            Assert.That(manager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
 
-            prevGroup = commandManager.GetPrevGroup();
+            prevGroup = manager.GetPrevGroup();
 
             Assert.That(prevGroup.Name, Is.EqualTo(groupModel.Name));
             Assert.That(prevGroup.ShortName, Is.EqualTo(groupModel.ShortName));
@@ -403,8 +330,8 @@ public class CommandManagerSuccessTests
 
         GroupModel groupModel = findMainGroupWithMostItems();
 
-        ICommandManager commandManager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
-        List<GroupItemModel> items = commandManager.GetItems();
+        ICommandManager manager = new CommandManager(groupModel.Name, groupModel.ShortName, groupModel.Description);
+        List<GroupItemModel> items = manager.GetItems();
 
         Assert.That(items.Count, Is.EqualTo(groupModel.Items.Count));
 
@@ -419,13 +346,13 @@ public class CommandManagerSuccessTests
             Guid subgroupId = findSubgroupIdWithMostItems(groupModel.Items);
             GroupModel subgroupModel = Configurator.Config.CommandSubgroups[subgroupId];
 
-            commandManager.UseItem(subgroupId);
+            manager.UseItem(subgroupId);
 
-            Assert.That(commandManager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
-            Assert.That(commandManager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
-            Assert.That(commandManager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
+            Assert.That(manager.CurrentGroup.Name, Is.EqualTo(subgroupModel.Name));
+            Assert.That(manager.CurrentGroup.ShortName, Is.EqualTo(subgroupModel.ShortName));
+            Assert.That(manager.CurrentGroup.Description, Is.EqualTo(subgroupModel.Description));
 
-            items = commandManager.GetItems();
+            items = manager.GetItems();
 
             Assert.That(items.Count, Is.EqualTo(subgroupModel.Items.Count));
 
@@ -437,57 +364,6 @@ public class CommandManagerSuccessTests
 
             groupModel = subgroupModel;
         }
-    }
-
-    [StackTraceHidden]
-    private GroupModel findMainGroupWithMostItems()
-    {
-        GroupModel? groupModel = null;
-
-        foreach (GroupModel group in Configurator.Config.CommandMainGroups.Values)
-        {
-            if (groupModel == null || group.Items.Count > groupModel.Items.Count)
-            {
-                groupModel = group;
-            }
-        }
-
-        if (groupModel == null || !Configurator.Config.CommandMainGroups.Values.Contains(groupModel))
-        {
-            throw new Exception("Main group not found.");
-        }
-
-        return groupModel;
-    }
-
-    [StackTraceHidden]
-    private Guid findSubgroupIdWithMostItems(List<Guid> itemIds)
-    {
-        Guid? subgroupId = null;
-        GroupModel? groupModel = null;
-
-        foreach (Guid itemId in itemIds)
-        {
-            if (!Configurator.Config.CommandSubgroups.ContainsKey(itemId))
-            {
-                continue;
-            }
-
-            GroupModel group = Configurator.Config.CommandSubgroups[itemId];
-
-            if (subgroupId == null || groupModel == null || group.Items.Count > groupModel.Items.Count)
-            {
-                subgroupId = itemId;
-                groupModel = group;
-            }
-        }
-
-        if (subgroupId == null || groupModel == null || !Configurator.Config.CommandSubgroups.ContainsKey(subgroupId.Value))
-        {
-            throw new Exception("Subgroup not found.");
-        }
-
-        return subgroupId.Value;
     }
 
     [StackTraceHidden]

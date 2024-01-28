@@ -174,21 +174,15 @@ internal sealed class CommandManager : ICommandManager
             return this;
         }
 
-        if (mParents.Count == 0)
+        if (mParents.Count <= 1)
         {
+            mParents.Clear();
             CurrentGroup = MainGroup;
 
             return this;
         }
 
         mParents.Pop();
-
-        if (mParents.Count == 0)
-        {
-            CurrentGroup = MainGroup;
-
-            return this;
-        }
 
         Guid id = mParents.Peek();
         CurrentGroup = Configurator.Config.CommandSubgroups[id];
@@ -223,7 +217,7 @@ internal sealed class CommandManager : ICommandManager
             return MainGroup;
         }
 
-        Guid id = mParents.ElementAt(mParents.Count - 2);
+        Guid id = mParents.ElementAt(mParents.Count - 1);
 
         return Configurator.Config.CommandSubgroups[id];
     }

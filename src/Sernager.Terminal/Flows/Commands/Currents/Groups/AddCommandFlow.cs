@@ -33,7 +33,7 @@ internal sealed class AddCommandFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string name) => mManager.CanUseName(name, false),
+                            (string name) => mManager.CanUseName(name, true),
                             FlowManager.CommonResourcePack.GetString("NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
@@ -53,7 +53,7 @@ internal sealed class AddCommandFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string shortNameInput) => mManager.CanUseName(shortNameInput, false),
+                            (string shortNameInput) => mManager.CanUseName(shortNameInput, true),
                             "ShortNameExisted",
                             EInputValidatorHandlerType.Default
                         )

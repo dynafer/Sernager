@@ -34,7 +34,7 @@ internal sealed class EditShortNameFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string shortNameInput) => mManager.CanUseName(shortNameInput, true),
+                            (string shortNameInput) => mManager.CanUseName(shortNameInput, false),
                             "ShortNameExisted",
                             EInputValidatorHandlerType.Default
                         )

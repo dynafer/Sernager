@@ -9,6 +9,12 @@ public static class CommandManagerExtension
 {
     public static ICommandManager AddSubgroup(this ICommandManager manager, string groupName, string shortName, string description)
     {
+        if (manager.MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
+            return manager;
+        }
+
         GroupModel groupModel = new GroupModel
         {
             Name = groupName,
@@ -27,6 +33,12 @@ public static class CommandManagerExtension
 
     public static ICommandManager AddCommand(this ICommandManager manager, CommandModel commandModel)
     {
+        if (manager.MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
+            return manager;
+        }
+
         Guid id = Guid.NewGuid();
 
         Configurator.Config.Commands.Add(id, commandModel);
@@ -38,6 +50,12 @@ public static class CommandManagerExtension
 
     public static bool ChangeCurrentGroupName(this ICommandManager manager, string name)
     {
+        if (manager.MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
+            return false;
+        }
+
         if (!ManagerHelper.CanUseCommandGroupName(name))
         {
             return false;
@@ -56,6 +74,12 @@ public static class CommandManagerExtension
 
     public static bool ChangeCurrentGroupShortName(this ICommandManager manager, string shortName)
     {
+        if (manager.MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
+            return false;
+        }
+
         if (!ManagerHelper.CanUseCommandGroupName(shortName))
         {
             return false;
@@ -68,12 +92,24 @@ public static class CommandManagerExtension
 
     public static void ChangeCurrentGroupDescription(this ICommandManager manager, string description)
     {
+        if (manager.MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
+            return;
+        }
+
         manager.CurrentGroup.Description = description;
     }
 
-    public static bool CanUseName(this ICommandManager manager, string name, bool bCheckFromPrevious)
+    public static bool CanUseName(this ICommandManager manager, string name, bool bCheckSubItems)
     {
-        if (bCheckFromPrevious)
+        if (manager.MainGroup == null)
+        {
+            ExceptionManager.Throw<SernagerException>("The main group already removed.");
+            return false;
+        }
+
+        if (!bCheckSubItems)
         {
             GroupModel prevGroup = manager.GetPrevGroup();
 

@@ -1,12 +1,10 @@
-using Sernager.Core.Configs;
 using Sernager.Core.Managers;
-using Sernager.Core.Models;
 using Sernager.Core.Options;
-using System.Diagnostics;
+using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class CommandManagerFailureTests : FailureFixture
+public class CommandManagerFailureTests : CommandManagerFixture
 {
     private static readonly string PREFIX_ALIAS = "Configs.Defaults.Specifications.Commands";
     [DatapointSource]
@@ -30,7 +28,7 @@ public class CommandManagerFailureTests : FailureFixture
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -60,7 +58,7 @@ public class CommandManagerFailureTests : FailureFixture
             return;
         }
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -87,7 +85,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -112,7 +110,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -139,7 +137,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -166,7 +164,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -191,7 +189,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -218,7 +216,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -245,7 +243,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -275,7 +273,7 @@ public class CommandManagerFailureTests : FailureFixture
             return;
         }
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
         Stack<Guid>? parents = PrivateUtil.GetFieldValue<Stack<Guid>>(commandManager, "mParents");
         if (parents == null)
         {
@@ -312,7 +310,7 @@ public class CommandManagerFailureTests : FailureFixture
             return;
         }
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -339,7 +337,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -364,7 +362,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -389,7 +387,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -414,7 +412,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -439,7 +437,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         commandManager.RemoveMainGroup();
 
@@ -464,7 +462,7 @@ public class CommandManagerFailureTests : FailureFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(level, caseName);
+        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
@@ -481,73 +479,5 @@ public class CommandManagerFailureTests : FailureFixture
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
         }
-    }
-
-    private ICommandManager setUpCommandManager(int level, string caseName)
-    {
-        Configurator.Parse(CaseUtil.GetPath($"{PREFIX_ALIAS}.{caseName}", "json"));
-
-        GroupModel mainGroup = findMainGroupWithMostItems();
-        ICommandManager commandManager = new CommandManager(mainGroup.Name, mainGroup.ShortName, mainGroup.Description);
-
-        for (int i = 1; i < level; ++i)
-        {
-            Guid subgroupId = findSubgroupIdWithMostItems(mainGroup.Items);
-            commandManager.UseItem(subgroupId);
-            mainGroup = commandManager.CurrentGroup;
-        }
-
-        return commandManager;
-    }
-
-    [StackTraceHidden]
-    private GroupModel findMainGroupWithMostItems()
-    {
-        GroupModel? groupModel = null;
-
-        foreach (GroupModel group in Configurator.Config.CommandMainGroups.Values)
-        {
-            if (groupModel == null || group.Items.Count > groupModel.Items.Count)
-            {
-                groupModel = group;
-            }
-        }
-
-        if (groupModel == null || !Configurator.Config.CommandMainGroups.Values.Contains(groupModel))
-        {
-            throw new Exception("Main group not found.");
-        }
-
-        return groupModel;
-    }
-
-    [StackTraceHidden]
-    private Guid findSubgroupIdWithMostItems(List<Guid> itemIds)
-    {
-        Guid? subgroupId = null;
-        GroupModel? groupModel = null;
-
-        foreach (Guid itemId in itemIds)
-        {
-            if (!Configurator.Config.CommandSubgroups.ContainsKey(itemId))
-            {
-                continue;
-            }
-
-            GroupModel group = Configurator.Config.CommandSubgroups[itemId];
-
-            if (subgroupId == null || groupModel == null || group.Items.Count > groupModel.Items.Count)
-            {
-                subgroupId = itemId;
-                groupModel = group;
-            }
-        }
-
-        if (subgroupId == null || groupModel == null || !Configurator.Config.CommandSubgroups.ContainsKey(subgroupId.Value))
-        {
-            throw new Exception("Subgroup not found.");
-        }
-
-        return subgroupId.Value;
     }
 }

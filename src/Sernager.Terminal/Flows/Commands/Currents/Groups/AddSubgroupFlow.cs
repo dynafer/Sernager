@@ -32,7 +32,7 @@ internal sealed class AddSubgroupFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string nameInput) => mManager.CanUseName(nameInput, false),
+                            (string nameInput) => mManager.CanUseName(nameInput, true),
                             FlowManager.CommonResourcePack.GetString("NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
@@ -58,7 +58,7 @@ internal sealed class AddSubgroupFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string nameInput) => mManager.CanUseName(nameInput, false),
+                            (string nameInput) => mManager.CanUseName(nameInput, true),
                             "ShortNameExisted",
                             EInputValidatorHandlerType.Default
                         )

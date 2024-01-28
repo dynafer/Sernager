@@ -33,7 +33,7 @@ internal sealed class EditNameFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            (string name) => mManager.CanUseName(name, true),
+                            (string name) => mManager.CanUseName(name, false),
                             FlowManager.CommonResourcePack.GetString("NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
