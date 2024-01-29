@@ -7,6 +7,21 @@ namespace Sernager.Core.Tests.Fixtures;
 
 public abstract class CommandManagerFixture : FailureFixture
 {
+    private protected static readonly string PREFIX_ALIAS = "Configs.Defaults.Specifications.Commands";
+    [DatapointSource]
+    private protected static readonly (int, string)[] LEVEL_CASE_PAIRS =
+    [
+        (1, "OneLevel"),
+        (2, "TwoLevels"),
+        (3, "ThreeLevels")
+    ];
+
+    [TearDown]
+    public void ResetConfigurator()
+    {
+        ResetUtil.ResetConfigurator();
+    }
+
     private protected ICommandManager setUpCommandManager(string prefix, int level, string caseName)
     {
         Configurator.Parse(CaseUtil.GetPath($"{prefix}.{caseName}", "json"));

@@ -6,21 +6,6 @@ namespace Sernager.Core.Tests.Units.Managers;
 
 public class CommandManagerFailureTests : CommandManagerFixture
 {
-    private static readonly string PREFIX_ALIAS = "Configs.Defaults.Specifications.Commands";
-    [DatapointSource]
-    private static readonly (int, string)[] LEVEL_CASE_PAIRS =
-    [
-        (1, "OneLevel"),
-        (2, "TwoLevels"),
-        (3, "ThreeLevels")
-    ];
-
-    [TearDown]
-    public void ResetConfigurator()
-    {
-        ResetUtil.ResetConfigurator();
-    }
-
     [Theory]
     public void RemoveMainGroup_ShouldThrow_WhenMainGroupAlreadyRemoved(EErrorLevel errorLevel, (int, string) pair)
     {
