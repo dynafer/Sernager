@@ -43,7 +43,7 @@ internal sealed class EditNameFlow : IFlow
 
         if (name != mManager.CurrentGroup.Name && !string.IsNullOrWhiteSpace(name))
         {
-            mManager.ChangeCurrentGroupName(name);
+            mManager.TryChangeCurrentGroupName(name);
         }
 
         FlowManager.RunPreviousFlow();

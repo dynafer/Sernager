@@ -25,12 +25,12 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
         string[] initialLines = variables.Select(x => $"{x.Key}={x.Value}").ToArray();
         string prompt = mbSubst ? "EditSubstEnvrionmentVariablePrompt" : "EditEnvironmentVariablePrompt";
 
-        IEnumerable<string> editedVariables = Prompter.Prompt(
+        string[] editedVariables = Prompter.Prompt(
             new EditorPlugin()
                 .UseResourcePack(FlowManager.GetResourceNamespace("Environment"))
                 .SetPrompt(prompt)
                 .SetInitialLines(initialLines)
-        );
+        ).ToArray();
 
         if (editedVariables == null)
         {
@@ -41,12 +41,12 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
         if (mbSubst)
         {
             mManager.RemoveSubstVariables(variables.Keys.ToArray());
-            mManager.AddSubstLines(editedVariables.ToArray());
+            mManager.AddSubstLines(editedVariables);
         }
         else
         {
             mManager.RemoveVariables(variables.Keys.ToArray());
-            mManager.AddLines(editedVariables.ToArray());
+            mManager.AddLines(editedVariables);
         }
 
         FlowManager.RunPreviousFlow();

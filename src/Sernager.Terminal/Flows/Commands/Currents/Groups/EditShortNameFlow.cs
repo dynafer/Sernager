@@ -48,7 +48,7 @@ internal sealed class EditShortNameFlow : IFlow
 
         if (!bSkip)
         {
-            mManager.ChangeCurrentGroupShortName(shortName);
+            mManager.TryChangeCurrentGroupShortName(shortName);
         }
 
         FlowManager.RunPreviousFlow();

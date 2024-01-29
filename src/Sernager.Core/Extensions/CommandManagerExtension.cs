@@ -1,7 +1,7 @@
 using Sernager.Core.Configs;
-using Sernager.Core.Helpers;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
+using System.Diagnostics;
 
 namespace Sernager.Core.Extensions;
 
@@ -14,6 +14,8 @@ public static class CommandManagerExtension
             ExceptionManager.Throw<SernagerException>("The main group already removed.");
             return manager;
         }
+
+        Debug.Assert(CanUseName(manager, groupName, true), "Suppoed to be checked before.");
 
         GroupModel groupModel = new GroupModel
         {
@@ -39,6 +41,12 @@ public static class CommandManagerExtension
             return manager;
         }
 
+        Debug.Assert(CanUseName(manager, commandModel.Name, true), "Suppoed to be checked before.");
+        Debug.Assert(
+            string.IsNullOrWhiteSpace(commandModel.ShortName) || CanUseName(manager, commandModel.ShortName, true),
+            "Suppoed to be checked before."
+        );
+
         Guid id = Guid.NewGuid();
 
         Configurator.Config.Commands.Add(id, commandModel);
@@ -48,7 +56,7 @@ public static class CommandManagerExtension
         return manager;
     }
 
-    public static bool ChangeCurrentGroupName(this ICommandManager manager, string name)
+    public static bool TryChangeCurrentGroupName(this ICommandManager manager, string name)
     {
         if (manager.MainGroup == null)
         {
@@ -56,10 +64,7 @@ public static class CommandManagerExtension
             return false;
         }
 
-        if (!ManagerHelper.CanUseCommandGroupName(name))
-        {
-            return false;
-        }
+        Debug.Assert(CanUseName(manager, name, false), "Suppoed to be checked before.");
 
         if (manager.MainGroup == manager.CurrentGroup)
         {
@@ -72,7 +77,7 @@ public static class CommandManagerExtension
         return true;
     }
 
-    public static bool ChangeCurrentGroupShortName(this ICommandManager manager, string shortName)
+    public static bool TryChangeCurrentGroupShortName(this ICommandManager manager, string shortName)
     {
         if (manager.MainGroup == null)
         {
@@ -80,10 +85,7 @@ public static class CommandManagerExtension
             return false;
         }
 
-        if (!ManagerHelper.CanUseCommandGroupName(shortName))
-        {
-            return false;
-        }
+        Debug.Assert(CanUseName(manager, shortName, false), "Suppoed to be checked before.");
 
         manager.CurrentGroup.ShortName = shortName;
 

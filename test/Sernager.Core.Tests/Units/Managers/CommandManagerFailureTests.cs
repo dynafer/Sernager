@@ -28,17 +28,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
         Assume.That(pair, Is.AnyOf(LEVEL_CASE_PAIRS));
 
         (int level, string caseName) = pair;
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.RemoveMainGroup);
+                TestNoneLevel(manager.RemoveMainGroup);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(commandManager.RemoveMainGroup);
+                TestExceptionLevel<SernagerException>(manager.RemoveMainGroup);
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -58,19 +58,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
             return;
         }
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
-        commandManager.CurrentGroup.Items.Add(id);
+        manager.CurrentGroup.Items.Add(id);
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.RemoveMainGroup);
+                TestNoneLevel(manager.RemoveMainGroup);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(commandManager.RemoveMainGroup);
+                TestExceptionLevel<SernagerException>(manager.RemoveMainGroup);
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -85,17 +85,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.RemoveCurrentGroup);
+                TestNoneLevel(manager.RemoveCurrentGroup);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(commandManager.RemoveCurrentGroup);
+                TestExceptionLevel<SernagerException>(manager.RemoveCurrentGroup);
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -110,19 +110,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
-        commandManager.CurrentGroup.Items.Add(id);
+        manager.CurrentGroup.Items.Add(id);
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.RemoveCurrentGroup);
+                TestNoneLevel(manager.RemoveCurrentGroup);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(commandManager.RemoveCurrentGroup);
+                TestExceptionLevel<SernagerException>(manager.RemoveCurrentGroup);
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -137,19 +137,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         Guid id = Guid.NewGuid();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.RemoveItem(id));
+                TestNoneLevel(() => manager.RemoveItem(id));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.RemoveItem(id));
+                TestExceptionLevel<SernagerException>(() => manager.RemoveItem(id));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -164,17 +164,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.RemoveItem(id));
+                TestNoneLevel(() => manager.RemoveItem(id));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.RemoveItem(id));
+                TestExceptionLevel<SernagerException>(() => manager.RemoveItem(id));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -189,19 +189,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
-        commandManager.CurrentGroup.Items.Add(id);
+        manager.CurrentGroup.Items.Add(id);
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.RemoveItem(id));
+                TestNoneLevel(() => manager.RemoveItem(id));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.RemoveItem(id));
+                TestExceptionLevel<SernagerException>(() => manager.RemoveItem(id));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -216,19 +216,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         Guid id = Guid.NewGuid();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.UseItem(id), Is.EqualTo(commandManager));
+                TestNoneLevel(() => manager.UseItem(id), Is.EqualTo(manager));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.UseItem(id));
+                TestExceptionLevel<SernagerException>(() => manager.UseItem(id));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -243,17 +243,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.UseItem(id), Is.EqualTo(commandManager));
+                TestNoneLevel(() => manager.UseItem(id), Is.EqualTo(manager));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.UseItem(id));
+                TestExceptionLevel<SernagerException>(() => manager.UseItem(id));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -273,8 +273,8 @@ public class CommandManagerFailureTests : CommandManagerFixture
             return;
         }
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
-        Stack<Guid>? parents = PrivateUtil.GetFieldValue<Stack<Guid>>(commandManager, "mParents");
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        Stack<Guid>? parents = PrivateUtil.GetFieldValue<Stack<Guid>>(manager, "mParents");
         if (parents == null)
         {
             throw new Exception("Parents is null.");
@@ -282,15 +282,15 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         Guid subgroupId = parents.Peek();
 
-        commandManager.CurrentGroup.Items.Add(subgroupId);
+        manager.CurrentGroup.Items.Add(subgroupId);
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.UseItem(subgroupId), Is.EqualTo(commandManager));
+                TestNoneLevel(() => manager.UseItem(subgroupId), Is.EqualTo(manager));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.UseItem(subgroupId));
+                TestExceptionLevel<SernagerException>(() => manager.UseItem(subgroupId));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -310,19 +310,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
             return;
         }
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
-        commandManager.CurrentGroup.Items.Add(id);
+        manager.CurrentGroup.Items.Add(id);
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.UseItem(id));
+                TestNoneLevel(() => manager.UseItem(id));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.UseItem(id));
+                TestExceptionLevel<SernagerException>(() => manager.UseItem(id));
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -337,17 +337,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.GetBreadcrumb, Is.Empty);
+                TestNoneLevel(manager.GetBreadcrumb, Is.Empty);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.GetBreadcrumb());
+                TestExceptionLevel<SernagerException>(() => manager.GetBreadcrumb());
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -362,17 +362,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.PrevGroup, Is.EqualTo(commandManager));
+                TestNoneLevel(manager.PrevGroup, Is.EqualTo(manager));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.PrevGroup());
+                TestExceptionLevel<SernagerException>(() => manager.PrevGroup());
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -387,17 +387,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.GoMainGroup, Is.EqualTo(commandManager));
+                TestNoneLevel(manager.GoMainGroup, Is.EqualTo(manager));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.GoMainGroup());
+                TestExceptionLevel<SernagerException>(() => manager.GoMainGroup());
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -412,17 +412,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.GetPrevGroup, Is.Null);
+                TestNoneLevel(manager.GetPrevGroup, Is.Null);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.GetPrevGroup());
+                TestExceptionLevel<SernagerException>(() => manager.GetPrevGroup());
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -437,17 +437,17 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
-        commandManager.RemoveMainGroup();
+        manager.RemoveMainGroup();
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(commandManager.GetItems, Is.Empty);
+                TestNoneLevel(manager.GetItems, Is.Empty);
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.GetItems());
+                TestExceptionLevel<SernagerException>(() => manager.GetItems());
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
@@ -462,19 +462,19 @@ public class CommandManagerFailureTests : CommandManagerFixture
 
         (int level, string caseName) = pair;
 
-        ICommandManager commandManager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
+        ICommandManager manager = setUpCommandManager(PREFIX_ALIAS, level, caseName);
 
         Guid id = Guid.NewGuid();
 
-        commandManager.CurrentGroup.Items.Add(id);
+        manager.CurrentGroup.Items.Add(id);
 
         switch (errorLevel)
         {
             case EErrorLevel.None:
-                TestNoneLevel(() => commandManager.GetItems().Count, Is.EqualTo(commandManager.CurrentGroup.Items.Count - 1));
+                TestNoneLevel(() => manager.GetItems().Count, Is.EqualTo(manager.CurrentGroup.Items.Count - 1));
                 break;
             case EErrorLevel.Exception:
-                TestExceptionLevel<SernagerException>(() => commandManager.GetItems());
+                TestExceptionLevel<SernagerException>(() => manager.GetItems());
                 break;
             default:
                 throw new Exception($"Error level: {errorLevel} doesn't exist or isn't available to test.");
