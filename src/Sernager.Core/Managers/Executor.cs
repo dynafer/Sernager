@@ -1,3 +1,5 @@
+using Sernager.Core.Configs;
+using Sernager.Core.Extensions;
 using Sernager.Core.Models;
 using System.Diagnostics;
 
@@ -46,8 +48,16 @@ internal sealed class Executor : IExecutor
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
-            CreateNoWindow = true
+            CreateNoWindow = true,
+            Environment = { }
         };
+
+        Dictionary<string, string> variables = buildEnvrionmentVariables();
+
+        foreach (var pair in variables)
+        {
+            startInfo.Environment.Add(pair.Key, pair.Value);
+        }
 
         switch (mModel.Command)
         {
@@ -75,5 +85,32 @@ internal sealed class Executor : IExecutor
         {
             StartInfo = startInfo
         };
+    }
+
+    private Dictionary<string, string> buildEnvrionmentVariables()
+    {
+        Dictionary<string, string> variables = new Dictionary<string, string>();
+
+        EnvironmentModel[] environmentGroups = mModel.UsedEnvironmentGroups
+            .Where(Configurator.Config.EnvironmentGroups.ContainsKey)
+            .Select(groupName => Configurator.Config.EnvironmentGroups[groupName])
+            .ToArray();
+
+        foreach (EnvironmentModel group in environmentGroups)
+        {
+            Dictionary<string, string> replacedVariables = group.BuildVariables();
+
+            foreach (var pair in replacedVariables)
+            {
+                if (variables.ContainsKey(pair.Key))
+                {
+                    continue;
+                }
+
+                variables.Add(pair.Key, pair.Value);
+            }
+        }
+
+        return variables;
     }
 }

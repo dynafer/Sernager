@@ -1,4 +1,5 @@
 using Sernager.Core.Configs;
+using Sernager.Core.Extensions;
 using Sernager.Core.Models;
 using Sernager.Core.Options;
 using System.Diagnostics;
@@ -280,8 +281,8 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return false;
         }
 
-        StringBuilder keyStringBuilder = new StringBuilder();
-        StringBuilder valueStringBuilder = new StringBuilder();
+        StringBuilder keyBuilder = new StringBuilder();
+        StringBuilder valueBuilder = new StringBuilder();
 
         bool bValue = false;
         bool bSingleQuote = false;
@@ -295,7 +296,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
                 {
                     break;
                 }
-                else if (c == ' ' || c == '\t')
+                else if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
                 {
                     continue;
                 }
@@ -305,15 +306,15 @@ internal sealed class EnvironmentManager : IEnvironmentManager
                 }
                 else
                 {
-                    keyStringBuilder.Append(c);
+                    keyBuilder.Append(c);
                 }
 
                 continue;
             }
 
-            if (valueStringBuilder.Length == 0)
+            if (valueBuilder.Length == 0)
             {
-                if (c == ' ' || c == '\t')
+                if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
                 {
                     continue;
                 }
@@ -324,7 +325,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
                 }
                 else
                 {
-                    valueStringBuilder.Append(c);
+                    valueBuilder.Append(c);
                 }
 
                 continue;
@@ -341,21 +342,21 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             }
             else
             {
-                valueStringBuilder.Append(c);
+                valueBuilder.Append(c);
             }
         }
 
         if (!bValue ||
             bSingleQuote ||
             bDoubleQuote ||
-            valueStringBuilder[valueStringBuilder.Length - 1] == '\'' ||
-            valueStringBuilder[valueStringBuilder.Length - 1] == '"')
+            valueBuilder[valueBuilder.Length - 1] == '\'' ||
+            valueBuilder[valueBuilder.Length - 1] == '"')
         {
             Debug.WriteLine($"Invalid environment variable format: {line}");
             return false;
         }
 
-        setVariable(target, keyStringBuilder.ToString(), valueStringBuilder.ToString());
+        setVariable(target, keyBuilder.ToString(), valueBuilder.ToString());
         return true;
     }
 
@@ -391,6 +392,8 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         }
 
         target.Add(key, value);
+
+        Group.RemoveWhitespacesInDeclaredVariables(target, key);
     }
 
     private void removeVariable(Dictionary<string, string> target, string key)

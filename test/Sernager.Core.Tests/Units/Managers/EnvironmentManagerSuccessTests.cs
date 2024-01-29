@@ -12,8 +12,9 @@ public class EnvironmentManagerSuccessTests
     private static readonly string ENV_FILE_ALIAS = "Envs.ValidEnv";
     private static readonly string INVALID_ENV_FILE_ALIAS = "Envs.InvalidEnv";
     private static readonly string EXISTING_KEY_NAME = "TEST2";
+    private static readonly string KEY_NAME_FOR_SUBSTITUTION = "SUBSTITUTION_TEST";
     [DatapointSource]
-    private static readonly string[] TEST_TYPES = ["Pre", "Normal"];
+    private static readonly string[] TEST_TYPES = ["Subst", "Normal"];
     [DatapointSource]
     private static readonly EAddDataOption[] ADDITION_MODES = Enum.GetValues<EAddDataOption>();
     private EnvironmentModel mGroup;
@@ -103,7 +104,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.AddFromSubstFile(path);
                 break;
             case "Normal":
@@ -148,6 +149,9 @@ public class EnvironmentManagerSuccessTests
             default:
                 throw new Exception("Invalid addition mode");
         }
+
+        Assert.That(target[KEY_NAME_FOR_SUBSTITUTION].Contains(" "), Is.False);
+        Assert.That(target[KEY_NAME_FOR_SUBSTITUTION].Contains("\t"), Is.False);
     }
 
     [Theory]
@@ -167,7 +171,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.AddFromSubstFile(path);
                 break;
             case "Normal":
@@ -209,7 +213,15 @@ public class EnvironmentManagerSuccessTests
             { "new_key1", "value1" },
             { "new_key2", "value2" },
             { "new_key3", "value3" },
-            { EXISTING_KEY_NAME, "value4" }
+            { EXISTING_KEY_NAME, "value4" },
+            { "substitution_key1", "${  value1}" },
+            { "substitution_key2", "${value2  }" },
+            { "substitution_key3", "${\tvalue3}" },
+            { "substitution_key4", "${value4\t}" },
+            { "substitution_key5", "${  value5   }" },
+            { "substitution_key6", "${\tvalue6\t}" },
+            { "substitution_key7", "${  value7\t}" },
+            { "substitution_key8", "${\tvalue8  }" },
         };
 
         int countBefore = target.Count;
@@ -219,7 +231,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.AddSubstLines(newLinesArr);
                 break;
             case "Normal":
@@ -233,7 +245,7 @@ public class EnvironmentManagerSuccessTests
 
         foreach (var line in newLines)
         {
-            if (line.Key == EXISTING_KEY_NAME)
+            if (line.Key == EXISTING_KEY_NAME || line.Key.Contains("substitution_key"))
             {
                 continue;
             }
@@ -264,6 +276,13 @@ public class EnvironmentManagerSuccessTests
             default:
                 throw new Exception("Invalid addition mode");
         }
+
+        for (int i = 1; i <= 8; ++i)
+        {
+            string key = $"substitution_key{i}";
+            Assert.That(target[key].Contains(" "), Is.False);
+            Assert.That(target[key].Contains("\t"), Is.False);
+        }
     }
 
     [Theory]
@@ -279,7 +298,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 Assert.That(mManager.GetSubstVariableOrNull(key), Is.EqualTo(value));
                 Assert.That(mManager.GetSubstVariableOrNull(inexistentKey), Is.Null);
                 break;
@@ -301,7 +320,7 @@ public class EnvironmentManagerSuccessTests
         mManager.AdditionMode = additionMode;
 
         string key = "new_key";
-        string value = "new_value";
+        string value = "${ \t  TEST1\t   \t}";
 
         Dictionary<string, string> target = getVariableDictionary(mGroup, testType);
 
@@ -311,7 +330,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.SetSubstVariable(key, value);
                 break;
             case "Normal":
@@ -324,14 +343,14 @@ public class EnvironmentManagerSuccessTests
         Assert.That(target.Count, Is.Not.EqualTo(countBefore));
 
         Assert.That(target.ContainsKey(key), Is.True);
-        Assert.That(target[key], Is.EqualTo(value));
+        Assert.That(target[key], Is.EqualTo(value.Replace(" ", "").Replace("\t", "")));
 
         countBefore = target.Count;
         value = "new_value2";
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.SetSubstVariable(key, value);
                 break;
             case "Normal":
@@ -370,7 +389,15 @@ public class EnvironmentManagerSuccessTests
             { "new_key1", "value1" },
             { "new_key2", "value2" },
             { "new_key3", "value3" },
-            { EXISTING_KEY_NAME, "value4" }
+            { EXISTING_KEY_NAME, "value4" },
+            { "substitution_key1", "${  value1}" },
+            { "substitution_key2", "${value2  }" },
+            { "substitution_key3", "${\tvalue3}" },
+            { "substitution_key4", "${value4\t}" },
+            { "substitution_key5", "${  value5   }" },
+            { "substitution_key6", "${\tvalue6\t}" },
+            { "substitution_key7", "${  value7\t}" },
+            { "substitution_key8", "${\tvalue8  }" },
         };
 
         Dictionary<string, string> target = getVariableDictionary(mGroup, testType);
@@ -381,7 +408,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.SetSubstVariables(newLines);
                 break;
             case "Normal":
@@ -395,7 +422,7 @@ public class EnvironmentManagerSuccessTests
 
         foreach (var line in newLines)
         {
-            if (line.Key == EXISTING_KEY_NAME)
+            if (line.Key == EXISTING_KEY_NAME || line.Key.Contains("substitution_key"))
             {
                 continue;
             }
@@ -426,6 +453,13 @@ public class EnvironmentManagerSuccessTests
             default:
                 throw new Exception("Invalid addition mode");
         }
+
+        for (int i = 1; i <= 8; ++i)
+        {
+            string key = $"substitution_key{i}";
+            Assert.That(target[key].Contains(" "), Is.False, $"key: {key}, value: {target[key]}");
+            Assert.That(target[key].Contains("\t"), Is.False);
+        }
     }
 
     [Theory]
@@ -442,7 +476,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.RemoveSubstVariable(key);
                 mManager.RemoveSubstVariable(inexistentKey);
                 break;
@@ -471,7 +505,7 @@ public class EnvironmentManagerSuccessTests
 
         switch (testType)
         {
-            case "Pre":
+            case "Subst":
                 mManager.RemoveSubstVariables(keys);
                 mManager.RemoveSubstVariables(inexistentKeys);
                 break;
@@ -518,7 +552,7 @@ public class EnvironmentManagerSuccessTests
     {
         return testType switch
         {
-            "Pre" => group.SubstVariables,
+            "Subst" => group.SubstVariables,
             "Normal" => group.Variables,
             _ => throw new Exception("Invalid test type")
         };

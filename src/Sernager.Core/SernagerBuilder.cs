@@ -1,5 +1,7 @@
 ﻿using Sernager.Core.Configs;
+using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
+using Sernager.Core.Models;
 using Sernager.Core.Options;
 using System.Runtime.CompilerServices;
 
@@ -59,6 +61,19 @@ public sealed class SernagerBuilder
         else
         {
             Configurator.Parse(mConfigFilePath);
+
+            foreach (EnvironmentModel model in Configurator.Config.EnvironmentGroups.Values)
+            {
+                foreach (string key in model.SubstVariables.Keys)
+                {
+                    model.RemoveWhitespacesInDeclaredVariables(model.SubstVariables, key);
+                }
+
+                foreach (string key in model.Variables.Keys)
+                {
+                    model.RemoveWhitespacesInDeclaredVariables(model.Variables, key);
+                }
+            }
         }
 
         return new SernagerService();
