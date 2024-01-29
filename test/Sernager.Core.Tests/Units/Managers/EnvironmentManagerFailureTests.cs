@@ -1,36 +1,11 @@
-using Sernager.Core.Configs;
-using Sernager.Core.Managers;
-using Sernager.Core.Models;
 using Sernager.Core.Options;
-using System.Diagnostics;
+using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class EnvironmentManagerFailureTests : FailureFixture
+public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 {
-    private static readonly string ALIAS = "Configs.Defaults.Specifications.Environment";
     private static readonly string ENV_FILE_ALIAS = "Envs.InvalidEnv";
-    private static readonly string EXISTING_KEY_NAME = "TEST2";
-    [DatapointSource]
-    private static readonly string[] TEST_TYPES = ["Subst", "Normal"];
-    [DatapointSource]
-    private static readonly EAddDataOption[] ADDITION_MODES = Enum.GetValues<EAddDataOption>();
-    private EnvironmentModel mGroup;
-    private IEnvironmentManager mManager;
-
-    [SetUp]
-    public void SetUpConfigurator()
-    {
-        Configurator.Parse(CaseUtil.GetPath(ALIAS, "json"));
-        mGroup = findGroupWithMostItems();
-        mManager = new EnvironmentManager(mGroup.Name);
-    }
-
-    [TearDown]
-    public void ResetConfigurator()
-    {
-        ResetUtil.ResetConfigurator();
-    }
 
     [Test]
     public void RemoveGroup_ShouldThrow_WhenGroupAlreadyRemoved()
@@ -249,29 +224,5 @@ public class EnvironmentManagerFailureTests : FailureFixture
             default:
                 throw new Exception("Invalid test type");
         }
-    }
-
-    [StackTraceHidden]
-    private EnvironmentModel findGroupWithMostItems()
-    {
-        int max = 0;
-        string name = "";
-
-        foreach (var group in Configurator.Config.EnvironmentGroups)
-        {
-            int cur = group.Value.SubstVariables.Count + group.Value.Variables.Count;
-            if (cur > max)
-            {
-                max = cur;
-                name = group.Key;
-            }
-        }
-
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new Exception("No group found");
-        }
-
-        return Configurator.Config.EnvironmentGroups[name];
     }
 }
