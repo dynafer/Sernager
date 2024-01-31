@@ -60,7 +60,7 @@ internal sealed class MainFlow : IFlow
 
     bool IFlow.TryJump(string command, bool _)
     {
-        string? groupName = ManagerHelper.GetCommadGroupNameOrNull(command);
+        string? groupName = ManagerHelper.GetCommadMainGroupNameOrNull(command);
         if (groupName == null)
         {
             return false;

@@ -6,7 +6,7 @@ namespace Sernager.Core.Helpers;
 
 public static class ManagerHelper
 {
-    public static bool CanUseCommandGroupName(string name)
+    public static bool CanUseCommandMainGroupName(string name)
     {
         return !Configurator.Config.CommandMainGroups.ContainsKey(name) &&
                !Configurator.Config.CommandMainGroups.Values.Where(x => x.ShortName == name).Any();
@@ -17,7 +17,7 @@ public static class ManagerHelper
         return !Configurator.Config.EnvironmentGroups.ContainsKey(name);
     }
 
-    public static string? GetCommadGroupNameOrNull(string nameOrShortName)
+    public static string? GetCommadMainGroupNameOrNull(string nameOrShortName)
     {
         return Configurator.Config.CommandMainGroups.Values
             .Where(x => x.Name == nameOrShortName || x.ShortName == nameOrShortName)

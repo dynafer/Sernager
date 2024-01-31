@@ -24,7 +24,7 @@ internal sealed class AddGroupFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            ManagerHelper.CanUseCommandGroupName,
+                            ManagerHelper.CanUseCommandMainGroupName,
                             FlowManager.CommonResourcePack.GetString("NameExisted"),
                             EInputValidatorHandlerType.Default
                         )
@@ -50,7 +50,7 @@ internal sealed class AddGroupFlow : IFlow
                             EInputValidatorHandlerType.ReturnWhenTrue
                         ),
                         (
-                            ManagerHelper.CanUseCommandGroupName,
+                            ManagerHelper.CanUseCommandMainGroupName,
                             "ShortNameExisted",
                             EInputValidatorHandlerType.Default
                         )
