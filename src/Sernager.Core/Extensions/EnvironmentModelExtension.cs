@@ -1,4 +1,5 @@
 using Sernager.Core.Models;
+using Sernager.Core.Options;
 using System.Diagnostics;
 using System.Text;
 
@@ -6,8 +7,15 @@ namespace Sernager.Core.Extensions;
 
 public static class EnvironmentModelExtension
 {
-    public static EnvironmentModel RemoveWhitespacesInDeclaredVariables(this EnvironmentModel model, Dictionary<string, string> target, string key)
+    public static EnvironmentModel RemoveWhitespacesInDeclaredVariables(this EnvironmentModel model, EEnvironmentType type, string key)
     {
+        Dictionary<string, string> target = type switch
+        {
+            EEnvironmentType.Normal => model.Variables,
+            EEnvironmentType.Substitution => model.SubstVariables,
+            _ => throw new NotImplementedException(),
+        };
+
         if (!target.ContainsKey(key) ||
             !target[key].Contains("${") ||
             !target[key].Contains("}"))

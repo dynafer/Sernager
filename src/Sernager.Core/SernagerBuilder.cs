@@ -66,12 +66,12 @@ public sealed class SernagerBuilder
             {
                 foreach (string key in model.SubstVariables.Keys)
                 {
-                    model.RemoveWhitespacesInDeclaredVariables(model.SubstVariables, key);
+                    model.RemoveWhitespacesInDeclaredVariables(EEnvironmentType.Substitution, key);
                 }
 
                 foreach (string key in model.Variables.Keys)
                 {
-                    model.RemoveWhitespacesInDeclaredVariables(model.Variables, key);
+                    model.RemoveWhitespacesInDeclaredVariables(EEnvironmentType.Normal, key);
                 }
             }
         }

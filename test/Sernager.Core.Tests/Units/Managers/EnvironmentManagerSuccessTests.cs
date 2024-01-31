@@ -66,7 +66,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void AddFromFile_ShouldAddVariablesFromFile(string testType, EAddDataOption additionMode)
+    public void AddFromFile_ShouldAddVariablesFromFile(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -82,10 +82,10 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.AddFromSubstFile(path);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.AddFromFile(path);
                 break;
             default:
@@ -133,7 +133,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void AddFromFile_ShouldNotAddAnyInvalidVariablesFromFile(string testType, EAddDataOption additionMode)
+    public void AddFromFile_ShouldNotAddAnyInvalidVariablesFromFile(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -149,10 +149,10 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.AddFromSubstFile(path);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.AddFromFile(path);
                 break;
             default:
@@ -177,7 +177,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void AddLines_ShouldAddVariablesFromLines(string testType, EAddDataOption additionMode)
+    public void AddLines_ShouldAddVariablesFromLines(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -209,10 +209,10 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.AddSubstLines(newLinesArr);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.AddLines(newLinesArr);
                 break;
             default:
@@ -264,7 +264,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void GetVariableOrNull_ShouldReturnValueOrNull(string testType)
+    public void GetVariableOrNull_ShouldReturnValueOrNull(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -276,11 +276,11 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 Assert.That(mManager.GetSubstVariableOrNull(key), Is.EqualTo(value));
                 Assert.That(mManager.GetSubstVariableOrNull(inexistentKey), Is.Null);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 Assert.That(mManager.GetVariableOrNull(key), Is.EqualTo(value));
                 Assert.That(mManager.GetVariableOrNull(inexistentKey), Is.Null);
                 break;
@@ -290,7 +290,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void SetVariable_ShouldSetVariable(string testType, EAddDataOption additionMode)
+    public void SetVariable_ShouldSetVariable(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -308,10 +308,10 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.SetSubstVariable(key, value);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.SetVariable(key, value);
                 break;
             default:
@@ -328,10 +328,10 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.SetSubstVariable(key, value);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.SetVariable(key, value);
                 break;
             default:
@@ -355,7 +355,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void SetVariables_ShouldSetVariables(string testType, EAddDataOption additionMode)
+    public void SetVariables_ShouldSetVariables(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -386,10 +386,10 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.SetSubstVariables(newLines);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.SetVariables(newLines);
                 break;
             default:
@@ -441,7 +441,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void RemoveVariable_ShouldRemoveVariableOrSkip(string testType)
+    public void RemoveVariable_ShouldRemoveVariableOrSkip(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -454,11 +454,11 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.RemoveSubstVariable(key);
                 mManager.RemoveSubstVariable(inexistentKey);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.RemoveVariable(key);
                 mManager.RemoveVariable(inexistentKey);
                 break;
@@ -470,7 +470,7 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void RemoveVariables_ShouldRemoveVariablesOrSkip(string testType)
+    public void RemoveVariables_ShouldRemoveVariablesOrSkip(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -483,11 +483,11 @@ public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 mManager.RemoveSubstVariables(keys);
                 mManager.RemoveSubstVariables(inexistentKeys);
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 mManager.RemoveVariables(keys);
                 mManager.RemoveVariables(inexistentKeys);
                 break;

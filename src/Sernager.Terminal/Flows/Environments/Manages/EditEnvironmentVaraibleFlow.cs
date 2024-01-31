@@ -23,7 +23,7 @@ internal sealed class EditEnvironmentVaraibleFlow : IFlow
     {
         Dictionary<string, string> variables = mbSubst ? mManager.Group.SubstVariables : mManager.Group.Variables;
         string[] initialLines = variables.Select(x => $"{x.Key}={x.Value}").ToArray();
-        string prompt = mbSubst ? "EditSubstEnvrionmentVariablePrompt" : "EditEnvironmentVariablePrompt";
+        string prompt = mbSubst ? "EditSubstEnvironmentVariablePrompt" : "EditEnvironmentVariablePrompt";
 
         string[] editedVariables = Prompter.Prompt(
             new EditorPlugin()

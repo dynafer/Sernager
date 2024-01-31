@@ -17,7 +17,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void AddFromFile_ShouldThrow_WhenGroupAlreadyRemoved(string testType, EAddDataOption additionMode)
+    public void AddFromFile_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -30,11 +30,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.AddFromSubstFile(path), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.AddFromSubstFile(path));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.AddFromFile(path), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.AddFromFile(path));
                 break;
@@ -44,7 +44,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void AddFromFile_ShouldThrow_WhenFileDoesNotExist(string testType, EAddDataOption additionMode)
+    public void AddFromFile_ShouldThrow_WhenFileDoesNotExist(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -55,11 +55,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.AddFromSubstFile(path), Is.EqualTo(mManager));
                 TestExceptionLevel<FileNotFoundException>(() => mManager.AddFromSubstFile(path));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.AddFromFile(path), Is.EqualTo(mManager));
                 TestExceptionLevel<FileNotFoundException>(() => mManager.AddFromFile(path));
                 break;
@@ -69,7 +69,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void AddLines_ShouldThrow_WhenGroupAlreadyRemoved(string testType, EAddDataOption additionMode)
+    public void AddLines_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType, EAddDataOption additionMode)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
         Assume.That(additionMode, Is.AnyOf(ADDITION_MODES));
@@ -87,11 +87,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.AddSubstLines(lines), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.AddSubstLines(lines));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.AddLines(lines), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.AddLines(lines));
                 break;
@@ -101,7 +101,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void GetVariableOrNull_ShouldThrow_WhenGroupAlreadyRemoved(string testType)
+    public void GetVariableOrNull_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -109,11 +109,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.GetSubstVariableOrNull(EXISTING_KEY_NAME), Is.Null);
                 TestExceptionLevel<SernagerException>(() => mManager.GetSubstVariableOrNull(EXISTING_KEY_NAME));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.GetVariableOrNull(EXISTING_KEY_NAME), Is.Null);
                 TestExceptionLevel<SernagerException>(() => mManager.GetVariableOrNull(EXISTING_KEY_NAME));
                 break;
@@ -123,7 +123,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void SetVariable_ShouldThrow_WhenGroupAlreadyRemoved(string testType)
+    public void SetVariable_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -131,11 +131,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.SetSubstVariable(EXISTING_KEY_NAME, "TEST"), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.SetSubstVariable(EXISTING_KEY_NAME, "TEST"));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.SetVariable(EXISTING_KEY_NAME, "TEST"), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.SetVariable(EXISTING_KEY_NAME, "TEST"));
                 break;
@@ -145,7 +145,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void SetVariables_ShouldThrow_WhenGroupAlreadyRemoved(string testType)
+    public void SetVariables_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -161,11 +161,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.SetSubstVariables(variables), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.SetSubstVariables(variables));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.SetVariables(variables), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.SetVariables(variables));
                 break;
@@ -175,7 +175,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void RemoveVariable_ShouldThrow_WhenGroupAlreadyRemoved(string testType)
+    public void RemoveVariable_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -183,11 +183,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.RemoveSubstVariable(EXISTING_KEY_NAME), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.RemoveSubstVariable(EXISTING_KEY_NAME));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.RemoveVariable(EXISTING_KEY_NAME), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.RemoveVariable(EXISTING_KEY_NAME));
                 break;
@@ -197,7 +197,7 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
     }
 
     [Theory]
-    public void RemoveVariables_ShouldThrow_WhenGroupAlreadyRemoved(string testType)
+    public void RemoveVariables_ShouldThrow_WhenGroupAlreadyRemoved(EEnvironmentType testType)
     {
         Assume.That(testType, Is.AnyOf(TEST_TYPES));
 
@@ -213,11 +213,11 @@ public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 
         switch (testType)
         {
-            case "Subst":
+            case EEnvironmentType.Substitution:
                 TestNoneLevel(() => mManager.RemoveSubstVariables(keys), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.RemoveSubstVariables(keys));
                 break;
-            case "Normal":
+            case EEnvironmentType.Normal:
                 TestNoneLevel(() => mManager.RemoveVariables(keys), Is.EqualTo(mManager));
                 TestExceptionLevel<SernagerException>(() => mManager.RemoveVariables(keys));
                 break;

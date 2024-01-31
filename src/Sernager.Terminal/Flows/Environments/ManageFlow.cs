@@ -33,7 +33,7 @@ internal sealed class ManageFlow : IFlow
                     ("AddFromFile", "AddFromFile"),
                     ("SetSubstVariable", "SetSubstVariable"),
                     ("SetVariable", "SetVariable"),
-                    ("EditSubstEnvrionmentVaraible", "EditSubstEnvrionmentVaraible"),
+                    ("EditSubstEnvironmentVaraible", "EditSubstEnvironmentVaraible"),
                     ("EditEnvironmentVaraible", "EditEnvironmentVaraible")
                 )
                 .AddOptions(
@@ -65,7 +65,7 @@ internal sealed class ManageFlow : IFlow
             case "SetVariable":
                 FlowManager.RunFlow("Environment.Manage.SetVariable", mManager, false);
                 break;
-            case "EditSubstEnvrionmentVaraible":
+            case "EditSubstEnvironmentVaraible":
                 FlowManager.RunFlow("Environment.Manage.EditEnvironmentVaraible", mManager, true);
                 break;
             case "EditEnvironmentVaraible":

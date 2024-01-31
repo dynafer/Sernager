@@ -52,7 +52,7 @@ internal sealed class Executor : IExecutor
             Environment = { }
         };
 
-        Dictionary<string, string> variables = buildEnvrionmentVariables();
+        Dictionary<string, string> variables = buildEnvironmentVariables();
 
         foreach (var pair in variables)
         {
@@ -87,7 +87,7 @@ internal sealed class Executor : IExecutor
         };
     }
 
-    private Dictionary<string, string> buildEnvrionmentVariables()
+    private Dictionary<string, string> buildEnvironmentVariables()
     {
         Dictionary<string, string> variables = new Dictionary<string, string>();
 

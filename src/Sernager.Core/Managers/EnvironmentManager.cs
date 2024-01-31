@@ -57,7 +57,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             Group.SubstVariables.Clear();
         }
 
-        tryAddFromFile(Group.SubstVariables, filePath);
+        tryAddFromFile(EEnvironmentType.Substitution, filePath);
 
         return this;
     }
@@ -75,7 +75,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             Group.Variables.Clear();
         }
 
-        tryAddFromFile(Group.Variables, filePath);
+        tryAddFromFile(EEnvironmentType.Normal, filePath);
 
         return this;
     }
@@ -90,7 +90,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (string line in lines)
         {
-            tryAddLine(Group.SubstVariables, line);
+            tryAddLine(EEnvironmentType.Substitution, line);
         }
 
         return this;
@@ -106,7 +106,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (string line in lines)
         {
-            tryAddLine(Group.Variables, line);
+            tryAddLine(EEnvironmentType.Normal, line);
         }
 
         return this;
@@ -120,7 +120,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return null;
         }
 
-        return getVariableOrNull(Group.SubstVariables, key);
+        return getVariableOrNull(EEnvironmentType.Substitution, key);
     }
 
     public string? GetVariableOrNull(string key)
@@ -131,7 +131,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return null;
         }
 
-        return getVariableOrNull(Group.Variables, key);
+        return getVariableOrNull(EEnvironmentType.Normal, key);
     }
 
     public IEnvironmentManager SetSubstVariable(string key, string value)
@@ -142,7 +142,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        setVariable(Group.SubstVariables, key, value);
+        setVariable(EEnvironmentType.Substitution, key, value);
 
         return this;
     }
@@ -155,7 +155,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        setVariable(Group.Variables, key, value);
+        setVariable(EEnvironmentType.Normal, key, value);
 
         return this;
     }
@@ -170,7 +170,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (var variable in variables)
         {
-            setVariable(Group.SubstVariables, variable.Key, variable.Value);
+            setVariable(EEnvironmentType.Substitution, variable.Key, variable.Value);
         }
 
         return this;
@@ -186,7 +186,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (var variable in variables)
         {
-            setVariable(Group.Variables, variable.Key, variable.Value);
+            setVariable(EEnvironmentType.Normal, variable.Key, variable.Value);
         }
 
         return this;
@@ -200,7 +200,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        removeVariable(Group.SubstVariables, key);
+        removeVariable(EEnvironmentType.Substitution, key);
 
         return this;
     }
@@ -213,7 +213,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return this;
         }
 
-        removeVariable(Group.Variables, key);
+        removeVariable(EEnvironmentType.Normal, key);
 
         return this;
     }
@@ -228,7 +228,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (string key in keys)
         {
-            removeVariable(Group.SubstVariables, key);
+            removeVariable(EEnvironmentType.Substitution, key);
         }
 
         return this;
@@ -244,13 +244,13 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         foreach (string key in keys)
         {
-            removeVariable(Group.Variables, key);
+            removeVariable(EEnvironmentType.Normal, key);
         }
 
         return this;
     }
 
-    private bool tryAddFromFile(Dictionary<string, string> target, string filePath)
+    private bool tryAddFromFile(EEnvironmentType type, string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -264,7 +264,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             string? line;
             while ((line = reader.ReadLine()) != null)
             {
-                tryAddLine(target, line);
+                tryAddLine(type, line);
             }
         }
 
@@ -273,7 +273,7 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return true;
     }
 
-    private bool tryAddLine(Dictionary<string, string> target, string line)
+    private bool tryAddLine(EEnvironmentType type, string line)
     {
         line = line.Trim();
         if (line.StartsWith('#'))
@@ -356,12 +356,14 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             return false;
         }
 
-        setVariable(target, keyBuilder.ToString(), valueBuilder.ToString());
+        setVariable(type, keyBuilder.ToString(), valueBuilder.ToString());
         return true;
     }
 
-    private string? getVariableOrNull(Dictionary<string, string> target, string key)
+    private string? getVariableOrNull(EEnvironmentType type, string key)
     {
+        Dictionary<string, string> target = getTarget(type);
+
         if (!target.ContainsKey(key))
         {
             return null;
@@ -370,8 +372,10 @@ internal sealed class EnvironmentManager : IEnvironmentManager
         return target[key];
     }
 
-    private void setVariable(Dictionary<string, string> target, string key, string value)
+    private void setVariable(EEnvironmentType type, string key, string value)
     {
+        Dictionary<string, string> target = getTarget(type);
+
         switch (AdditionMode)
         {
             case EAddDataOption.SkipIfExists:
@@ -393,16 +397,28 @@ internal sealed class EnvironmentManager : IEnvironmentManager
 
         target.Add(key, value);
 
-        Group.RemoveWhitespacesInDeclaredVariables(target, key);
+        Group.RemoveWhitespacesInDeclaredVariables(type, key);
     }
 
-    private void removeVariable(Dictionary<string, string> target, string key)
+    private void removeVariable(EEnvironmentType type, string key)
     {
+        Dictionary<string, string> target = getTarget(type);
+
         if (!target.ContainsKey(key))
         {
             return;
         }
 
         target.Remove(key);
+    }
+
+    private Dictionary<string, string> getTarget(EEnvironmentType type)
+    {
+        return type switch
+        {
+            EEnvironmentType.Substitution => Group.SubstVariables,
+            EEnvironmentType.Normal => Group.Variables,
+            _ => throw new NotImplementedException(),
+        };
     }
 }

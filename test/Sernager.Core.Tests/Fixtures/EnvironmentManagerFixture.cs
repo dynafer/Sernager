@@ -11,7 +11,7 @@ public abstract class EnvironmentManagerFixture : FailureFixture
     private protected static readonly string CONFIG_ALIAS = "Configs.Defaults.Specifications.Environment";
     private protected static readonly string EXISTING_KEY_NAME = "TEST2";
     [DatapointSource]
-    private protected static readonly string[] TEST_TYPES = ["Subst", "Normal"];
+    private protected static readonly EEnvironmentType[] TEST_TYPES = Enum.GetValues<EEnvironmentType>();
     [DatapointSource]
     private protected static readonly EAddDataOption[] ADDITION_MODES = Enum.GetValues<EAddDataOption>();
     private protected EnvironmentModel mGroup;
@@ -56,12 +56,12 @@ public abstract class EnvironmentManagerFixture : FailureFixture
     }
 
     [StackTraceHidden]
-    private protected Dictionary<string, string> getVariableDictionary(EnvironmentModel group, string testType)
+    private protected Dictionary<string, string> getVariableDictionary(EnvironmentModel group, EEnvironmentType testType)
     {
         return testType switch
         {
-            "Subst" => group.SubstVariables,
-            "Normal" => group.Variables,
+            EEnvironmentType.Substitution => group.SubstVariables,
+            EEnvironmentType.Normal => group.Variables,
             _ => throw new Exception("Invalid test type")
         };
     }

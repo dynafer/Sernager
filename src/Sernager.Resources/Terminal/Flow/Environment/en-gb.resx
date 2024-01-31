@@ -132,10 +132,10 @@
   <data name="EditEnvironmentVariablePrompt" xml:space="preserve">
     <value>Edit environment variables</value>
   </data>
-  <data name="EditSubstEnvrionmentVaraible" xml:space="preserve">
+  <data name="EditSubstEnvironmentVaraible" xml:space="preserve">
     <value>Edit substitution-environment variables</value>
   </data>
-  <data name="EditSubstEnvrionmentVariablePrompt" xml:space="preserve">
+  <data name="EditSubstEnvironmentVariablePrompt" xml:space="preserve">
     <value>Edit substitution-environment variables</value>
   </data>
   <data name="EnterKeyPromptWithCancel" xml:space="preserve">
