@@ -3,6 +3,7 @@ using Sernager.Core.Extensions;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
 using Sernager.Core.Options;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Sernager.Core.Tests")]
@@ -26,18 +27,12 @@ public sealed class SernagerBuilder
 
     public SernagerBuilder UseConfig(string configPath)
     {
-        if (!File.Exists(configPath))
-        {
-            ExceptionManager.ThrowFail<FileNotFoundException>("Config file not found.", configPath);
-        }
-        else
-        {
-            mConfigFilePath = configPath;
-        }
+        mConfigFilePath = configPath;
 
         return this;
     }
 
+    [ExcludeFromCodeCoverage]
     public SernagerBuilder EnableAutoSave(EConfigurationType type)
     {
         Configurator.UseAutoSave(type);
@@ -45,6 +40,7 @@ public sealed class SernagerBuilder
         return this;
     }
 
+    [ExcludeFromCodeCoverage]
     public SernagerBuilder EnableAutoSave(EUserFriendlyConfigurationType type)
     {
         Configurator.UseAutoSave(type);
@@ -54,7 +50,7 @@ public sealed class SernagerBuilder
 
     public ISernagerService Build()
     {
-        if (string.IsNullOrWhiteSpace(mConfigFilePath))
+        if (string.IsNullOrWhiteSpace(mConfigFilePath) || !File.Exists(mConfigFilePath))
         {
             Configurator.Init();
         }
