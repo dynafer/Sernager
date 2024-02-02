@@ -18,7 +18,7 @@ public abstract class EnvironmentManagerFixture : FailureFixture
     private protected IEnvironmentManager mManager;
 
     [SetUp]
-    public void Setup()
+    public void SetUp()
     {
         Configurator.Parse(CaseUtil.GetPath(CONFIG_ALIAS, "json"));
         mGroup = findGroupWithMostItems();

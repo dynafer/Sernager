@@ -41,6 +41,8 @@ internal sealed class EnvironmentManager : IEnvironmentManager
             commandModel.UsedEnvironmentGroups.Remove(Group.Name);
         }
 
+        CacheManager.Remove($"Environment-Group-{Group.Name}");
+
         Group = null!;
     }
 

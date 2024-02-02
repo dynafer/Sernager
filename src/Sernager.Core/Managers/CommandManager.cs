@@ -43,6 +43,7 @@ internal sealed class CommandManager : ICommandManager
 
         MainGroup.Items.Clear();
         Configurator.Config.CommandMainGroups.Remove(MainGroup.Name);
+        CacheManager.Remove($"Command-Group-{MainGroup.Name}");
         MainGroup = null!;
     }
 
@@ -271,6 +272,7 @@ internal sealed class CommandManager : ICommandManager
             else if (Configurator.Config.Commands.ContainsKey(id))
             {
                 Configurator.Config.Commands.Remove(id);
+                CacheManager.Remove($"Executor-{id}");
             }
             else
             {
