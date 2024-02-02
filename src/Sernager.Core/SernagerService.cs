@@ -1,6 +1,8 @@
 using Sernager.Core.Configs;
 using Sernager.Core.Managers;
 using Sernager.Core.Options;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Sernager.Core;
 
@@ -40,6 +42,8 @@ internal sealed class SernagerService : ISernagerService
 
     IExecutor ISernagerService.GetExecutor(Guid commandId)
     {
+        Debug.Assert(Configurator.Config.Commands.ContainsKey(commandId));
+
         IExecutor? executor;
 
         if (CacheManager.TryGet($"Executor-{commandId}", out executor))
@@ -69,11 +73,13 @@ internal sealed class SernagerService : ISernagerService
         return Configurator.Config.EnvironmentGroups.Keys.ToArray();
     }
 
+    [ExcludeFromCodeCoverage]
     void ISernagerService.SaveAs(EConfigurationType type)
     {
         Configurator.SaveAsFile(type);
     }
 
+    [ExcludeFromCodeCoverage]
     void ISernagerService.SaveAs(EUserFriendlyConfigurationType type)
     {
         Configurator.SaveAsFile(type);
