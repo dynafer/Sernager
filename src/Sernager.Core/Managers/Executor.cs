@@ -37,6 +37,16 @@ internal sealed class Executor : IExecutor
 
             int exitCode = process.ExitCode;
 
+            if (outputHandler != null)
+            {
+                process.OutputDataReceived -= outputHandler;
+            }
+
+            if (errorHandler != null)
+            {
+                process.ErrorDataReceived -= errorHandler;
+            }
+
             return exitCode;
         }
     }
