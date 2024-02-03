@@ -20,19 +20,12 @@ internal sealed class CursorComponent : IPromptComponent
         return this;
     }
 
-    internal CursorComponent AddCursors(params object[] cursors)
+    internal CursorComponent AddCursors(params PromptCursor[] cursors)
     {
-        foreach (object cursor in cursors)
+        foreach (PromptCursor cursor in cursors)
         {
-            ECursorDirection? direction = (ECursorDirection?)cursor.GetType().GetProperty("Direction")?.GetValue(cursor, null);
-            int? count = (int?)cursor.GetType().GetProperty("Count")?.GetValue(cursor, null);
-
-            if (direction == null || count == null)
-            {
-                throw new ArgumentException($"Object must have Direction and Count properties to be converted to {nameof(PromptCursor)}.");
-            }
-
-            AddCursor(direction.Value, count.Value);
+            Cursors.Add(cursor);
+            updateFinalPosition(cursor);
         }
 
         return this;
@@ -78,6 +71,8 @@ internal sealed class CursorComponent : IPromptComponent
                 break;
             case ECursorDirection.HorizontalAbsolute:
                 FianlX = cursor.Count;
+                break;
+            default:
                 break;
         }
     }

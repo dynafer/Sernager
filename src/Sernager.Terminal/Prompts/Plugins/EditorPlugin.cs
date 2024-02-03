@@ -188,8 +188,8 @@ internal sealed class EditorPlugin : IEnumerableResultBasePlugin<string>
                 .SetText($"[Bold]{guidance}[/Bold]"),
             new CursorComponent()
                 .AddCursors(
-                    new { Direction = ECursorDirection.HorizontalAbsolute, Count = mCursor.X + 1 },
-                    new { Direction = ECursorDirection.Up, Count = mMaxEditorHeight }
+                    new PromptCursor(ECursorDirection.HorizontalAbsolute, mCursor.X + 1),
+                    new PromptCursor(ECursorDirection.Up, mMaxEditorHeight)
                 )
         ]);
 

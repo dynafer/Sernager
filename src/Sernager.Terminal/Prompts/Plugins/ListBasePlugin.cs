@@ -116,9 +116,9 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
 
             components.Add(new CursorComponent()
                 .AddCursors(
-                    new { Direction = ECursorDirection.HorizontalAbsolute, Count = 0 },
-                    new { Direction = ECursorDirection.Right, Count = mAutoComplete.Prompt.Length + mAutoComplete.CursorPosition },
-                    new { Direction = ECursorDirection.Up, Count = prev + (end - start) + next + (bNoResult ? 1 : 0) }
+                    new PromptCursor(ECursorDirection.HorizontalAbsolute, 0),
+                    new PromptCursor(ECursorDirection.Right, mAutoComplete.Prompt.Length + mAutoComplete.CursorPosition),
+                    new PromptCursor(ECursorDirection.Up, prev + (end - start) + next + (bNoResult ? 1 : 0))
                 )
             );
         }
