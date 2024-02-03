@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
+internal sealed class UserFriendlyConfigurationExtensionFailureTests : FailureFixture
 {
     private readonly struct FoundItem<TItem>
     {

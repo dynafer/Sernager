@@ -3,7 +3,7 @@ using Sernager.Core.Utils;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class SernagerBuilderUtilTests
+internal sealed class SernagerBuilderUtilTests
 {
     [Test]
     public void GetConfigurationTypeOrNull_ShouldReturnNull_WhenPassedNullFilePath()

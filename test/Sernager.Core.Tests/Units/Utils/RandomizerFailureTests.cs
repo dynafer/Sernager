@@ -2,7 +2,7 @@ using Sernager.Core.Utils;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class RandomizerFailureTests : FailureFixture
+internal sealed class RandomizerFailureTests : FailureFixture
 {
     [Test]
     public void GenerateRandomString_ShouldThrow_WhenPassedNegativeLength()

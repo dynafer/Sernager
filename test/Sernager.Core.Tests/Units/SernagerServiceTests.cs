@@ -4,7 +4,7 @@ using Sernager.Core.Models;
 
 namespace Sernager.Core.Tests.Units;
 
-public class SernagerServiceTests
+internal sealed class SernagerServiceTests
 {
     private ISernagerService mService;
 

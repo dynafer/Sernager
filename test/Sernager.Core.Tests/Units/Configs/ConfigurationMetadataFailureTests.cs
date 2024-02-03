@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Configs;
 
-public class ConfigurationMetadataFailureTests : FailureFixture
+internal sealed class ConfigurationMetadataFailureTests : FailureFixture
 {
     private static readonly string TEMP_FILE_ALIAS = "ConfigurationMetadata";
     [DatapointSource]

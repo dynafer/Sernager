@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class ByteReaderFailureTests : FailureFixture
+internal sealed class ByteReaderFailureTests : FailureFixture
 {
     private static readonly string TEMP_FILE_ALIAS = "ByteReader";
     [DatapointSource]

@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class UserFriendlyConfigurationExtensionSuccessTests
+internal sealed class UserFriendlyConfigurationExtensionSuccessTests
 {
     [DatapointSource]
     private static readonly EUserFriendlyConfigurationType[] USER_FRIENDLY_CONFIGURATION_TYPES = Enum.GetValues<EUserFriendlyConfigurationType>();

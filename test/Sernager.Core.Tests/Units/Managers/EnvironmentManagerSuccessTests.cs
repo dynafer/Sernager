@@ -6,7 +6,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
+internal sealed class EnvironmentManagerSuccessTests : EnvironmentManagerFixture
 {
     private static readonly string ENV_FILE_ALIAS = "Envs.ValidEnv";
     private static readonly string INVALID_ENV_FILE_ALIAS = "Envs.InvalidEnv";

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class CommandManagerSuccessTests : CommandManagerFixture
+internal sealed class CommandManagerSuccessTests : CommandManagerFixture
 {
     [Theory]
     public void Constructor_ShouldCreateMainGroup((int, string) pair)

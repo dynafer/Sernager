@@ -4,7 +4,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class EnvironmentManagerExtensionFailureTests : EnvironmentManagerFixture
+internal sealed class EnvironmentManagerExtensionFailureTests : EnvironmentManagerFixture
 {
     [Theory]
     public void UseMode_ShouldThrow_WhenGroupAlreadyRemoved(EAddDataOption additionMode)

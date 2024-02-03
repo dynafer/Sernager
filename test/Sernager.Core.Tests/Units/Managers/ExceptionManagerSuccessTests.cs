@@ -4,7 +4,7 @@ using Sernager.Core.Tests.Fakes;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class ExceptionManagerSuccessTests
+internal sealed class ExceptionManagerSuccessTests
 {
     [DatapointSource]
     private static readonly EErrorLevel[] TEST_ERROR_LEVELS =

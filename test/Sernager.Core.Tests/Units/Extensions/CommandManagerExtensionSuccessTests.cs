@@ -5,7 +5,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class CommandManagerExtensionSuccessTests : CommandManagerFixture
+internal sealed class CommandManagerExtensionSuccessTests : CommandManagerFixture
 {
     [Theory]
     public void AddSubgroup_ShouldAdd((int, string) pair)

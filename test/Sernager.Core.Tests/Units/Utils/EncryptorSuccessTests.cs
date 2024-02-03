@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class EncryptorSuccessTests
+internal sealed class EncryptorSuccessTests
 {
     [Test]
     public void Encrypt_And_Decrypt_ShouldWorkProperly()

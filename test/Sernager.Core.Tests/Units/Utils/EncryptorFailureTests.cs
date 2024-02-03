@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class EncryptorFailureTests : FailureFixture
+internal sealed class EncryptorFailureTests : FailureFixture
 {
     [Test]
     public void Encrypt_ShouldThrow_WhenPassedNullValue()

@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class JsonElementExtensionFailureTests : FailureFixture
+internal sealed class JsonElementExtensionFailureTests : FailureFixture
 {
     [Test]
     public void TryGetString_ShouldReturnFalseAndOutNull_WhenJsonElementIsNotString()

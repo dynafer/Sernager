@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class ExecutorTests
+internal sealed class ExecutorTests
 {
     [DatapointSource]
     private static readonly string[] COMMANDS =

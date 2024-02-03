@@ -4,7 +4,7 @@ using Sernager.Core.Options;
 
 namespace Sernager.Core.Tests.Units;
 
-public class SernagerBuilderTests
+internal sealed class SernagerBuilderTests
 {
     [DatapointSource]
     private static readonly EErrorLevel[] ERROR_LEVELS = Enum.GetValues<EErrorLevel>();

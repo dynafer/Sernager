@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class JsonElementExtensionSuccessTests
+internal sealed class JsonElementExtensionSuccessTests
 {
     [Test]
     public void TryGetString_ShouldReturnEmptyString()

@@ -3,7 +3,7 @@ using Sernager.Core.Tests.Fakes;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class CacheManagerSuccessTests
+internal sealed class CacheManagerSuccessTests
 {
     [TearDown]
     public void ClearCache()

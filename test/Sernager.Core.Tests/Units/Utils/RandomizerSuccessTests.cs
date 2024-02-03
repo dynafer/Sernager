@@ -2,7 +2,7 @@ using Sernager.Core.Utils;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class RandomizerSuccessTests
+internal sealed class RandomizerSuccessTests
 {
     [Test]
     public void GenerateRandomString_ShouldReturnEmptyString_WhenPassedZeroLength()

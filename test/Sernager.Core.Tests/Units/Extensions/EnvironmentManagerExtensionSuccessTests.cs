@@ -5,7 +5,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class EnvironmentManagerExtensionSuccessTests : EnvironmentManagerFixture
+internal sealed class EnvironmentManagerExtensionSuccessTests : EnvironmentManagerFixture
 {
     [Theory]
     public void UseMode_ShouldChangeMode(EAddDataOption additionMode)

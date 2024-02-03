@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Sernager.Core.Tests.Units.Helpers;
 
-public class ManagerHelperTests : FailureFixture
+internal sealed class ManagerHelperTests : FailureFixture
 {
     [DatapointSource]
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();

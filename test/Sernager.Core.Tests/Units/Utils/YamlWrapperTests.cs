@@ -3,7 +3,7 @@ using Sernager.Core.Utils;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class YamlWrapperTests
+internal sealed class YamlWrapperTests
 {
     [Test]
     public void Serialize_ShouldReturnEmptyString_WhenPassedNullObject()

@@ -1,7 +1,7 @@
 namespace Sernager.Core.Tests.Fakes;
 
 
-public class FakeException : Exception
+public sealed class FakeException : Exception
 {
     public FakeException(string message) : base(message)
     {

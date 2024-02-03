@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class ConfigurationExtensionTests
+internal sealed class ConfigurationExtensionTests
 {
     [DatapointSource]
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();

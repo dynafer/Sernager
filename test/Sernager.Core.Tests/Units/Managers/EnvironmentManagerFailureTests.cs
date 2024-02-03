@@ -3,7 +3,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class EnvironmentManagerFailureTests : EnvironmentManagerFixture
+internal sealed class EnvironmentManagerFailureTests : EnvironmentManagerFixture
 {
     private static readonly string ENV_FILE_ALIAS = "Envs.InvalidEnv";
 

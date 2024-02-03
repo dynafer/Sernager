@@ -6,7 +6,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class CommandManagerExtensionFailureTests : CommandManagerFixture
+internal sealed class CommandManagerExtensionFailureTests : CommandManagerFixture
 {
     [Theory]
     public void AddSubgroup_ShouldThrow_WhenMainGroupAlreadyRemoved(EErrorLevel errorLevel, (int, string) pair)

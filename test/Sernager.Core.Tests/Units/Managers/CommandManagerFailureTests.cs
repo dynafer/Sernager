@@ -4,7 +4,7 @@ using Sernager.Core.Tests.Fixtures;
 
 namespace Sernager.Core.Tests.Units.Managers;
 
-public class CommandManagerFailureTests : CommandManagerFixture
+internal sealed class CommandManagerFailureTests : CommandManagerFixture
 {
     [Theory]
     public void RemoveMainGroup_ShouldThrow_WhenMainGroupAlreadyRemoved(EErrorLevel errorLevel, (int, string) pair)

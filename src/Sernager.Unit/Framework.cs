@@ -4,6 +4,6 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Sernager.Terminal.Tests")]
 namespace Sernager.Unit;
 
-public class Framework
+public sealed class Framework
 {
 }

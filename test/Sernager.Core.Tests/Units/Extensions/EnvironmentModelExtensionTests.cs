@@ -4,7 +4,7 @@ using Sernager.Core.Options;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class EnvironmentModelExtensionTests
+internal sealed class EnvironmentModelExtensionTests
 {
     [DatapointSource]
     private static readonly EEnvironmentType[] TEST_TYPES = Enum.GetValues<EEnvironmentType>();

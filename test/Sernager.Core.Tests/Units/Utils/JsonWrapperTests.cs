@@ -3,7 +3,7 @@ using Sernager.Core.Utils;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class JsonWrapperTests
+internal sealed class JsonWrapperTests
 {
     [Test]
     public void Serialize_ShouldReturnEmptyString_WhenPassedNull()

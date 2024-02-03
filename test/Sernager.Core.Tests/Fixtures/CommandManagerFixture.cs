@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using Sernager.Core.Configs;
 using Sernager.Core.Managers;
 using Sernager.Core.Models;
+using System.Diagnostics;
 
 namespace Sernager.Core.Tests.Fixtures;
 

@@ -3,7 +3,7 @@ using Sernager.Core.Tests.Fakes;
 
 namespace Sernager.Core.Tests.Units.Extensions;
 
-public class EnumExtensionTests
+internal sealed class EnumExtensionTests
 {
     [DatapointSource]
     private static readonly EFake[] FAKE_TYPES = Enum.GetValues<EFake>();

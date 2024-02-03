@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Sernager.Core.Tests.Units.Utils;
 
-public class ByteWriterSuccessTests
+internal sealed class ByteWriterSuccessTests
 {
     [DatapointSource]
     private static readonly Encoding[] ENCODING_LIST =

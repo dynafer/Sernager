@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Sernager.Core.Tests.Units.Configs;
 
-public class ConfiguratorSuccessTests
+internal sealed class ConfiguratorSuccessTests
 {
     [DatapointSource]
     private static readonly EConfigurationType[] CONFIGURATION_TYPES = Enum.GetValues<EConfigurationType>();

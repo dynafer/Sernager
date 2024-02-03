@@ -3,7 +3,7 @@ using Sernager.Core.Tests.Fakes;
 
 namespace Sernager.Core.Tests.Units.Models;
 
-public class GroupItemModelFailureTests
+internal sealed class GroupItemModelFailureTests
 {
     [DatapointSource]
     private static readonly object[] _ =

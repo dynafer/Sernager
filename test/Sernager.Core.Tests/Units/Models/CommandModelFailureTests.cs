@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Sernager.Core.Tests.Units.Models;
 
-public class CommandModelFailureTests
+internal sealed class CommandModelFailureTests
 {
     private readonly CommandModel mCommandModel = new CommandModel();
     [DatapointSource]
