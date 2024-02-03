@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Sernager.Terminal.Attributes;
 
+[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 public sealed class FlowAttribute : Attribute
 {

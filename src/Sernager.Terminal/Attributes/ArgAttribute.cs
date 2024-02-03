@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Sernager.Terminal.Attributes;
 
+[ExcludeFromCodeCoverage]
 [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
 public sealed class ArgAttribute : Attribute
 {
