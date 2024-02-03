@@ -20,7 +20,7 @@
     <PublishReadyToRun>True</PublishReadyToRun>
     <PublishSelfContained>true</PublishSelfContained>
     <DebugSymbols>false</DebugSymbols>
-    <DebugType>None</DebugType>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <Target Name="RenameFiles" AfterTargets="Publish">
@@ -32,6 +32,10 @@
     <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(RenamedFiles)" />
     <Move SourceFiles="@(RenamedFiles)" DestinationFiles="@(DestinationFiles)" />
     <RemoveDir Directories="$(PublishDir)" />
+    <ItemGroup>
+      <PdbFiles Include="..\..\bin\**\*.pdb" />
+    </ItemGroup>
+    <Delete Files="@(PdbFiles)" />
   </Target>
 
   <ItemGroup>
