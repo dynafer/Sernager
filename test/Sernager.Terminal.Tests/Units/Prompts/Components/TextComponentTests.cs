@@ -37,7 +37,7 @@ internal sealed class TextComponentTests
     }
 
     [Theory]
-    public void Render_ShouldRenderTextWithDecoration(EDecorationFlags decoration, EColorFlags textColor, RgbColor? rgbColor)
+    public void Render_ShouldReturnRenderedText(EDecorationFlags decoration, EColorFlags textColor, RgbColor? rgbColor)
     {
         Assume.That(decoration, Is.AnyOf(DECORATIONS));
         Assume.That(textColor, Is.AnyOf(COLORS));

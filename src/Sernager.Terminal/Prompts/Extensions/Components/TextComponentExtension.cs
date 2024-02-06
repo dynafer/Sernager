@@ -32,11 +32,4 @@ internal static class TextComponentExtension
 
         return component;
     }
-
-    internal static InlineStyledTextComponent SetText(this InlineStyledTextComponent component, string text)
-    {
-        component.Text = text;
-
-        return component;
-    }
 }
