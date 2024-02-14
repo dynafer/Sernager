@@ -6,23 +6,24 @@ namespace Sernager.Terminal.Prompts.Components;
 
 internal sealed class InlineStyledTextComponent : IPromptComponent
 {
-    private bool mbEscapeOnly = false;
+    private bool mbPlainTextOnly = false;
     internal string Text { get; set; } = string.Empty;
     public bool IsLineBreak => false;
 
-    internal InlineStyledTextComponent UseEscapeOnly()
+    internal InlineStyledTextComponent UsePlainTextOnly()
     {
-        mbEscapeOnly = true;
+        mbPlainTextOnly = true;
 
         return this;
     }
 
     string IPromptComponent.Render()
     {
-        string pattern = @"\[(\/?\w+)\]";
+        string pattern = @"\[\/?[a-zA-Z]*\(?[\d\s,]*\)?\]";
         MatchCollection matches = Regex.Matches(Text, pattern);
 
         List<SInlineStyle> styles = new List<SInlineStyle>();
+        int lastCodesLength = 0;
 
         string replacedText = Regex.Replace(Text, pattern, match =>
         {
@@ -31,37 +32,41 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
             int code;
             bool bReset = false;
+            bool bParsed = false;
 
             if (tryParseDecoration(value.Replace("/", ""), out code))
             {
-                if (mbEscapeOnly)
+                if (mbPlainTextOnly)
                 {
                     return string.Empty;
                 }
 
                 addOrDeleteDecoration(styles, code, bClosed, ref bReset);
+                bParsed = true;
             }
             else if (tryParseColor(value.Replace("/", ""), out code))
             {
-                if (mbEscapeOnly)
+                if (mbPlainTextOnly)
                 {
                     return string.Empty;
                 }
 
                 addOrDeleteColor(styles, code, bClosed, ref bReset);
+                bParsed = true;
             }
             else if (isTextRgbColor(value))
             {
-                if (mbEscapeOnly)
+                if (mbPlainTextOnly)
                 {
                     return string.Empty;
                 }
 
-                addOrDeleteRgbColor(styles, value, bClosed, ref bReset);
+                addOrDeleteRgbColor(styles, value.Replace("/", ""), bClosed, ref bReset);
+                bParsed = true;
             }
             else if (value == "/")
             {
-                if (mbEscapeOnly)
+                if (mbPlainTextOnly)
                 {
                     return string.Empty;
                 }
@@ -71,19 +76,22 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
                     styles.RemoveAt(styles.Count - 1);
                     bReset = true;
                 }
+
+                bParsed = true;
             }
             else if (value == "/RESET" || value == "RESET")
             {
-                if (mbEscapeOnly)
+                if (mbPlainTextOnly)
                 {
                     return string.Empty;
                 }
 
                 styles.Clear();
                 bReset = true;
+                bParsed = true;
             }
 
-            if (mbEscapeOnly)
+            if (mbPlainTextOnly || !bParsed)
             {
                 return match.Value;
             }
@@ -110,10 +118,30 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
                 }
             }
 
+            if (codes.Count == lastCodesLength && codes.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            lastCodesLength = codes.Count;
+
+            if (codes.Count == 0)
+            {
+                return AnsiCode.ResetGraphicsMode();
+            }
+
             return AnsiCode.GraphicsMode(codes.ToArray());
         });
 
-        replacedText += AnsiCode.ResetGraphicsMode();
+        if (mbPlainTextOnly)
+        {
+            return replacedText;
+        }
+
+        if (!replacedText.EndsWith(AnsiCode.ResetGraphicsMode()))
+        {
+            replacedText += AnsiCode.ResetGraphicsMode();
+        }
 
         return replacedText;
     }
@@ -138,6 +166,11 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
     private void addOrDeleteDecoration(List<SInlineStyle> styles, int code, bool bDelete, ref bool bReset)
     {
+        if (code == 0)
+        {
+            return;
+        }
+
         if (!bDelete)
         {
             styles.Add(new SInlineStyle("Decoration", code));
@@ -173,6 +206,11 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
     private void addOrDeleteColor(List<SInlineStyle> styles, int code, bool bDelete, ref bool bReset)
     {
+        if (code == 0)
+        {
+            return;
+        }
+
         if (!bDelete)
         {
             styles.Add(new SInlineStyle("Color", code));
@@ -226,7 +264,7 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
     private void addOrDeleteRgbColor(List<SInlineStyle> styles, string value, bool bDelete, ref bool bReset)
     {
-        int[]? textRgbColor = toTextRgbColorOrNull(value.Replace("/", ""));
+        int[]? textRgbColor = toTextRgbColorOrNull(value);
 
         if (!bDelete)
         {
@@ -244,7 +282,11 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
             if (textRgbColor != null)
             {
-                bRgbColor &= style.Value.Equals(textRgbColor);
+                int[] styleValue = (int[])style.Value;
+
+                bRgbColor &= styleValue[0] == textRgbColor[0] &&
+                             styleValue[1] == textRgbColor[1] &&
+                             styleValue[2] == textRgbColor[2];
             }
 
             return bRgbColor;
