@@ -54,7 +54,7 @@ internal sealed class OptionItem<T>
 
         IPromptComponent nameComponent = new InlineStyledTextComponent()
             .SetText(name)
-            .UseEscapeOnly();
+            .UsePlainTextOnly();
 
         TextComponent component = new TextComponent()
             .SetDecoration(EDecorationFlags.None)
