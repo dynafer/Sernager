@@ -2,6 +2,9 @@ namespace Sernager.Terminal.Prompts.Components.Texts;
 
 internal struct SInlineStyle
 {
+    internal static readonly string DECORATION_STYLE_NAME = "Decoration";
+    internal static readonly string COLOR_STYLE_NAME = "Color";
+    internal static readonly string RGB_COLOR_STYLE_NAME = "RgbColor";
     internal string Name { get; private init; }
     private object mValue;
     internal object Value

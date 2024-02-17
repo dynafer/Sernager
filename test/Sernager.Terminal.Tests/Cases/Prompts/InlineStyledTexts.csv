@@ -1,0 +1,47 @@
+Case,                                                                                       Expected Rendered Text,                                                                                         Expected Plain Text
+"Hello, World",                                                                             "Hello, World\u001b[0m",                                                                                        "Hello, World"
+
+"[NotExisted]Not existed tags[/NotExisted]",                                                "[NotExisted]Not existed tags[/NotExisted]\u001b[0m",                                                           "[NotExisted]Not existed tags[/NotExisted]"
+"[Rgb(0, 0)]Invalid RGB",                                                                   "[Rgb(0, 0)]Invalid RGB\u001b[0m",                                                                              "[Rgb(0, 0)]Invalid RGB"
+"[Rgb(0, 0, 0, 0)]Invalid RGB",                                                             "[Rgb(0, 0, 0, 0)]Invalid RGB\u001b[0m",                                                                        "[Rgb(0, 0, 0, 0)]Invalid RGB"
+"[Rgb(-1, -1, -1)]Invalid RGB",                                                             "[Rgb(-1, -1, -1)]Invalid RGB\u001b[0m",                                                                        "[Rgb(-1, -1, -1)]Invalid RGB"
+
+"[None]Existed decoration but not parsed",                                                  "[None]Existed decoration but not parsed\u001b[0m",                                                             "[None]Existed decoration but not parsed"
+"[Default]Existed decoration but not parsed",                                               "[Default]Existed decoration but not parsed\u001b[0m",                                                          "[Default]Existed decoration but not parsed"
+
+"[Bold]Bold text",                                                                          "\u001b[0;1mBold text\u001b[0m",                                                                                "Bold text"
+"[Bold]Bold[/Bold] text",                                                                   "\u001b[0;1mBold\u001b[0m text\u001b[0m",                                                                       "Bold text"
+"[Bold]Bold[/Deco] text",                                                                   "\u001b[0;1mBold\u001b[0m text\u001b[0m",                                                                       "Bold text"
+"[Bold]Bold[/Decoration] text",                                                             "\u001b[0;1mBold\u001b[0m text\u001b[0m",                                                                       "Bold text"
+"[Bold]Bold[/] text",                                                                       "\u001b[0;1mBold\u001b[0m text\u001b[0m",                                                                       "Bold text"
+"[Bold]Bold[Reset] text",                                                                   "\u001b[0;1mBold\u001b[0m text\u001b[0m",                                                                       "Bold text"
+"[Bold]Bold[/Reset] text",                                                                  "\u001b[0;1mBold\u001b[0m text\u001b[0m",                                                                       "Bold text"
+
+"Black [Black]text",                                                                        "Black \u001b[0;30mtext\u001b[0m",                                                                              "Black text"
+"Black [Black]text[/Black]",                                                                "Black \u001b[0;30mtext\u001b[0m",                                                                              "Black text"
+"Black [Black]text[/Color]",                                                                "Black \u001b[0;30mtext\u001b[0m",                                                                              "Black text"
+"Black [Black]text[/]",                                                                     "Black \u001b[0;30mtext\u001b[0m",                                                                              "Black text"
+"Black [Black]text[Reset]",                                                                 "Black \u001b[0;30mtext\u001b[0m",                                                                              "Black text"
+"Black [Black]text[/Reset]",                                                                "Black \u001b[0;30mtext\u001b[0m",                                                                              "Black text"
+
+"Rgb(255, 0, 0) [Rgb(255, 0, 0)]text",                                                      "Rgb(255, 0, 0) \u001b[0;38;2;255;0;0mtext\u001b[0m",                                                           "Rgb(255, 0, 0) text"
+"Rgb(255, 0, 0) [Rgb(255, 0, 0)]text[/Rgb(255, 0, 0)]",                                     "Rgb(255, 0, 0) \u001b[0;38;2;255;0;0mtext\u001b[0m",                                                           "Rgb(255, 0, 0) text"
+"Rgb(255, 0, 0) [Rgb(255, 0, 0)]text[/Rgb]",                                                "Rgb(255, 0, 0) \u001b[0;38;2;255;0;0mtext\u001b[0m",                                                           "Rgb(255, 0, 0) text"
+"Rgb(255, 0, 0) [Rgb(255, 0, 0)]text[/]",                                                   "Rgb(255, 0, 0) \u001b[0;38;2;255;0;0mtext\u001b[0m",                                                           "Rgb(255, 0, 0) text"
+"Rgb(255, 0, 0) [Rgb(255, 0, 0)]text[Reset]",                                               "Rgb(255, 0, 0) \u001b[0;38;2;255;0;0mtext\u001b[0m",                                                           "Rgb(255, 0, 0) text"
+"Rgb(255, 0, 0) [Rgb(255, 0, 0)]text[/Reset]",                                              "Rgb(255, 0, 0) \u001b[0;38;2;255;0;0mtext\u001b[0m",                                                           "Rgb(255, 0, 0) text"
+
+"[Italic]Italic and [Bold]bold[/Bold] text",                                                "\u001b[0;3mItalic and \u001b[0;3;1mbold\u001b[0;3m text\u001b[0m",                                             "Italic and bold text"
+"[Italic]Italic and [Bold]bold[/Italic] text",                                              "\u001b[0;3mItalic and \u001b[0;3;1mbold\u001b[0;1m text\u001b[0m",                                             "Italic and bold text"
+"[Italic]Italic and [Bold]bold[/Bold] text[/Italic]",                                       "\u001b[0;3mItalic and \u001b[0;3;1mbold\u001b[0;3m text\u001b[0m",                                             "Italic and bold text"
+"[Italic]Italic and [Bold]bold[/Italic] text[/Bold]",                                       "\u001b[0;3mItalic and \u001b[0;3;1mbold\u001b[0;1m text\u001b[0m",                                             "Italic and bold text"
+
+"[Red]Red and [Underline]underline[/Underline] text",                                       "\u001b[0;31mRed and \u001b[0;31;4munderline\u001b[0;31m text\u001b[0m",                                        "Red and underline text"
+"[Red]Red and [Underline]underline[/Red] text",                                             "\u001b[0;31mRed and \u001b[0;31;4munderline\u001b[0;4m text\u001b[0m",                                         "Red and underline text"
+"[Red]Red and [Underline]underline[/Underline] text[/Red]",                                 "\u001b[0;31mRed and \u001b[0;31;4munderline\u001b[0;31m text\u001b[0m",                                        "Red and underline text"
+"[Red]Red and [Underline]underline[/Red] text[/Underline]",                                 "\u001b[0;31mRed and \u001b[0;31;4munderline\u001b[0;4m text\u001b[0m",                                         "Red and underline text"
+
+"[Hidden]Hidden and [Rgb(0, 255, 0)]rgb(0, 255, 0) text",                                   "\u001b[0;8mHidden and \u001b[0;8;38;2;0;255;0mrgb(0, 255, 0) text\u001b[0m",                                   "Hidden and rgb(0, 255, 0) text"
+"[Hidden]Hidden and [Rgb(0, 255, 0)]rgb(0, 255, 0)[/Rgb(0, 255, 0)] text",                  "\u001b[0;8mHidden and \u001b[0;8;38;2;0;255;0mrgb(0, 255, 0)\u001b[0;8m text\u001b[0m",                        "Hidden and rgb(0, 255, 0) text"
+"[Hidden]Hidden and [Rgb(0, 255, 0)]rgb(0, 255, 0)[/Hidden] text",                          "\u001b[0;8mHidden and \u001b[0;8;38;2;0;255;0mrgb(0, 255, 0)\u001b[0;38;2;0;255;0m text\u001b[0m",             "Hidden and rgb(0, 255, 0) text"
+"[Hidden]Hidden and [Rgb(0, 255, 0)]rgb(0, 255, 0)[/Rgb(0, 255, 0)] text[/Hidden]",        "\u001b[0;8mHidden and \u001b[0;8;38;2;0;255;0mrgb(0, 255, 0)\u001b[0;8m text\u001b[0m",                         "Hidden and rgb(0, 255, 0) text"

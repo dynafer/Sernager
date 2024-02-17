@@ -153,4 +153,69 @@ public static class CaseUtil
 
         return metadata.Config;
     }
+
+    internal static string[][] ReadCSV(string alias)
+    {
+        string aliasPath = alias.Replace('.', Path.DirectorySeparatorChar);
+        string csv = ReadString(aliasPath, "csv")
+            .Replace("\r\n", "\n");
+
+        string[] lines = csv.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+        List<List<string>> result = new List<List<string>>();
+
+        // First line is the header
+        for (int i = 1; i < lines.Length; ++i)
+        {
+            List<string> cells = new List<string>();
+            bool bBetweenQuotes = false;
+
+            foreach (char c in lines[i])
+            {
+                if (c == '\r')
+                {
+                    continue;
+                }
+
+                if (!bBetweenQuotes &&
+                    (c == ' ' || c == '\t') &&
+                    (cells.Count == 0 || cells[^1].Length == 0))
+                {
+                    continue;
+                }
+
+                if (c == '"')
+                {
+                    bBetweenQuotes = !bBetweenQuotes;
+                }
+                else if (c == ',' && !bBetweenQuotes)
+                {
+                    cells[^1] = cells[^1].Trim().Replace("\\u001b[", "\u001b[");
+                    cells.Add("");
+                }
+                else if (cells.Count == 0)
+                {
+                    if (c == ' ' || c == '\t')
+                    {
+                        continue;
+                    }
+
+                    cells.Add(c.ToString());
+                }
+                else
+                {
+                    cells[^1] += c;
+                }
+            }
+
+            result.Add(cells);
+
+            if (result[0].Count != result[i - 1].Count)
+            {
+                throw new InvalidOperationException($"Invalid CSV format: Cases{Path.DirectorySeparatorChar}{aliasPath}.csv");
+            }
+        }
+
+        return result.Select(cells => cells.ToArray()).ToArray();
+    }
 }

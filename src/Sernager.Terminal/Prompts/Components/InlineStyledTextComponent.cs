@@ -1,6 +1,7 @@
 using Sernager.Terminal.Prompts.Components.Texts;
 using Sernager.Terminal.Prompts.Helpers;
-using System.Text.RegularExpressions;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Sernager.Terminal.Prompts.Components;
 
@@ -19,210 +20,235 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
 
     string IPromptComponent.Render()
     {
-        string pattern = @"\[\/?[a-zA-Z]*\(?[\d\s,]*\)?\]";
-        MatchCollection matches = Regex.Matches(Text, pattern);
+        StringBuilder builder = new StringBuilder();
+
+        bool bTagging = false;
+        bool bClose = false;
+        string tagName = string.Empty;
 
         List<SInlineStyle> styles = new List<SInlineStyle>();
-        int lastCodesLength = 0;
+        bool bAppliedStyle = true;
 
-        string replacedText = Regex.Replace(Text, pattern, match =>
+        foreach (char c in Text)
         {
-            string value = match.Value.ToUpperInvariant().Replace("[", "").Replace("]", "").Replace(" ", "");
-            bool bClosed = value.StartsWith("/");
-
-            int code;
-            bool bReset = false;
-            bool bParsed = false;
-
-            if (tryParseDecoration(value.Replace("/", ""), out code))
+            if (c == '[')
             {
-                if (mbPlainTextOnly)
-                {
-                    return string.Empty;
-                }
-
-                addOrDeleteDecoration(styles, code, bClosed, ref bReset);
-                bParsed = true;
+                tagName = string.Empty;
+                bTagging = true;
+                bClose = false;
             }
-            else if (tryParseColor(value.Replace("/", ""), out code))
+            else if (c == '/' && bTagging)
             {
-                if (mbPlainTextOnly)
-                {
-                    return string.Empty;
-                }
-
-                addOrDeleteColor(styles, code, bClosed, ref bReset);
-                bParsed = true;
+                bClose = true;
             }
-            else if (isTextRgbColor(value))
+            else if (c == ']' && bTagging)
             {
-                if (mbPlainTextOnly)
+                if (!tryTag(styles, tagName, bClose))
                 {
-                    return string.Empty;
+                    builder.Append('[');
+
+                    if (bClose)
+                    {
+                        builder.Append('/');
+                    }
+
+                    builder.Append(tagName);
+                    builder.Append(']');
+                }
+                else
+                {
+                    bAppliedStyle = false;
                 }
 
-                addOrDeleteRgbColor(styles, value.Replace("/", ""), bClosed, ref bReset);
-                bParsed = true;
+                bTagging = false;
+                bClose = false;
+                tagName = string.Empty;
             }
-            else if (value == "/")
+            else if (bTagging)
             {
-                if (mbPlainTextOnly)
+                tagName += c;
+            }
+            else
+            {
+                if (!bAppliedStyle && !mbPlainTextOnly)
                 {
-                    return string.Empty;
+                    if (styles.Count == 0)
+                    {
+                        builder.Append(AnsiCode.ResetGraphicsMode());
+                    }
+                    else
+                    {
+                        builder.Append(applyStyles(styles));
+                    }
+
+                    bTagging = false;
+                    bClose = false;
+                    tagName = string.Empty;
+                    bAppliedStyle = true;
                 }
 
+                builder.Append(c);
+            }
+        }
+
+        styles.Clear();
+
+        string result = builder.ToString();
+
+        if (!result.EndsWith(AnsiCode.ResetGraphicsMode()) && !mbPlainTextOnly)
+        {
+            result += AnsiCode.ResetGraphicsMode();
+        }
+
+        return result;
+    }
+
+    private bool tryTag(List<SInlineStyle> styles, string tagName, bool bClose)
+    {
+        string filteredTag = tagName.ToUpperInvariant().Replace(" ", "");
+
+        if (filteredTag == "RESET")
+        {
+            styles.Clear();
+
+            return true;
+        }
+
+        if (bClose)
+        {
+            if (filteredTag.Length == 0)
+            {
                 if (styles.Count > 0)
                 {
                     styles.RemoveAt(styles.Count - 1);
-                    bReset = true;
                 }
 
-                bParsed = true;
+                return true;
             }
-            else if (value == "/RESET" || value == "RESET")
+            else if (filteredTag == "DECO" || filteredTag == "DECORATION")
             {
-                if (mbPlainTextOnly)
-                {
-                    return string.Empty;
-                }
-
-                styles.Clear();
-                bReset = true;
-                bParsed = true;
+                removeStyle(styles, SInlineStyle.DECORATION_STYLE_NAME);
+                return true;
             }
-
-            if (mbPlainTextOnly || !bParsed)
+            else if (filteredTag == "COLOR")
             {
-                return match.Value;
+                removeStyle(styles, SInlineStyle.COLOR_STYLE_NAME);
+                return true;
             }
-
-            List<int> codes = new List<int>();
-            if (bReset)
+            else if (filteredTag == "RGB")
             {
-                codes.Add(0);
+                removeStyle(styles, SInlineStyle.RGB_COLOR_STYLE_NAME);
+                return true;
             }
-
-            foreach (SInlineStyle style in styles)
-            {
-                if (style.Name == "Decoration")
-                {
-                    codes.Add((int)style.Value);
-                }
-                else if (style.Name == "Color")
-                {
-                    codes.Add((int)style.Value);
-                }
-                else if (style.Name == "RgbColor")
-                {
-                    codes.AddRange((int[])style.Value);
-                }
-            }
-
-            if (codes.Count == lastCodesLength && codes.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            lastCodesLength = codes.Count;
-
-            if (codes.Count == 0)
-            {
-                return AnsiCode.ResetGraphicsMode();
-            }
-
-            return AnsiCode.GraphicsMode(codes.ToArray());
-        });
-
-        if (mbPlainTextOnly)
-        {
-            return replacedText;
         }
 
-        if (!replacedText.EndsWith(AnsiCode.ResetGraphicsMode()))
+        string? styleName;
+        int code;
+
+        if (tryParseDecoration(filteredTag, out styleName, out code) ||
+            tryParseColor(filteredTag, out styleName, out code))
         {
-            replacedText += AnsiCode.ResetGraphicsMode();
+            if (code == 0)
+            {
+                return false;
+            }
+
+            if (bClose)
+            {
+                removeStyle(styles, styleName, code);
+            }
+            else
+            {
+                styles.Add(new SInlineStyle(styleName, code));
+            }
+
+            return true;
+        }
+        else if (isTextRgbColor(filteredTag))
+        {
+            int[]? rgbColor;
+
+            if (tryParseRgbColor(filteredTag, out styleName, out rgbColor))
+            {
+                if (bClose)
+                {
+                    removeStyle(styles, styleName, rgbColor);
+                }
+                else
+                {
+                    styles.Add(new SInlineStyle(styleName, rgbColor));
+                }
+
+                return true;
+            }
         }
 
-        return replacedText;
+        return false;
     }
 
-    private bool tryParseDecoration(string value, out int code)
+    private string applyStyles(List<SInlineStyle> styles)
+    {
+        if (styles.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        List<int> codes = [0];
+
+        foreach (SInlineStyle style in styles)
+        {
+            if (style.Name == SInlineStyle.DECORATION_STYLE_NAME || style.Name == SInlineStyle.COLOR_STYLE_NAME)
+            {
+                codes.Add((int)style.Value);
+            }
+            else if (style.Name == SInlineStyle.RGB_COLOR_STYLE_NAME)
+            {
+                int[] rgbColor = (int[])style.Value;
+
+                codes.AddRange(rgbColor);
+            }
+        }
+
+        return AnsiCode.GraphicsMode(codes.ToArray());
+    }
+
+    private bool tryParseDecoration(string value, [NotNullWhen(true)] out string? styleName, out int code)
     {
         EDecorationFlags decoration;
 
         if (Enum.TryParse(value, true, out decoration))
         {
+            styleName = SInlineStyle.DECORATION_STYLE_NAME;
             code = AnsiCodeHelper.FromDecoration(decoration);
 
             return true;
         }
         else
         {
+            styleName = null;
             code = -1;
 
             return false;
         }
     }
 
-    private void addOrDeleteDecoration(List<SInlineStyle> styles, int code, bool bDelete, ref bool bReset)
-    {
-        if (code == 0)
-        {
-            return;
-        }
-
-        if (!bDelete)
-        {
-            styles.Add(new SInlineStyle("Decoration", code));
-        }
-        else
-        {
-            int existedIndex = styles.FindLastIndex(style => style.Name == "Decoration" && style.Value.Equals(code));
-            if (existedIndex != -1)
-            {
-                styles.RemoveAt(existedIndex);
-                bReset = true;
-            }
-        }
-    }
-
-    private bool tryParseColor(string value, out int code)
+    private bool tryParseColor(string value, [NotNullWhen(true)] out string? styleName, out int code)
     {
         EColorFlags color;
 
         if (Enum.TryParse(value, true, out color))
         {
+            styleName = SInlineStyle.COLOR_STYLE_NAME;
             code = AnsiCodeHelper.FromTextColor(color);
 
             return true;
         }
         else
         {
+            styleName = null;
             code = -1;
 
             return false;
-        }
-    }
-
-    private void addOrDeleteColor(List<SInlineStyle> styles, int code, bool bDelete, ref bool bReset)
-    {
-        if (code == 0)
-        {
-            return;
-        }
-
-        if (!bDelete)
-        {
-            styles.Add(new SInlineStyle("Color", code));
-        }
-        else
-        {
-            int existedIndex = styles.FindLastIndex(style => style.Name == "Color" && style.Value.Equals(code));
-            if (existedIndex != -1)
-            {
-                styles.RemoveAt(existedIndex);
-                bReset = true;
-            }
         }
     }
 
@@ -231,71 +257,87 @@ internal sealed class InlineStyledTextComponent : IPromptComponent
         return value.Contains("RGB", StringComparison.OrdinalIgnoreCase);
     }
 
-    private int[]? toTextRgbColorOrNull(string value)
+    private bool tryParseRgbColor(string value, [NotNullWhen(true)] out string? styleName, [NotNullWhen(true)] out int[]? codes)
     {
         string name = value
             .Replace("RGB", "")
             .Replace("(", "")
-            .Replace(")", "")
-            .Replace(" ", "");
+            .Replace(")", "");
 
         string[] rgb = name.Split(',');
 
         if (rgb.Length != 3)
         {
-            return null;
+            styleName = null;
+            codes = null;
+
+            return false;
         }
 
-        int r;
-        int g;
-        int b;
+        uint r;
+        uint g;
+        uint b;
 
-        if (int.TryParse(rgb[0], out r) &&
-            int.TryParse(rgb[1], out g) &&
-            int.TryParse(rgb[2], out b))
+        if (uint.TryParse(rgb[0], out r) &&
+            uint.TryParse(rgb[1], out g) &&
+            uint.TryParse(rgb[2], out b))
         {
-            return AnsiCodeHelper.FromTextRgbColor(new RgbColor(r, g, b));
+            RgbColor rgbColor = new RgbColor((int)r, (int)g, (int)b);
+
+            styleName = SInlineStyle.RGB_COLOR_STYLE_NAME;
+            codes = AnsiCodeHelper.FromTextRgbColor(rgbColor);
+
+            return true;
         }
         else
         {
-            return null;
+            styleName = null;
+            codes = null;
+
+            return false;
         }
     }
 
-    private void addOrDeleteRgbColor(List<SInlineStyle> styles, string value, bool bDelete, ref bool bReset)
+    private void removeStyle(List<SInlineStyle> styles, string name)
     {
-        int[]? textRgbColor = toTextRgbColorOrNull(value);
+        findAndRemoveStyle(styles, style => style.Name == name);
+    }
 
-        if (!bDelete)
+    private void removeStyle(List<SInlineStyle> styles, string name, int value)
+    {
+        findAndRemoveStyle(styles, style => style.Name == name && style.Value.Equals(value));
+    }
+
+    private void removeStyle(List<SInlineStyle> styles, string name, int[] rgbColor)
+    {
+        findAndRemoveStyle(styles, style =>
         {
-            if (textRgbColor != null)
+            if (style.Name != name)
             {
-                styles.Add(new SInlineStyle("RgbColor", textRgbColor));
+                return false;
             }
 
-            return;
-        }
+            int[] styleValue = (int[])style.Value;
 
-        int existedIndex = styles.FindLastIndex(style =>
-        {
-            bool bRgbColor = style.Name == "RgbColor";
+            int startIndex = 0;
 
-            if (textRgbColor != null)
+            if (rgbColor.Length == 5)
             {
-                int[] styleValue = (int[])style.Value;
-
-                bRgbColor &= styleValue[0] == textRgbColor[0] &&
-                             styleValue[1] == textRgbColor[1] &&
-                             styleValue[2] == textRgbColor[2];
+                startIndex = 2;
             }
 
-            return bRgbColor;
+            return styleValue[startIndex] == rgbColor[startIndex] &&
+                   styleValue[startIndex + 1] == rgbColor[startIndex + 1] &&
+                   styleValue[startIndex + 2] == rgbColor[startIndex + 2];
         });
+    }
 
+    private void findAndRemoveStyle(List<SInlineStyle> styles, Predicate<SInlineStyle> match)
+    {
+        int existedIndex = styles.FindLastIndex(match);
         if (existedIndex != -1)
         {
             styles.RemoveAt(existedIndex);
-            bReset = true;
         }
     }
 }
