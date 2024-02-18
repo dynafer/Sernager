@@ -68,6 +68,12 @@ internal sealed class TextComponentTests
             codes.AddRange(AnsiCodeHelper.FromTextRgbColor(rgbColor));
         }
 
+        if (codes.Count == 0)
+        {
+            Assert.That(component.Render(), Is.EqualTo("Hello, World!"));
+            return;
+        }
+
         string expected = $"{AnsiCode.GraphicsMode(codes.ToArray())}Hello, World!{AnsiCode.ResetGraphicsMode()}";
         string actual = component.Render();
 

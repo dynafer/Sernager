@@ -18,6 +18,18 @@ internal sealed class Column
         Colspan = colspan;
     }
 
+    internal Column(string text, int colspan = 1)
+    {
+        if (colspan < 1)
+        {
+            throw new ArgumentException("Colspan must be greater than 0.");
+        }
+
+        Component = new TextComponent { Text = text };
+        Length = text.Length;
+        Colspan = colspan;
+    }
+
     internal string Render()
     {
         return Component.Render();

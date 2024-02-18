@@ -37,6 +37,11 @@ internal sealed class TextComponent : IPromptComponent
             codes.AddRange(AnsiCodeHelper.FromTextRgbColor(RgbColor));
         }
 
+        if (codes.Count == 0)
+        {
+            return Text;
+        }
+
         return $"{AnsiCode.GraphicsMode(codes.ToArray())}{Text}{AnsiCode.ResetGraphicsMode()}";
     }
 }

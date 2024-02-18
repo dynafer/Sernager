@@ -6,20 +6,20 @@ namespace Sernager.Terminal.Prompts.Components;
 internal sealed class TableComponent : IPromptComponent
 {
     internal readonly List<Row> Rows = new List<Row>();
-    private bool mUseBorder = false;
-    private bool mUseHeader = false;
+    private bool mbUseBorder = false;
+    private bool mbUseHeader = false;
     bool IPromptComponent.IsLineBreak => true;
 
     internal TableComponent UseBorder()
     {
-        mUseBorder = true;
+        mbUseBorder = true;
 
         return this;
     }
 
     internal TableComponent UseHeader()
     {
-        mUseHeader = true;
+        mbUseHeader = true;
 
         return this;
     }
@@ -46,7 +46,7 @@ internal sealed class TableComponent : IPromptComponent
                 addMiddleHorizontalEdgeBorder(builder, widths, i);
             }
 
-            bool bHeaderRow = mUseHeader && i == 0;
+            bool bHeaderRow = mbUseHeader && i == 0;
             int index = 0;
 
             foreach (Column column in Rows[i].Columns)
@@ -54,19 +54,15 @@ internal sealed class TableComponent : IPromptComponent
                 int padding = widths[index] - column.Length;
                 for (int j = 1; j < column.Colspan; ++j)
                 {
-                    padding += widths[index + j] + (mUseBorder ? 1 : 0);
+                    padding += widths[index + j] + (mbUseBorder ? 1 : 0);
                 }
 
                 int rest = padding % 2;
                 padding /= 2;
 
-                if (mUseBorder)
+                if (mbUseBorder)
                 {
                     builder.Append('│');
-                }
-                else if (column.Colspan > 1)
-                {
-                    builder.Append(' ');
                 }
 
                 builder.Append(' ', bHeaderRow
@@ -84,7 +80,7 @@ internal sealed class TableComponent : IPromptComponent
                 }
             }
 
-            if (mUseBorder)
+            if (mbUseBorder)
             {
                 builder.Append('│');
             }
@@ -112,7 +108,7 @@ internal sealed class TableComponent : IPromptComponent
 
     private void addMostHorizontalEdgeBorder(StringBuilder builder, int[] widths, bool bTop)
     {
-        if (!mUseBorder)
+        if (!mbUseBorder)
         {
             return;
         }
@@ -156,7 +152,7 @@ internal sealed class TableComponent : IPromptComponent
 
     private void addMiddleHorizontalEdgeBorder(StringBuilder builder, int[] widths, int curRowIndex)
     {
-        if (!mUseBorder)
+        if (!mbUseBorder)
         {
             return;
         }
