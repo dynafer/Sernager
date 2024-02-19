@@ -13,10 +13,6 @@ internal struct SInlineStyle
         {
             return mValue;
         }
-        private init
-        {
-            mValue = value;
-        }
     }
 
     internal SInlineStyle(string name, int value)
