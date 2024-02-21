@@ -13,6 +13,7 @@ internal sealed class OptionItemTests
     public void Constructor_ShouldInitialise(EOptionTypeFlags type, bool bUseResourcePack)
     {
         Assume.That(type, Is.AnyOf(OPTION_TYPES));
+        Assume.That(bUseResourcePack, Is.AnyOf(BOOLS));
 
         string name = "Test";
         int value = 1;
@@ -21,7 +22,7 @@ internal sealed class OptionItemTests
 
         Assert.That(optionItem.Name, Is.EqualTo(name));
         Assert.That(optionItem.Value, Is.EqualTo(value));
-        Assert.That(optionItem.IsSelected, Is.EqualTo(bUseResourcePack));
+        Assert.That(optionItem.IsSelected, Is.False);
         Assert.That(PrivateUtil.GetFieldValue<bool>(optionItem, "mbUseResourcePack"), Is.EqualTo(bUseResourcePack));
     }
 
@@ -48,6 +49,7 @@ internal sealed class OptionItemTests
     public void ToTextComponent_ShouldReturnTextComponent(EOptionTypeFlags type, bool bUseResourcePack)
     {
         Assume.That(type, Is.AnyOf(OPTION_TYPES));
+        Assume.That(bUseResourcePack, Is.AnyOf(BOOLS));
 
         string name = "Test";
         int value = 1;
@@ -61,6 +63,7 @@ internal sealed class OptionItemTests
     public void ToRestTextComponent_ShouldReturnTextComponent(EOptionTypeFlags type, bool bUseResourcePack)
     {
         Assume.That(type, Is.AnyOf(OPTION_TYPES));
+        Assume.That(bUseResourcePack, Is.AnyOf(BOOLS));
 
         string name = "Test";
         int value = 1;
