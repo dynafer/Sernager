@@ -13,11 +13,8 @@ internal static class TypeHelper
     internal static void EnsureIsSearchable<T>()
         where T : notnull
     {
-        if (typeof(T) == typeof(string))
-        {
-            return;
-        }
-        else if (Is<T, OptionItem<object>>())
+        if (typeof(T) == typeof(string) ||
+            Is<T, OptionItem<object>>())
         {
             return;
         }

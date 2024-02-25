@@ -9,18 +9,15 @@ internal static class ConvertExtension
 {
     internal static string ToSuggestItem<T>(this T item)
     {
-        if (typeof(T) == typeof(string))
+        if (item is string strItem)
         {
-            return item?.ToString() ?? string.Empty;
+            return strItem;
         }
         else if (TypeHelper.Is<T, OptionItem<object>>())
         {
-            PropertyInfo? nameProperty = typeof(T).GetProperty("Name", BindingFlags.NonPublic | BindingFlags.Instance);
+            PropertyInfo nameProperty = typeof(T).GetProperty("Name", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
-            if (nameProperty != null)
-            {
-                return nameProperty.GetValue(item, null)?.ToString() ?? string.Empty;
-            }
+            return nameProperty.GetValue(item, null)?.ToString() ?? string.Empty;
         }
 
         throw new NotSupportedException($"Cannot convert {nameof(T)} to suggest item.");
