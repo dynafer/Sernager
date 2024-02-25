@@ -10,7 +10,7 @@ internal sealed class AutoComplete<TSearchable>
     private readonly IResourcePack mResourcePack = ResourceRetriever.UsePack("Terminal.Prompt.AutoComplete");
     internal string Prompt => $"{mResourcePack.GetString("Prompt")}: ";
     internal string NoResultText => mResourcePack.GetString("NoResult");
-    internal string Input { get; set; } = string.Empty;
+    internal string Input { get; private set; } = string.Empty;
     internal int CursorPosition { get; private set; } = 0;
 
     internal AutoComplete()
@@ -34,6 +34,8 @@ internal sealed class AutoComplete<TSearchable>
                 break;
             case ConsoleKey.LeftArrow:
             case ConsoleKey.RightArrow:
+            case ConsoleKey.Home:
+            case ConsoleKey.End:
                 moveCursor(keyInfo.Key);
                 break;
             default:
@@ -138,6 +140,12 @@ internal sealed class AutoComplete<TSearchable>
     private void moveCursor(ConsoleKey key)
     {
         bool bForward = key == ConsoleKey.RightArrow;
+
+        if (key == ConsoleKey.Home || key == ConsoleKey.End)
+        {
+            CursorPosition = key == ConsoleKey.Home ? 0 : Input.Length;
+            return;
+        }
 
         if (bForward)
         {
