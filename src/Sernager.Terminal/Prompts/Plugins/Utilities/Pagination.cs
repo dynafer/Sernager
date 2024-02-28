@@ -6,11 +6,11 @@ internal sealed class Pagination
     internal int Total { get; set; } = 0;
     internal int Offset { get; private set; } = 0;
 
-    internal (int, int, int, int) GetRange()
+    internal PaginationRange GetRange()
     {
         if (PageSize >= Total)
         {
-            return (0, Total, 0, 0);
+            return new PaginationRange(0, Total, 0, 0);
         }
 
         int halfPageSize = (int)Math.Floor((float)(PageSize / 2));
@@ -29,7 +29,7 @@ internal sealed class Pagination
             next = Offset + halfPageSize - Total;
         }
 
-        return (start, end, prev, next);
+        return new PaginationRange(start, end, prev, next);
     }
 
     internal void Home()

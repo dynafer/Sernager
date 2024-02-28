@@ -67,20 +67,20 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
             );
         }
 
-        (int start, int end, int prev, int next) = Pagination.GetRange();
+        PaginationRange range = Pagination.GetRange();
 
-        if (prev != 0)
+        if (range.Prev != 0)
         {
-            for (int i = Pagination.Total - prev; i < Pagination.Total; ++i)
+            for (int i = Pagination.Total - range.Prev; i < Pagination.Total; ++i)
             {
                 components.Add(options[i].ToRestTextComponent(this));
             }
         }
 
-        for (int i = start; i < end; ++i)
+        for (int i = range.Start; i < range.End; ++i)
         {
             TextComponent option = options[i].ToTextComponent(this, i == Pagination.Offset);
-            if (next == 0 && i == end - 1)
+            if (range.Next == 0 && i == range.End - 1)
             {
                 option.IsLineBreak = false;
             }
@@ -88,12 +88,12 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
             components.Add(option);
         }
 
-        if (next != 0)
+        if (range.Next != 0)
         {
-            for (int i = 0; i < next; ++i)
+            for (int i = 0; i < range.Next; ++i)
             {
                 TextComponent option = options[i].ToRestTextComponent(this);
-                if (i == next - 1)
+                if (i == range.Next - 1)
                 {
                     option.IsLineBreak = false;
                 }
@@ -104,7 +104,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
 
         if (mAutoComplete != null)
         {
-            bool bNoResult = mAutoComplete.Input.Length != 0 && end == 0;
+            bool bNoResult = mAutoComplete.Input.Length != 0 && range.End == 0;
 
             if (bNoResult)
             {
@@ -118,7 +118,7 @@ internal abstract class ListBasePlugin<TOptionValue> : IBasePlugin
                 .AddCursors(
                     new PromptCursor(ECursorDirection.HorizontalAbsolute, 0),
                     new PromptCursor(ECursorDirection.Right, mAutoComplete.Prompt.Length + mAutoComplete.CursorPosition),
-                    new PromptCursor(ECursorDirection.Up, prev + (end - start) + next + (bNoResult ? 1 : 0))
+                    new PromptCursor(ECursorDirection.Up, range.Prev + (range.End - range.Start) + range.Next + (bNoResult ? 1 : 0))
                 )
             );
         }

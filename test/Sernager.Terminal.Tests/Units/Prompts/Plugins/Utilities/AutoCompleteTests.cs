@@ -40,7 +40,7 @@ internal sealed class AutoCompleteTests
         AutoComplete<string> autoComplete = new AutoComplete<string>();
 
         Assert.That(autoComplete.Input, Is.EqualTo(string.Empty));
-        Assert.That(autoComplete.CursorPosition, Is.EqualTo(0));
+        Assert.That(autoComplete.CursorPosition, Is.Zero);
 
         autoComplete.SetInitialInput("test");
 
@@ -85,7 +85,7 @@ internal sealed class AutoCompleteTests
             appendedStr = appendedStr.Remove(0, 1);
 
             Assert.That(autoComplete.Input, Is.EqualTo(appendedStr));
-            Assert.That(autoComplete.CursorPosition, Is.EqualTo(0));
+            Assert.That(autoComplete.CursorPosition, Is.Zero);
         }
     }
 
@@ -113,7 +113,7 @@ internal sealed class AutoCompleteTests
 
         autoComplete.InterceptInput(new ConsoleKeyInfo('\0', ConsoleKey.Home, false, false, false));
 
-        Assert.That(autoComplete.CursorPosition, Is.EqualTo(0));
+        Assert.That(autoComplete.CursorPosition, Is.Zero);
 
         autoComplete.InterceptInput(new ConsoleKeyInfo('\0', ConsoleKey.End, false, false, false));
 
