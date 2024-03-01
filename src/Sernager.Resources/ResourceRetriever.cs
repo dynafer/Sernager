@@ -1,6 +1,9 @@
 ﻿using System.Globalization;
 using System.Resources;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Sernager.Resources.Tests")]
+[assembly: InternalsVisibleTo("Sernager.Unit")]
 namespace Sernager.Resources;
 
 public static class ResourceRetriever
